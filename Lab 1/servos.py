@@ -14,9 +14,6 @@ import encoders as ENCODERS
 LSERVO = 0
 RSERVO = 1
 
-#Values
-
-
 # This function is called when Ctrl+C is pressed.
 # It's intended for properly exiting the program.
 def ctrlC(signum, frame):
@@ -28,9 +25,38 @@ def ctrlC(signum, frame):
     
     exit()
 
+#This function changes the values from 1.5 - 1.7 to 1.5-1.3 basically outputting inverse pwm values 
+def setDifference(speed):
+    diff = speed - 1.5
+    return 1.5 - diff
+
 #This function creates a calibration map comparing the servo input to output based on microseconds
 #Measures the speeds of each wheel based on different input values 
 def calibrateSpeeds():
+
+    #Initial start pwm value is at complete stop
+    startVar = 1.5
+
+    #Loop runs starting from full stop to full speed in the forward direction
+    #LSERVO runs from 1.5 to 1.3 (with 1.3 being max forward pwm)
+    #RSERVO runs from 1.5 to 1.7 (with 1.7 being max forward pwm)
+    while startVar < 1.71: 
+        pwm.set_pwm(LSERVO, 0, math.floor( setDifference(startVar) / 20 * 4096));
+        pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096));
+        time.sleep(1)
+
+        #Print out speed corresponding to pwm values
+        print (startVar, ENCODERS.getSpeeds())
+        time.sleep(1)
+
+        #Increment loop
+        startVar += 0.01
+
+        #Reset counts for next loop!
+        ENCODERS.resetCounts()
+
+# How do we get the above code to write into a map?? ***********************************
+
 
 #Sets speed of motors in revolutions per second
 def setSpeedsRPS(rpsLeft, rpsRight):
@@ -42,6 +68,16 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 # v = inches per second         w = angular velocity
 # positive w values spin counterclockwise       negative w values spin clockwise
 def setSpeedsvw(v, w):
+
+
+
+
+
+
+#******************************* MAINLINE CODE *****************************************************
+#Currently rotates the robot in one direction, pauses for 4 seconds then roates in the other direction
+
+
 
 # Attach the Ctrl+C signal interrupt
 signal.signal(signal.SIGINT, ctrlC)
