@@ -1,6 +1,7 @@
 # This program demonstrates usage of the digital encoders.
 # After executing the program, manually spin the wheels and observe the output.
 # See https://sourceforge.net/p/raspberry-gpio-python/wiki/Inputs/ for more details.
+# For full information on this project see the Git Repo at https://github.com/pstilian/Mobile_Robotics_Kinematics.git
 
 import time
 import RPi.GPIO as GPIO
@@ -28,11 +29,6 @@ def onLeftEncode(pin):
 	lRevolutions = float(lCount / 32)
 	currentTime = time.time() - startTime
 	lSpeed = lRevolutions / currentTime
-    #print("Left encoder ticked!")
-    print ("Lticks: ", lCount)
-    print ("LRevolutions: ", lRevolutions)
-    print ("LTime: ", currentTime)
-    print ("LSpeed: ", lSpeed)
 
 # This function is called when the right encoder detects a rising edge signal.
 def onRightEncode(pin):
@@ -41,11 +37,6 @@ def onRightEncode(pin):
 	rRevolutions = float(rCount / 32)
 	currentTime = time.time() -startTime
 	lSpeed = rRevolutions / currentTime
-    #print("Right encoder ticked!")
-    print ("Rticks: ", rCount)
-    print ("RRevolutions: ", rRevolutions)
-    print ("RTime: ", currentTime)
-    print ("RSpeed: ", rSpeed)
 
 # This function is called when Ctrl+C is pressed.
 # It's intended for properly exiting the program.

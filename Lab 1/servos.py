@@ -2,12 +2,13 @@
 # Keep the robot in a safe location before running this program,
 # as it will immediately begin moving.
 # See https://learn.adafruit.com/adafruit-16-channel-pwm-servo-hat-for-raspberry-pi/ for more details.
+# For full information on this project see the Git Repo at https://github.com/pstilian/Mobile_Robotics_Kinematics.git
 
 import time
 import Adafruit_PCA9685
 import signal
 import math
-import encoders as ENCODERS
+import encoders as ENCODER
 
 # The servo hat uses its own numbering scheme within the Adafruit library.
 # 0 represents the first servo, 1 for the second, and so on.
@@ -46,22 +47,22 @@ def calibrateSpeeds():
         time.sleep(1)
 
         #Print out speed corresponding to pwm values
-        print (startVar, ENCODERS.getSpeeds())
+        print (startVar, ENCODER.getSpeeds())
         time.sleep(1)
 
         #Increment loop
         startVar += 0.01
 
         #Reset counts for next loop!
-        ENCODERS.resetCounts()
+        ENCODER.resetCounts()
 
 # How do we get the above code to write into a map?? ***********************************
 
-
 #Sets speed of motors in revolutions per second
 def setSpeedsRPS(rpsLeft, rpsRight):
+    # needs to convert from RPS to PWM values
 
-#Sets speed of motors in Inches per Second
+#Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
 
 #Function sets speed of robot to move over a linear speed with a set angular velocity
@@ -99,12 +100,12 @@ while True:
     # Since the servos are oriented in opposite directions,
     # the robot will end up spinning in one direction.
     # Values between 1.3 and 1.7 should be used.
-    pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
-    pwm.set_pwm(RSERVO, 0, math.floor(1.6 / 20 * 4096));
+    pwm.set_pwm(LSERVO, 0, math.floor(1.3 / 20 * 4096));
+    pwm.set_pwm(RSERVO, 0, math.floor(1.7 / 20 * 4096));
     time.sleep(4)
     
     # Write a minimum value of 1.4 for each servo.
     # The robot will end up spinning in the other direction.
-    pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096));
-    pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
+    pwm.set_pwm(LSERVO, 0, math.floor(1.7 / 20 * 4096));
+    pwm.set_pwm(RSERVO, 0, math.floor(1.3 / 20 * 4096));
     time.sleep(4)
