@@ -30,6 +30,10 @@ lRevolutions = 0
 rRevolutions = 0
 startTime = time.time()
 currentTime = 0
+#innitialize map Rotation per second speed
+#keys = range(41)
+LWSpeed = {}
+RWSpeed = {}
 
 # Write an initial value of 1.5, which keeps the servos stopped.
 # Due to how servos work, and the design of the Adafruit library, 
@@ -64,7 +68,7 @@ def ctrlC(signum, frame):
     # The value must be divided by 20 and multiplied by 4096.
     pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
     pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
-
+	
     exit()
 
 #Resets the tick count
@@ -105,7 +109,10 @@ def setDifference(speed):
 #This function creates a calibration map comparing the servo input to output based on microseconds
 #Measures the speeds of each wheel based on different input values 
 def calibrateSpeeds():
-
+	
+	#open text files for reading
+	l = open("LeftSpeedCalibration.txt", "w+")
+	r = open("RightSpeedCalibration.txt", "w+")
     #Initial start pwm value is at complete stop
     startVar = 1.5
 
@@ -116,17 +123,27 @@ def calibrateSpeeds():
         pwm.set_pwm(LSERVO, 0, math.floor( setDifference(startVar) / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096));
         time.sleep(1)
-
+		
         #Print out speed corresponding to pwm values
         print (startVar, getSpeeds())
         time.sleep(1)
+		currentSpeeds = getSpeeds()
+		currentLeftSpeeds = currentSpeeds[0]
+		currentRightSpeeds = currentSpeeds[1]
+		#write to file
+		l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
+		r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
+		
+		LWSpeed[setDifference(startVar)] = currentLeftSpeeds
+		RWSpeed[setDifference(startVar)] = currentRightSpeeds
 
         #Increment loop
         startVar += 0.01
 
         #Reset counts for next loop!
-        ENCODER.resetCounts()
-
+        resetCounts()
+	l.close()
+	r.close()
 # How do we get the above code to write into a map?? ***********************************
 
 #Sets speed of motors in revolutions per second
