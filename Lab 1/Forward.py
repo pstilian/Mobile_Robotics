@@ -4,6 +4,7 @@
 import time
 import Adafruit_PCA9685
 import signal
+import decimal
 import math
 import RPi.GPIO as GPIO
 import encoders as ENCODER

@@ -11,7 +11,7 @@ import math
 import encoders as ENCODER
 
 # The servo hat uses its own numbering scheme within the Adafruit library.
-# 0 represents the first servo, 1 for the second, and so on.
+# 0 represents the first servo, 1 for the second.
 LSERVO = 0
 RSERVO = 1
 
