@@ -35,12 +35,6 @@ currentTime = 0
 LWSpeed = {}
 RWSpeed = {}
 
-# Write an initial value of 1.5, which keeps the servos stopped.
-# Due to how servos work, and the design of the Adafruit library, 
-# the value must be divided by 20 and multiplied by 4096.
-pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
-pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
-
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
     global lCount, lRevolutions, lSpeed, currentTime
@@ -109,7 +103,7 @@ def setDifference(speed):
 #This function creates a calibration map comparing the servo input to output based on microseconds
 #Measures the speeds of each wheel based on different input values 
 def calibrateSpeeds():
-	
+
 	#open text files for reading
 	l = open("LeftSpeedCalibration.txt", "w+")
 	r = open("RightSpeedCalibration.txt", "w+")
@@ -123,17 +117,17 @@ def calibrateSpeeds():
         pwm.set_pwm(LSERVO, 0, math.floor( setDifference(startVar) / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096));
         time.sleep(1)
-		
+		decimal.getcontext().prec=3
         #Print out speed corresponding to pwm values
         print (startVar, getSpeeds())
         time.sleep(1)
-		currentSpeeds = getSpeeds()
+		currentSpeeds = decimal.Decimal(getSpeeds())
 		currentLeftSpeeds = currentSpeeds[0]
 		currentRightSpeeds = currentSpeeds[1]
 		#write to file
 		l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
 		r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
-		
+
 		LWSpeed[setDifference(startVar)] = currentLeftSpeeds
 		RWSpeed[setDifference(startVar)] = currentRightSpeeds
 
