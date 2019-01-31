@@ -202,7 +202,12 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
     # v = inches per second         w = angular velocity
     # positive w values spin counterclockwise       negative w values spin clockwise
+    decimal.getcontext().prec=2
+    rpsLeft = decimal.Decimal(math.ceil(ipsLeft / 15.71) * 100 / 100)
+    rpsRight = decimal.Decimal(math.ceil(ipsRight / 15.71) * 100 / 100)
 
+    #Calculates the PWM values by using RPS
+    setSpeedsRPS(rpsLeft, rpsRight)
 
 def setSpeedsvw(v, w):
 
