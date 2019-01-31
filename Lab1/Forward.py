@@ -29,7 +29,6 @@ rRevolutions = 0
 startTime = time.time()
 currentTime = 0
 # innitialize map Rotation per second speed
-#keys = range(41)
 LWSpeed = {}
 RWSpeed = {}
 leftflag = False
@@ -215,6 +214,24 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 # After robot movement has been initiated it will move forward in a straight for an input number of inches (xInches)
 # The robot will also complete this task in the input number of seconds (ySeconds)
 
+# Attach the Ctrl+C signal interrupt
+signal.signal(signal.SIGINT, ctrlC)
+
+# Initialize the servo hat library.
+pwm = Adafruit_PCA9685.PCA9685()
+
+# 50Hz is used for the frequency of the servos.
+pwm.set_pwm_freq(50)
+
+# Write an initial value of 1.5, which keeps the servos stopped.
+# Due to how servos work, and the design of the Adafruit library,
+# the value must be divided by 20 and multiplied by 4096.
+pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+
+signal.signal(signal.SIGINT, ctrlC)
+initEncoders()
+
 # Reads input values for distance to travel and time of travel
 xInches = input("Enter desired distance of travel in inches")
 ySeconds = input("Enter the amount of time to travel the set distance in seconds")
@@ -223,6 +240,7 @@ ySeconds = input("Enter the amount of time to travel the set distance in seconds
 goodVal = False
 ips = (float(xInches) / float(ySeconds))
 
+distanceT = 0
 # Set Maximum possible value for inches per second      NEED TO FIND MAX ROBOT SPEED
 #maxSpeed = number???
 
@@ -241,3 +259,21 @@ while goodVal != True:
 	else:
 		goodVal = True
 
+selectCommand = ' '
+
+while selectCommand != 's':
+	selectCommand = input("Please enter \'s\' to begin robot movement")
+
+while True:
+	setSpeedIPS(ips, ips)
+
+    distanceT = ( 15.71 * (lRevolutions + rRevolutions) / 2 )
+    if (float(xInches) - float(distanceT)) <= 0.00:
+    	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+    	pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+
+    	print("Beep! Boop! Bop! I have traveled ", distanceT, " inches! I am AMAZING!!")
+    	exit()
+
+    print("Number of Revolutions : ", (lRevolutions + rRevolutions) / 2)
+    print("Distance Traveled     : ", distanceT)
