@@ -28,7 +28,7 @@ lRevolutions = 0
 rRevolutions = 0
 startTime = time.time()
 currentTime = 0
-now = time.time()
+
 # innitialize map Rotation per second speed
 LWSpeed = {}
 RWSpeed = {}
@@ -36,10 +36,7 @@ leftflag = False
 rightflag = False
 
 
-#Timer to measure movement
-def stopWatch(now):
-	end = time.time()
-	print (end - now)
+
 
 
 # This function is called when the left encoder detects a rising edge signal.
@@ -49,6 +46,7 @@ def onLeftEncode(pin):
     lRevolutions = float(lCount / 32)
     currentTime = time.time() - startTime
     lSpeed = lRevolutions / currentTime
+    
 
 # This function is called when the right encoder detects a rising edge signal.
 def onRightEncode(pin):
@@ -127,8 +125,8 @@ def calibrateSpeeds():
         print(startVar, getSpeeds())
         time.sleep(1)
         currentSpeeds = getSpeeds()
-        currentLeftSpeeds = decimal.Decimal(currentSpeeds[0])
-        currentRightSpeeds = decimal.Decimal(currentSpeeds[1])
+        currentLeftSpeeds = currentSpeeds[0]
+        currentRightSpeeds = currentSpeeds[1]
         # write to file
         l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
         r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
@@ -149,12 +147,11 @@ def setSpeedsRPS(rpsLeft, rpsRight):
     #decimal.getcontext().prec = 2
     global leftflag, rightflag
     # Calculating pwm values from the respective dictionaries
-    left = round(rpsLeft, 2)
-    right = round(rpsRight, 2)
+    left = round(float(rpsLeft * 0.55), 2)
+    right = round(float(rpsRight * 0.55), 2)
     leftflag = False
     rightflag = False
 
-    decimal.getcontext().prec = 2
     
     # Loop compares rpsLeft values with rps values from calibration document
     while leftflag != True:
@@ -166,7 +163,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
             pwmValue = round(float(currentLine[1]), 2)
 
             if left == rpsValue:
-                lPwmValue = round(pwmValue, 2)
+                lPwmValue = pwmValue
                 leftflag = True
                 break
             elif left > 0.62:
@@ -174,7 +171,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 leftflag = False
                 break
         l.close()
-        left = round((left + 0.01), 2)
+        left = round(left + 0.01, 2)
 
     # Loop compares rpsRight values with rps values from calibration document
     while rightflag != True:
@@ -186,7 +183,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
             pwmValue = round(float(currentLine[1]), 2)
 
             if right == rpsValue:
-                rPwmValue = round(pwmValue, 2)
+                rPwmValue = pwmValue
                 rightflag = True
                 break
             elif right > 0.63:
@@ -194,7 +191,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 rightflag = False
                 break
         r.close()
-        right = round((right + 0.01), 2)
+        right = round(right + 0.01, 2)
         
     # If both right and left values are found then statement sets speeds to desired imputs
     if rightflag == True and leftflag == True:
@@ -207,9 +204,8 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
     # v = inches per second         w = angular velocity
     # positive w values spin counterclockwise       negative w values spin clockwise
-    decimal.getcontext().prec=2
-    rpsLeft = round(float((ipsLeft / 8.17)), 2)
-    rpsRight = round(float((ipsRight / 8.17)), 2)
+    rpsLeft = round(float(ipsLeft / 8.17), 2)
+    rpsRight = round(float(ipsRight / 8.17), 2)
     
     #Calculates the PWM values by using RPS
     setSpeedsRPS(rpsLeft, rpsRight)
@@ -269,17 +265,18 @@ selectCommand = ' '
 
 while selectCommand != 's':
 	selectCommand = input("Please enter \'s\' to begin robot movement")
-now
+now = time.time()
 while True:
     setSpeedsIPS(ips, ips)
+    
 
     distanceT = ( 8.17 * ((lRevolutions + rRevolutions) / 2) )
     if (float(xInches) - float(distanceT)) <= 0.00:
     	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
     	pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
-		itsTime = stopWatch(now)
+    	itsTime = time.time()
     	print("Beep! Boop! Bop! I have traveled ", round(distanceT,2), " inches! I am AMAZING!!")
-		print("Time taken to travel: ", itsTime)
+    	print("Time taken to travel: ", itsTime - now)
     	exit()
 
     #print("Number of Revolutions : ", (lRevolutions + rRevolutions) / 2)
