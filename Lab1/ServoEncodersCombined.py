@@ -69,6 +69,7 @@ def ctrlC(signum, frame):
 def resetCounts():
     Lcounts = 0
     Rcounts = 0
+    startTime = time.time()
 
 # Returns the previous tick counts as a touple
 def getCounts():

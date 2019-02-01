@@ -35,6 +35,10 @@ RWSpeed = {}
 leftflag = False
 rightflag = False
 
+
+
+
+
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
     global lCount, lRevolutions, lSpeed, currentTime
@@ -104,7 +108,6 @@ def setDifference(speed):
 # This function creates a calibration map comparing the servo input to output based on microseconds
 # Measures the speeds of each wheel based on different input values
 def calibrateSpeeds():
-    decimal.getcontext().prec = 2
     # open text files for reading
     l = open("LeftSpeedCalibration.txt", "w+")
     r = open("RightSpeedCalibration.txt", "w+")
@@ -113,7 +116,7 @@ def calibrateSpeeds():
     # Loop runs starting from full stop to full speed in the forward direction
     # LSERVO runs from 1.5 to 1.3 (with 1.3 being max forward pwm)
     # RSERVO runs from 1.5 to 1.7 (with 1.7 being max forward pwm)
-    while startVar < 1.71:
+    while startVar <= 1.7:
         pwm.set_pwm(LSERVO, 0, math.floor(setDifference(startVar) / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
         time.sleep(1)
@@ -121,8 +124,8 @@ def calibrateSpeeds():
         print(startVar, getSpeeds())
         time.sleep(1)
         currentSpeeds = getSpeeds()
-        currentLeftSpeeds = currentSpeeds[0]
-        currentRightSpeeds = currentSpeeds[1]
+        currentLeftSpeeds = round(currentSpeeds[0], 2)# added round  2 dec
+        currentRightSpeeds = round(currentSpeeds[1], 2)
         # write to file
         l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
         r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
@@ -140,11 +143,10 @@ def calibrateSpeeds():
 
 def setSpeedsRPS(rpsLeft, rpsRight):
     # needs to convert from RPS to PWM values
-    #decimal.getcontext().prec = 2
     global leftflag, rightflag
     # Calculating pwm values from the respective dictionaries
-    left = round(float(rpsLeft * 0.55), 2)
-    right = round(float(rpsRight * 0.55), 2)
+    left = round(float(rpsLeft), 2)#.55
+    right = round(float(rpsRight), 2)#.55
     leftflag = False
     rightflag = False
 
@@ -160,14 +162,15 @@ def setSpeedsRPS(rpsLeft, rpsRight):
 
             if left == rpsValue:
                 lPwmValue = pwmValue
+                print("LPWMVALUE: ", lPwmValue)
                 leftflag = True
                 break
-            elif left > 0.63:
+            elif left > 0.64:
                 lPwmValue = 0
                 leftflag = False
                 break
         l.close()
-        left = round(left + 0.01, 2)
+        left = round(left + 0.01, 2)#check remove
 
     # Loop compares rpsRight values with rps values from calibration document
     while rightflag != True:
@@ -180,14 +183,15 @@ def setSpeedsRPS(rpsLeft, rpsRight):
 
             if right == rpsValue:
                 rPwmValue = pwmValue
+                print("RPWMVALUE: ", rPwmValue)
                 rightflag = True
                 break
-            elif right > 0.64:
+            elif right > 0.65:
                 rPwmValue = 0
                 rightflag = False
                 break
         r.close()
-        right = round(right + 0.01, 2)
+        right = round(right + 0.01, 2)#remove
         
     # If both right and left values are found then statement sets speeds to desired imputs
     if rightflag == True and leftflag == True:
@@ -200,8 +204,8 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
     # v = inches per second         w = angular velocity
     # positive w values spin counterclockwise       negative w values spin clockwise
-    rpsLeft = round(float(ipsLeft / 8.17), 2)
-    rpsRight = round(float(ipsRight / 8.17), 2)
+    rpsLeft = round(float(ipsLeft / 8.20), 2)
+    rpsRight = round(float(ipsRight / 8.20), 2)
     
     #Calculates the PWM values by using RPS
     setSpeedsRPS(rpsLeft, rpsRight)
@@ -240,12 +244,12 @@ ips = (float(xInches) / float(ySeconds))
 
 distanceT = 0
 # Set Maximum possible value for inches per second      NEED TO FIND MAX ROBOT SPEED
-maxSpeed = 5.19
+maxSpeed = 10.05
 
 #This loop checks to see if input values for xInches and ySeconds are valid for this project
 while goodVal != True:
 	if ips > maxSpeed:
-		print("I'm sorry I ate too much chocolate I can't go that fast...")
+		print("Input values cannot be used robot cannot achieve desired speed")
 		xInches = input("Enter desired distance of travel in inches")
 		ySeconds = input("Enter the amount of time to travel the set distance in seconds")
 		ips = (float(xInches) / float(ySeconds))
@@ -260,12 +264,13 @@ while goodVal != True:
 selectCommand = ' '
 
 while selectCommand != 's':
-	selectCommand = input("Please enter \'s\' to begin robot movement: ")
+	selectCommand = input("Please enter \'s\' to begin robot movement")
 now = time.time()
 while True:
     setSpeedsIPS(ips, ips)
-   
-    distanceT = ( 8.17 * ((lRevolutions + rRevolutions) / 2) )
+    
+
+    distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
     if (float(xInches) - float(distanceT)) <= 0.00:
     	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
     	pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
