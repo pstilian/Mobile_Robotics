@@ -35,10 +35,6 @@ RWSpeed = {}
 leftflag = False
 rightflag = False
 
-
-
-
-
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
     global lCount, lRevolutions, lSpeed, currentTime
@@ -166,7 +162,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 lPwmValue = pwmValue
                 leftflag = True
                 break
-            elif left > 0.62:
+            elif left > 0.63:
                 lPwmValue = 0
                 leftflag = False
                 break
@@ -186,7 +182,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 rPwmValue = pwmValue
                 rightflag = True
                 break
-            elif right > 0.63:
+            elif right > 0.64:
                 rPwmValue = 0
                 rightflag = False
                 break
@@ -244,12 +240,12 @@ ips = (float(xInches) / float(ySeconds))
 
 distanceT = 0
 # Set Maximum possible value for inches per second      NEED TO FIND MAX ROBOT SPEED
-maxSpeed = 10.05
+maxSpeed = 5.19
 
 #This loop checks to see if input values for xInches and ySeconds are valid for this project
 while goodVal != True:
 	if ips > maxSpeed:
-		print("Input values cannot be used robot cannot achieve desired speed")
+		print("I'm sorry I ate too much chocolate I can't go that fast...")
 		xInches = input("Enter desired distance of travel in inches")
 		ySeconds = input("Enter the amount of time to travel the set distance in seconds")
 		ips = (float(xInches) / float(ySeconds))
@@ -264,12 +260,11 @@ while goodVal != True:
 selectCommand = ' '
 
 while selectCommand != 's':
-	selectCommand = input("Please enter \'s\' to begin robot movement")
+	selectCommand = input("Please enter \'s\' to begin robot movement: ")
 now = time.time()
 while True:
     setSpeedsIPS(ips, ips)
-    
-
+   
     distanceT = ( 8.17 * ((lRevolutions + rRevolutions) / 2) )
     if (float(xInches) - float(distanceT)) <= 0.00:
     	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
