@@ -28,11 +28,19 @@ lRevolutions = 0
 rRevolutions = 0
 startTime = time.time()
 currentTime = 0
+now = time.time()
 # innitialize map Rotation per second speed
 LWSpeed = {}
 RWSpeed = {}
 leftflag = False
 rightflag = False
+
+
+#Timer to measure movement
+def stopWatch(now):
+	end = time.time()
+	print (end - now)
+
 
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
@@ -261,7 +269,7 @@ selectCommand = ' '
 
 while selectCommand != 's':
 	selectCommand = input("Please enter \'s\' to begin robot movement")
-
+now
 while True:
     setSpeedsIPS(ips, ips)
 
@@ -269,8 +277,9 @@ while True:
     if (float(xInches) - float(distanceT)) <= 0.00:
     	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
     	pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
-
+		itsTime = stopWatch(now)
     	print("Beep! Boop! Bop! I have traveled ", round(distanceT,2), " inches! I am AMAZING!!")
+		print("Time taken to travel: ", itsTime)
     	exit()
 
     #print("Number of Revolutions : ", (lRevolutions + rRevolutions) / 2)
