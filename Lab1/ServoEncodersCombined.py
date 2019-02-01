@@ -209,9 +209,6 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     #Calculates the PWM values by using RPS
     setSpeedsRPS(rpsLeft, rpsRight)
 
-def setSpeedsvw(v, w):
-
-
 
 #---------------------------------------MAINLINE TEXT------------------------------------------------------------
 # Attach the Ctrl+C signal interrupt

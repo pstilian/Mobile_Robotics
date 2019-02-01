@@ -138,27 +138,27 @@ def calibrateSpeeds():
 
 def setSpeedsRPS(rpsLeft, rpsRight):
     # needs to convert from RPS to PWM values
-    decimal.getcontext().prec = 2
+    #decimal.getcontext().prec = 2
     global leftflag, rightflag
     # Calculating pwm values from the respective dictionaries
-    left = decimal.Decimal(rpsLeft) + decimal.Decimal(0.00)
-    right = decimal.Decimal(rpsRight) + decimal.Decimal(0.00)
+    left = round(rpsLeft, 2)
+    right = round(rpsRight, 2)
     leftflag = False
     rightflag = False
 
     decimal.getcontext().prec = 2
-
+    
     # Loop compares rpsLeft values with rps values from calibration document
     while leftflag != True:
 
         l = open("LeftSpeedCalibration.txt", "r")
         for line in l:
             currentLine = line.split(" ")
-            rpsValue = decimal.Decimal(currentLine[0])
-            pwmValue = decimal.Decimal(currentLine[1])
+            rpsValue = round(float(currentLine[0]), 2)
+            pwmValue = round(float(currentLine[1]), 2)
 
             if left == rpsValue:
-                lPwmValue = decimal.Decimal(pwmValue)
+                lPwmValue = round(pwmValue, 2)
                 leftflag = True
                 break
             elif left > 0.62:
@@ -166,8 +166,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 leftflag = False
                 break
         l.close()
-        left = left + decimal.Decimal(0.01)
-        time.sleep(3)
+        left = round((left + 0.01), 2)
 
     # Loop compares rpsRight values with rps values from calibration document
     while rightflag != True:
@@ -175,11 +174,11 @@ def setSpeedsRPS(rpsLeft, rpsRight):
         r = open("RightSpeedCalibration.txt", "r")
         for line in r:
             currentLine = line.split(" ")
-            rpsValue = decimal.Decimal(currentLine[0])
-            pwmValue = decimal.Decimal(currentLine[1])
+            rpsValue = round(float(currentLine[0]), 2)
+            pwmValue = round(float(currentLine[1]), 2)
 
             if right == rpsValue:
-                rPwmValue = decimal.Decimal(pwmValue)
+                rPwmValue = round(pwmValue, 2)
                 rightflag = True
                 break
             elif right > 0.63:
@@ -187,24 +186,23 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 rightflag = False
                 break
         r.close()
-        right = right + decimal.Decimal(0.01)
-
+        right = round((right + 0.01), 2)
+        
     # If both right and left values are found then statement sets speeds to desired imputs
     if rightflag == True and leftflag == True:
         # Setting appropiate speeds to the servos
-        pwm.set_pwm(LSERVO, 0, math.floor(
-            setDifference(lPwmValue) / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
-
+        
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
     # v = inches per second         w = angular velocity
     # positive w values spin counterclockwise       negative w values spin clockwise
     decimal.getcontext().prec=2
-    rpsLeft = decimal.Decimal(math.ceil(ipsLeft / 15.71) * 100 / 100)
-    rpsRight = decimal.Decimal(math.ceil(ipsRight / 15.71) * 100 / 100)
-
+    rpsLeft = round(float((ipsLeft / 8.17)), 2)
+    rpsRight = round(float((ipsRight / 8.17)), 2)
+    
     #Calculates the PWM values by using RPS
     setSpeedsRPS(rpsLeft, rpsRight)
 
@@ -233,8 +231,8 @@ signal.signal(signal.SIGINT, ctrlC)
 initEncoders()
 
 # Reads input values for distance to travel and time of travel
-xInches = input("Enter desired distance of travel in inches")
-ySeconds = input("Enter the amount of time to travel the set distance in seconds")
+xInches = input("Enter desired distance of travel in inches: ")
+ySeconds = input("Enter the amount of time to travel the set distance in seconds: ")
 
 # Set boolean value for good values to false and calculate the desired speed in inches per second (ips)
 goodVal = False
@@ -242,7 +240,7 @@ ips = (float(xInches) / float(ySeconds))
 
 distanceT = 0
 # Set Maximum possible value for inches per second      NEED TO FIND MAX ROBOT SPEED
-#maxSpeed = number???
+maxSpeed = 10.05
 
 #This loop checks to see if input values for xInches and ySeconds are valid for this project
 while goodVal != True:
@@ -265,15 +263,15 @@ while selectCommand != 's':
 	selectCommand = input("Please enter \'s\' to begin robot movement")
 
 while True:
-	setSpeedIPS(ips, ips)
+    setSpeedsIPS(ips, ips)
 
-    distanceT = ( 15.71 * (lRevolutions + rRevolutions) / 2 )
+    distanceT = ( 8.17 * ((lRevolutions + rRevolutions) / 2) )
     if (float(xInches) - float(distanceT)) <= 0.00:
     	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
     	pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
 
-    	print("Beep! Boop! Bop! I have traveled ", distanceT, " inches! I am AMAZING!!")
+    	print("Beep! Boop! Bop! I have traveled ", round(distanceT,2), " inches! I am AMAZING!!")
     	exit()
 
-    print("Number of Revolutions : ", (lRevolutions + rRevolutions) / 2)
-    print("Distance Traveled     : ", distanceT)
+    #print("Number of Revolutions : ", (lRevolutions + rRevolutions) / 2)
+    #print("Distance Traveled     : ", distanceT)
