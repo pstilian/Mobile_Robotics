@@ -28,12 +28,6 @@ lRevolutions = 0
 rRevolutions = 0
 startTime = time.time()
 currentTime = 0
-# innitialize map Rotation per second speed
-#keys = range(41)
-LWSpeed = {}
-RWSpeed = {}
-leftflag = False
-rightflag = False
 
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
@@ -112,101 +106,32 @@ def calibrateSpeeds():
     endVar = 1.7
 
     while startVar <= endVar:
-        pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(startVar) / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
         time.sleep(1)
-        # Print out speed corresponding to pwm values
+        # Reset tick counts and print out speed corresponding to pwm values
         print(startVar, getSpeeds())
+        resetCounts()
+
         time.sleep(1)
+
         currentSpeeds = getSpeeds()
         currentLeftSpeeds = currentSpeeds[0]
         currentRightSpeeds = currentSpeeds[1]
-        # write to file
+        # write pwm and speed values for startVar to file
         l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
         r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
         LWSpeed[setDifference(startVar)] = currentLeftSpeeds
         RWSpeed[setDifference(startVar)] = currentRightSpeeds
-        # Increment loop
-        startVar += 0.01
 
         # Reset counts for next loop!
         resetCounts()
 
+        # Increment loop
+        startVar += 0.01
+
     l.close()
     r.close()
-
-
-def setSpeedsRPS(rpsLeft, rpsRight):
-    # needs to convert from RPS to PWM values
-    decimal.getcontext().prec = 2
-    global leftflag, rightflag
-    # Calculating pwm values from the respective dictionaries
-    left = decimal.Decimal(rpsLeft) + decimal.Decimal(0.00)
-    right = decimal.Decimal(rpsRight) + decimal.Decimal(0.00)
-    leftflag = False
-    rightflag = False
-
-    decimal.getcontext().prec = 2
-
-    # Loop compares rpsLeft values with rps values from calibration document
-    while leftflag != True:
-
-        l = open("LeftSpeedCalibration.txt", "r")
-        for line in l:
-            currentLine = line.split(" ")
-            rpsValue = decimal.Decimal(currentLine[0])
-            pwmValue = decimal.Decimal(currentLine[1])
-
-            if left == rpsValue:
-                lPwmValue = decimal.Decimal(pwmValue)
-                leftflag = True
-                break
-            elif left > 0.62:
-                lPwmValue = 0
-                leftflag = False
-                break
-        l.close()
-        left = left + decimal.Decimal(0.01)
-        time.sleep(3)
-
-    # Loop compares rpsRight values with rps values from calibration document
-    while rightflag != True:
-
-        r = open("RightSpeedCalibration.txt", "r")
-        for line in r:
-            currentLine = line.split(" ")
-            rpsValue = decimal.Decimal(currentLine[0])
-            pwmValue = decimal.Decimal(currentLine[1])
-
-            if right == rpsValue:
-                rPwmValue = decimal.Decimal(pwmValue)
-                rightflag = True
-                break
-            elif right > 0.63:
-                rPwmValue = 0
-                rightflag = False
-                break
-        r.close()
-        right = right + decimal.Decimal(0.01)
-
-    # If both right and left values are found then statement sets speeds to desired imputs
-    if rightflag == True and leftflag == True:
-        # Setting appropiate speeds to the servos
-        pwm.set_pwm(LSERVO, 0, math.floor(
-            setDifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
-
-# Sets speed of motors in Inches per econd
-def setSpeedsIPS(ipsLeft, ipsRight):
-    # Function sets speed of robot to move over a linear speed with a set angular velocity
-    # v = inches per second         w = angular velocity
-    # positive w values spin counterclockwise       negative w values spin clockwise
-    decimal.getcontext().prec=2
-    rpsLeft = decimal.Decimal(math.ceil(ipsLeft / 15.71) * 100 / 100)
-    rpsRight = decimal.Decimal(math.ceil(ipsRight / 15.71) * 100 / 100)
-
-    #Calculates the PWM values by using RPS
-    setSpeedsRPS(rpsLeft, rpsRight)
 
 
 #---------------------------------------MAINLINE TEXT------------------------------------------------------------
