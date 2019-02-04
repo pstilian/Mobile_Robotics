@@ -29,6 +29,9 @@ rRevolutions = 0
 startTime = time.time()
 currentTime = 0
 
+LWSpeed = {}
+RWSpeed = {}
+
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
     global lCount, lRevolutions, lSpeed, currentTime
@@ -106,14 +109,13 @@ def calibrateSpeeds():
     endVar = 1.7
 
     while startVar <= endVar:
-        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(startVar) / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
         time.sleep(1)
         # Reset tick counts and print out speed corresponding to pwm values
         print(startVar, getSpeeds())
-        resetCounts()
 
-        time.sleep(1)
+        time.sleep(3)
 
         currentSpeeds = getSpeeds()
         currentLeftSpeeds = currentSpeeds[0]
@@ -123,12 +125,15 @@ def calibrateSpeeds():
         r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
         LWSpeed[setDifference(startVar)] = currentLeftSpeeds
         RWSpeed[setDifference(startVar)] = currentRightSpeeds
-
+        
+        # Increment loop
+        startVar += 0.01
+        
+        time.sleep(1)
+        
         # Reset counts for next loop!
         resetCounts()
 
-        # Increment loop
-        startVar += 0.01
 
     l.close()
     r.close()
