@@ -113,21 +113,20 @@ def calibrateSpeeds():
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
         # Reset tick counts and print out speed corresponding to pwm values
 
-        time.sleep(4)
+        time.sleep(3)
 
         currentSpeeds = getSpeeds()
         currentLeftSpeeds = currentSpeeds[0]
         currentRightSpeeds = currentSpeeds[1]
         # write pwm and speed values for startVar to dictionary
-        LWSpeed[startVar] = round(currentLeftSpeeds,3)
-        RWSpeed[startVar] = round(currentRightSpeeds,3)
+        LWSpeed[round(startVar,2)] = round(currentLeftSpeeds,3)
+        RWSpeed[round(startVar,2)] = round(currentRightSpeeds,3)
 
-        round(startVar,2)
         print(LWSpeed)
         print(RWSpeed)
                    
         # Increment loop
-        startVar += 0.01
+        startVar = round(startVar + 0.01,2)
 
         
         time.sleep(2)
@@ -149,12 +148,23 @@ def setSpeedsRPS(rpsLeft, rpsRight):
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
-    # v = inches per second         w = angular velocity
-    # positive w values spin counterclockwise       negative w values spin clockwise
+    
+    # converts input to inches/sec sets variables rpsLeft and rpsRight to 3 decimal places
     rpsLeft = float(ipsLeft / 8.20)
     rpsRight = float(ipsRight / 8.20)
     round(rpsLeft, 3)
     round(rpsRight, 3)
+
+    lIndex = 1.5
+    rIndex = 1.5
+    endVar = 1.71
+
+    #binary search to find correct value
+    while rpsLeft < :
+
+
+
+    #merp a drep
     lPwmValue = LWSpeed[rpsLeft]
     rPwmValue = LWSpeed[rpsRight]
     pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
