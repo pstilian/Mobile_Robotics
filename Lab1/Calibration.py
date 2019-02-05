@@ -100,7 +100,6 @@ def setDifference(speed):
 # This function creates a calibration map comparing the servo input to output based on microseconds
 # Measures the speeds of each wheel based on different input values
 def calibrateSpeeds():
-    decimal.getcontext().prec = 2
     # open text files for reading
     l = open("LeftSpeedCalibration.txt", "w+")
     r = open("RightSpeedCalibration.txt", "w+")

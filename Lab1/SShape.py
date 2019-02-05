@@ -151,11 +151,14 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
     # v = inches per second         w = angular velocity
     # positive w values spin counterclockwise       negative w values spin clockwise
-    rpsLeft = round(float(ipsLeft / 8.20), 3)
-    rpsRight = round(float(ipsRight / 8.20), 3)
-    
-    #Calculates the PWM values by using RPS
-    setSpeedsRPS(rpsLeft, rpsRight)
+    rpsLeft = float(ipsLeft / 8.20)
+    rpsRight = float(ipsRight / 8.20)
+    round(rpsLeft, 3)
+    round(rpsRight, 3)
+    lPwmValue = LWSpeed[rpsLeft]
+    rPwmValue = LWSpeed[rpsRight]
+    pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
 
 
 # Defines speeds in a clockwise rotation

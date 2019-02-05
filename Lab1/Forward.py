@@ -228,7 +228,7 @@ while goodVal != True:
 selectCommand = ' '
 
 while selectCommand != 's':
-	selectCommand = input("Please enter \'s\' to begin robot movement: ")
+	selectCommand = input("Please enter \'s\' to begin robot movement:")
 now = time.time()
 while True:
     setSpeedsIPS(ips, ips)
