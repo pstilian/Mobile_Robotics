@@ -228,11 +228,18 @@ linearVelocity = ( float(cirPath1) + float(cirPath2) ) / float(cirTime)
 omega1 = float(linearVelocity) / float(cirRadius1)
 omega2 = float(linearVelocity) / float(cirRadius2)
 
-print()
+print("cirPath1: ", cirPath2)
+print("cirPath2: ", cirPath1)
+print("linear velocity: ", linearVelocity)
+print("omega1: ", omega1)
+print("omega2:", omega2)
+print("dAxis: ", dAxis)
+print("values initialized")
 # Initialize flag to track first circle movement
 cirFlag = True
 
 while cirFlag == True:
+    print("running in loop")
     # Set speeds for first circle
     setSpeedsvw1(linearVelocity, omega1)
     distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
