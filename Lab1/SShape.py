@@ -155,18 +155,30 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     round(rpsLeft, 3)
     round(rpsRight, 3)
 
-    lIndex = 1.5
-    rIndex = 1.5
-    endVar = 1.71
 
     #binary search to find correct value
-    while rpsLeft < :
+	#value closests
+	# value = min(d.items(), key = lambda kv : abs(kv[1] - target))[0]
+	#value = min(LWSpeed.items(), key = lambda kv: abs(kv[1] - target))[0]
+	i = 1.3;
+    while i < 1.7 :
+		if(rpsLeft > LWSpeed[i] && rpsLeft < LWSpeed[i+.01])
+			lKey = i;
+		i = i + .01;
+
+	while i < 1.7 :
+		if(rpsRight > RWSpeed[i] && rpsRight < RWSpeed[i+.01])
+			rKey = i;
+		i = i + .01;
+	
+	
+	#get.RWSpeed[rKey]
 
 
 
     #merp a drep
-    lPwmValue = LWSpeed[rpsLeft]
-    rPwmValue = LWSpeed[rpsRight]
+    lPwmValue = LWSpeed[lKey]
+    rPwmValue = RWSpeed[rKey]
     pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
 
