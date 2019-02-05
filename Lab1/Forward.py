@@ -105,42 +105,6 @@ def setDifference(speed):
     diff = speed - 1.5
     return 1.5 - diff
 
-# This function creates a calibration map comparing the servo input to output based on microseconds
-# Measures the speeds of each wheel based on different input values
-def calibrateSpeeds():
-    # open text files for reading
-    l = open("LeftSpeedCalibration.txt", "w+")
-    r = open("RightSpeedCalibration.txt", "w+")
-    # Initial start pwm value is at complete stop
-    startVar = 1.5
-    # Loop runs starting from full stop to full speed in the forward direction
-    # LSERVO runs from 1.5 to 1.3 (with 1.3 being max forward pwm)
-    # RSERVO runs from 1.5 to 1.7 (with 1.7 being max forward pwm)
-    while startVar <= 1.7:
-        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(startVar) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
-        time.sleep(1)
-        # Print out speed corresponding to pwm values
-        print(startVar, getSpeeds())
-        time.sleep(1)
-        currentSpeeds = getSpeeds()
-        currentLeftSpeeds = round(currentSpeeds[0], 2)# added round  2 dec
-        currentRightSpeeds = round(currentSpeeds[1], 2)
-        # write to file
-        l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
-        r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
-        LWSpeed[setDifference(startVar)] = currentLeftSpeeds
-        RWSpeed[setDifference(startVar)] = currentRightSpeeds
-        # Increment loop
-        startVar += 0.01
-
-        # Reset counts for next loop!
-        resetCounts()
-
-    l.close()
-    r.close()
-
-
 def setSpeedsRPS(rpsLeft, rpsRight):
     # needs to convert from RPS to PWM values
     global leftflag, rightflag
@@ -165,7 +129,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 print("LPWMVALUE: ", lPwmValue)
                 leftflag = True
                 break
-            elif left > 0.64:
+            elif left > 0.78:
                 lPwmValue = 0
                 leftflag = False
                 break
@@ -186,7 +150,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 print("RPWMVALUE: ", rPwmValue)
                 rightflag = True
                 break
-            elif right > 0.65:
+            elif right > 0.80:
                 rPwmValue = 0
                 rightflag = False
                 break
@@ -243,8 +207,8 @@ goodVal = False
 ips = (float(xInches) / float(ySeconds))
 
 distanceT = 0
-# Set Maximum possible value for inches per second      NEED TO FIND MAX ROBOT SPEED
-maxSpeed = 10.05
+# Set Maximum possible value for inches per second
+maxSpeed = 6.5
 
 #This loop checks to see if input values for xInches and ySeconds are valid for this project
 while goodVal != True:
@@ -264,7 +228,7 @@ while goodVal != True:
 selectCommand = ' '
 
 while selectCommand != 's':
-	selectCommand = input("Please enter \'s\' to begin robot movement")
+	selectCommand = input("Please enter \'s\' to begin robot movement: ")
 now = time.time()
 while True:
     setSpeedsIPS(ips, ips)
