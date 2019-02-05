@@ -252,6 +252,9 @@ cirFlag = True
 now = time.time()
 
 resetCounts()
+lRevolutions = 0
+rRevolutions = 0
+
 while cirFlag == True:
     # Set speeds for first circle
     setSpeedsvw1(linearVelocity, omega1)
@@ -267,7 +270,7 @@ while cirFlag == True:
         print("Time taken to travel: ", itsTime - now)
 
 time.sleep(1)
-selectCommmand = ' '
+selectCommand = ' '
 
 
 while selectCommand != 's':
@@ -276,6 +279,9 @@ now = time.time()
 
 cirFlag = True
 resetCounts()
+lRevolutions = 0
+rRevolutions = 0
+
 while cirFlag == True:
     
     print("inside loop 2")
