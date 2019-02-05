@@ -106,7 +106,7 @@ def calibrateSpeeds():
     r = open("RightSpeedCalibration.txt", "w+")
     # Initial start pwm value is at complete stop
     startVar = 1.3
-    endVar = 1.7
+    endVar = 1.71
 
     while startVar <= endVar:
         pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))

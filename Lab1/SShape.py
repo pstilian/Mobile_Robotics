@@ -101,6 +101,38 @@ def setDifference(speed):
     diff = speed - 1.5
     return 1.5 - diff
 
+# This function creates a calibration map comparing the servo input to output based on microseconds
+# Measures the speeds of each wheel based on different input values
+def calibrateSpeeds():
+    # Initial start pwm value is at complete stop
+    startVar = 1.3
+    endVar = 1.71
+
+    while startVar <= endVar:
+        pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
+        time.sleep(1)
+        # Reset tick counts and print out speed corresponding to pwm values
+        print(startVar, getSpeeds())
+
+        time.sleep(4)
+
+        currentSpeeds = getSpeeds()
+        currentLeftSpeeds = currentSpeeds[0]
+        currentRightSpeeds = currentSpeeds[1]
+        # write pwm and speed values for startVar to dictionary
+        LWSpeed[startVar] = currentLeftSpeeds
+        RWSpeed[startVar] = currentRightSpeeds
+        
+        # Increment loop
+        startVar += 0.01
+        
+        time.sleep(2)
+        
+        # Reset counts for next loop!
+        resetCounts()
+
+
 def setSpeedsRPS(rpsLeft, rpsRight):
     # needs to convert from RPS to PWM values
     global leftflag, rightflag
@@ -195,6 +227,8 @@ def setSpeedsvw2(v, w):
 
 # Attach the Ctrl+C signal interrupt
 signal.signal(signal.SIGINT, ctrlC)
+initEncoders()
+signal.signal(signal.SIGINT, ctrlC)
 
 # Initialize the servo hat library.
 pwm = Adafruit_PCA9685.PCA9685()
@@ -202,14 +236,7 @@ pwm = Adafruit_PCA9685.PCA9685()
 # 50Hz is used for the frequency of the servos.
 pwm.set_pwm_freq(50)
 
-# Write an initial value of 1.5, which keeps the servos stopped.
-# Due to how servos work, and the design of the Adafruit library,
-# the value must be divided by 20 and multiplied by 4096.
-pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
-pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
 
-signal.signal(signal.SIGINT, ctrlC)
-initEncoders()
 
 # Initalizing variables for radius and time
 cirRadius1 = 0
@@ -231,7 +258,7 @@ omega2 = float(linearVelocity) / float(cirRadius2)
 # Initialize flag to track first circle movement
 cirFlag = True
 
-while firstFlag == True:
+while cirFlag == True:
 	# Set speeds for first circle
 	setSpeedsvw1(linearVelocity, omega1)
 	distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
@@ -242,3 +269,10 @@ while firstFlag == True:
     	itsTime = time.time()
     	print("first arc completed")
     	print("Time taken to travel: ", itsTime - now)
+
+select commmand = ' '
+
+while selectCommand != 's':
+	selectCommand = input("Please enter \'s\' to begin robot movement: ")
+now = time.time()
+
