@@ -228,17 +228,22 @@ linearVelocity = ( float(cirPath1) + float(cirPath2) ) / float(cirTime)
 omega1 = float(linearVelocity) / float(cirRadius1)
 omega2 = float(linearVelocity) / float(cirRadius2)
 
+print()
 # Initialize flag to track first circle movement
 cirFlag = True
 
-while firstFlag == True:
-	# Set speeds for first circle
-	setSpeedsvw1(linearVelocity, omega1)
-	distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
+while cirFlag == True:
+    # Set speeds for first circle
+    setSpeedsvw1(linearVelocity, omega1)
+    distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
-	if (float(cirPath1) - float(distanceT)) <= 0.00:
-    	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
-    	pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
-    	itsTime = time.time()
-    	print("first arc completed")
-    	print("Time taken to travel: ", itsTime - now)
+    if (float(cirPath1) - float(distanceT)) <= 0.00:
+        cirFlag = False
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+        itsTime = time.time()
+        print("first arc completed")
+        print("Time taken to travel: ", itsTime - now)
+
+resetCounts()
+print("missed loop")
