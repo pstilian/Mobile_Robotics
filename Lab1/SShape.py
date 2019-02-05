@@ -32,6 +32,8 @@ LWSpeed = {}
 RWSpeed = {}
 leftflag = False
 rightflag = False
+lKey = 0
+rKey = 0  
 
 
 
@@ -108,7 +110,7 @@ def calibrateSpeeds():
     startVar = 1.3
     endVar = 1.71
 
-    while startVar <= endVar:
+    while startVar < endVar:
         pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
         # Reset tick counts and print out speed corresponding to pwm values
@@ -127,14 +129,11 @@ def calibrateSpeeds():
                    
         # Increment loop
         startVar = round(startVar + 0.01,2)
-
-        
-        time.sleep(2)
-        if startVar == 1.70:
-            break
         
         # Reset counts for next loop!
         resetCounts()
+    LWSpeed[1.71] = 0
+    RWSpeed[1.71] = 0
     
 
 def setSpeedsRPS(rpsLeft, rpsRight):
@@ -148,39 +147,47 @@ def setSpeedsRPS(rpsLeft, rpsRight):
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
-    
+    global lKey, rKey
     # converts input to inches/sec sets variables rpsLeft and rpsRight to 3 decimal places
-    rpsLeft = float(ipsLeft / 8.20)
-    rpsRight = float(ipsRight / 8.20)
+    rpsLeft = float((ipsLeft / 3.14) / 8.20)
+    rpsRight = float((ipsRight / 3.14) / 8.20)
     round(rpsLeft, 3)
     round(rpsRight, 3)
-
+    lSetter = False
+    rSetter = False
 
     #binary search to find correct value
-	#value closests
-	# value = min(d.items(), key = lambda kv : abs(kv[1] - target))[0]
-	#value = min(LWSpeed.items(), key = lambda kv: abs(kv[1] - target))[0]
-	i = 1.3;
-    while i < 1.7 :
-		if(rpsLeft > LWSpeed[i] && rpsLeft < LWSpeed[i+.01])
-			lKey = i;
-		i = i + .01;
+    #while rpsLeft < :
+    i = 1.3
+    j = 1.3
+    while round(i,2) <=1.70 and lSetter != True:
+        global lKey
+        lIndex = LWSpeed[round(i + 0.01,2)]
+        #print("i: ", i, " left: ", rpsLeft, "   ", LWSpeed[round(i,2)], "   right: ", lIndex)
+        if rpsLeft < LWSpeed[round(i,2)] and rpsLeft > lIndex:
+            lKey = i;
+            print("left key: ", lKey)
+            lSetter = True
+            break
+        i = round(i + 0.01,2)
 
-	while i < 1.7 :
-		if(rpsRight > RWSpeed[i] && rpsRight < RWSpeed[i+.01])
-			rKey = i;
-		i = i + .01;
-	
-	
-	#get.RWSpeed[rKey]
+    while round(j,2) <= 1.70 and rSetter != True:
+        global rKey
+        rIndex = RWSpeed[round(j + 0.01,2)]
+        #print("j: ", j, " left: ", rpsRight, "   ", RWSpeed[round(j,2)], "   right: ", rIndex)
+        if rpsRight < RWSpeed[round(j,2)] and rpsRight > rIndex:
+            rKey = j;
+            print("right key: ",rKey)
+            rSetter = True
+            break
+        j = round(j + .01,2)
 
-
-
-    #merp a drep
-    lPwmValue = LWSpeed[lKey]
-    rPwmValue = RWSpeed[rKey]
-    pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-    pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+    if lSetter == True and rSetter == True:
+        print("moving")
+        lPwmValue = LWSpeed[lKey]
+        rPwmValue = RWSpeed[rKey]
+        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
 
 
 # Defines speeds in a clockwise rotation
@@ -208,7 +215,6 @@ def setSpeedsvw2(v, w):
 # Attach the Ctrl+C signal interrupt
 signal.signal(signal.SIGINT, ctrlC)
 initEncoders()
-signal.signal(signal.SIGINT, ctrlC)
 
 # Initialize the servo hat library.
 pwm = Adafruit_PCA9685.PCA9685()
@@ -243,25 +249,49 @@ omega2 = float(linearVelocity) / float(cirRadius2)
 
 # Initialize flag to track first circle movement
 cirFlag = True
-print("entering the loop")
+now = time.time()
 
+resetCounts()
 while cirFlag == True:
-    
-    print("inside the loop")
-	# Set speeds for first circle
+    # Set speeds for first circle
     setSpeedsvw1(linearVelocity, omega1)
+    print("inside loop 1")
     distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
     if (float(cirPath1) - float(distanceT)) <= 0.00:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
         itsTime = time.time()
+        cirFlag = False
         print("first arc completed")
         print("Time taken to travel: ", itsTime - now)
 
+time.sleep(1)
 selectCommmand = ' '
+
 
 while selectCommand != 's':
 	selectCommand = input("Please enter \'s\' to begin robot movement: ")
 now = time.time()
 
+cirFlag = True
+resetCounts()
+while cirFlag == True:
+    
+    print("inside loop 2")
+	# Set speeds for first circle
+    setSpeedsvw1(linearVelocity, omega1)
+    distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
+
+    if (float(cirPath2) - float(distanceT)) <= 0.00:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+        itsTime = time.time()
+        print("first arc completed")
+        print("Time taken to travel: ", itsTime - now)
+        
+        #Cleanup and Exit the program
+        GPIO.cleanup()
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+        exit()
