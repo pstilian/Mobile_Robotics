@@ -111,9 +111,7 @@ def calibrateSpeeds():
     while startVar <= endVar:
         pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
-        time.sleep(1)
         # Reset tick counts and print out speed corresponding to pwm values
-        print(startVar, getSpeeds())
 
         time.sleep(4)
 
@@ -121,83 +119,40 @@ def calibrateSpeeds():
         currentLeftSpeeds = currentSpeeds[0]
         currentRightSpeeds = currentSpeeds[1]
         # write pwm and speed values for startVar to dictionary
-        LWSpeed[startVar] = currentLeftSpeeds
-        RWSpeed[startVar] = currentRightSpeeds
-        
+        LWSpeed[startVar] = round(currentLeftSpeeds,3)
+        RWSpeed[startVar] = round(currentRightSpeeds,3)
+
+        round(startVar,2)
+        print(LWSpeed)
+        print(RWSpeed)
+                   
         # Increment loop
         startVar += 0.01
+
         
         time.sleep(2)
+        if startVar == 1.70:
+            break
         
         # Reset counts for next loop!
         resetCounts()
-
+    
 
 def setSpeedsRPS(rpsLeft, rpsRight):
-    # needs to convert from RPS to PWM values
-    global leftflag, rightflag
-    # Calculating pwm values from the respective dictionaries
-    left = round(float(rpsLeft), 2)#.55
-    right = round(float(rpsRight), 2)#.55
-    leftflag = False
-    rightflag = False
-
+    lPwmValue = LWSpeed[rpsLeft]
+    rPwmValue = LWSpeed[rpsRight]
+    pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
     
-    # Loop compares rpsLeft values with rps values from calibration document
-    while leftflag != True:
+    
 
-        l = open("LeftSpeedCalibration.txt", "r")
-        for line in l:
-            currentLine = line.split(" ")
-            rpsValue = round(float(currentLine[0]), 2)
-            pwmValue = round(float(currentLine[1]), 2)
-
-            if left == rpsValue:
-                lPwmValue = pwmValue
-                print("LPWMVALUE: ", lPwmValue)
-                leftflag = True
-                break
-            elif left > 0.78:
-                lPwmValue = 0
-                leftflag = False
-                break
-        l.close()
-        left = round(left + 0.01, 2)#check remove
-
-    # Loop compares rpsRight values with rps values from calibration document
-    while rightflag != True:
-
-        r = open("RightSpeedCalibration.txt", "r")
-        for line in r:
-            currentLine = line.split(" ")
-            rpsValue = round(float(currentLine[0]), 2)
-            pwmValue = round(float(currentLine[1]), 2)
-
-            if right == rpsValue:
-                rPwmValue = pwmValue
-                print("RPWMVALUE: ", rPwmValue)
-                rightflag = True
-                break
-            elif right > 0.80:
-                rPwmValue = 0
-                rightflag = False
-                break
-        r.close()
-        right = round(right + 0.01, 2)#remove
-        
-    # If both right and left values are found then statement sets speeds to desired imputs
-    if rightflag == True and leftflag == True:
-        # Setting appropiate speeds to the servos
-        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
-        
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
     # v = inches per second         w = angular velocity
     # positive w values spin counterclockwise       negative w values spin clockwise
-    rpsLeft = round(float(ipsLeft / 8.20), 2)
-    rpsRight = round(float(ipsRight / 8.20), 2)
+    rpsLeft = round(float(ipsLeft / 8.20), 3)
+    rpsRight = round(float(ipsRight / 8.20), 3)
     
     #Calculates the PWM values by using RPS
     setSpeedsRPS(rpsLeft, rpsRight)
@@ -205,16 +160,16 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 
 # Defines speeds in a clockwise rotation
 def setSpeedsvw1(v, w):
-	velocityLeft1 = ( v + ( w * dAxis))
-	velocityRight1 = ( v - ( w * dAxis))
+	velocityLeft1 = float(( v + ( w * dAxis)))
+	velocityRight1 = float(( v - ( w * dAxis)))
 
 	setSpeedsIPS(velocityLeft1, velocityRight1)
 
 
 # Defines speeds in a counter clockwise rotation
 def setSpeedsvw2(v, w):
-	velocityLeft2 = ( v + ( w * dAxis))
-	velocityRight2 = ( v + ( w * dAxis))
+	velocityLeft2 = float(( v + ( w * dAxis)))
+	velocityRight2 = float(( v + ( w * dAxis)))
 
 	setSpeedsIPS(velocityLeft2, velocityRight2)
 
@@ -236,7 +191,13 @@ pwm = Adafruit_PCA9685.PCA9685()
 # 50Hz is used for the frequency of the servos.
 pwm.set_pwm_freq(50)
 
+print("calibrating")
 
+calibrateSpeeds()
+pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+
+print("calibration complete")
 
 # Initalizing variables for radius and time
 cirRadius1 = 0
@@ -257,20 +218,23 @@ omega2 = float(linearVelocity) / float(cirRadius2)
 
 # Initialize flag to track first circle movement
 cirFlag = True
+print("entering the loop")
 
 while cirFlag == True:
+    
+    print("inside the loop")
 	# Set speeds for first circle
-	setSpeedsvw1(linearVelocity, omega1)
-	distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
+    setSpeedsvw1(linearVelocity, omega1)
+    distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
-	if (float(cirPath1) - float(distanceT)) <= 0.00:
-    	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
-    	pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
-    	itsTime = time.time()
-    	print("first arc completed")
-    	print("Time taken to travel: ", itsTime - now)
+    if (float(cirPath1) - float(distanceT)) <= 0.00:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+        itsTime = time.time()
+        print("first arc completed")
+        print("Time taken to travel: ", itsTime - now)
 
-select commmand = ' '
+selectCommmand = ' '
 
 while selectCommand != 's':
 	selectCommand = input("Please enter \'s\' to begin robot movement: ")
