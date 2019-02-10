@@ -1,6 +1,6 @@
-## Mobile Robotics Spring 2019
+# Mobile Robotics Spring 2019
 
-# Lab 1 Kinematics
+### Lab 1 Kinematics
 
 The purpose of this lab was to program our robot to move forward a set distance in a requested amount of time.
 This meant calculating the velocity of the Robot based on the requested parameters. We implemented this task with
@@ -10,4 +10,4 @@ our lab report. The final tasking was to have the robot drive in an S-Shape. Thi
 This program performs it's own calculations and stores the calibration numbers in a dictionary. Afterwards it 
 prompts the user for the desired radius of each section of the S as well as the desired completion time.
 
-# Lab 2 Working
+### Lab 2 Working
