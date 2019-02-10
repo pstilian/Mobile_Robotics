@@ -134,7 +134,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 leftflag = False
                 break
         l.close()
-        left = round(left + 0.01, 2)#check remove
+        left = round(left + 0.01, 2)
 
     # Loop compares rpsRight values with rps values from calibration document
     while rightflag != True:
@@ -155,7 +155,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 rightflag = False
                 break
         r.close()
-        right = round(right + 0.01, 2)#remove
+        right = round(right + 0.01, 2)
         
     # If both right and left values are found then statement sets speeds to desired imputs
     if rightflag == True and leftflag == True:

@@ -200,7 +200,7 @@ def setSpeedsvw1(v, w):
 
 # Defines speeds in a counter clockwise rotation
 def setSpeedsvw2(v, w):
-	velocityLeft2 = float(( v + ( w * dAxis)))
+	velocityLeft2 = float(( v - ( w * dAxis)))
 	velocityRight2 = float(( v + ( w * dAxis)))
 
 	setSpeedsIPS(velocityLeft2, velocityRight2)
@@ -286,7 +286,7 @@ while cirFlag == True:
     
     print("inside loop 2")
 	# Set speeds for first circle
-    setSpeedsvw1(linearVelocity, omega1)
+    setSpeedsvw2(linearVelocity, omega1)
     distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
     if (float(cirPath2) - float(distanceT)) <= 0.00:
