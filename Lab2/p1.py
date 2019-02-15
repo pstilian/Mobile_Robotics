@@ -205,9 +205,9 @@ for count in range(0, 11):
     distanceT =  (8.20 * ((lRevolutions + rRevolutions) / 2))
     #need Movement here!!!
     while distanceT <= distanceInc:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
+        pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
         distanceT =  (8.20 * ((lRevolutions + rRevolutions) / 2))
-        setSpeedsIPS(1.4,1.6)
-
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
     pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
