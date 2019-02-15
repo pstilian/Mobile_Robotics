@@ -9,6 +9,7 @@ import RPi.GPIO as GPIO
 import signal
 import decimal
 
+
 # Pins that the encoders are connected to
 LENCODER = 17
 RENCODER = 18
@@ -33,7 +34,7 @@ LWSpeed = {}
 RWSpeed = {}
 
 #map
-CalibrationMap = collections.OrderedDict()
+CalibrationMap = {}
 
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
@@ -116,17 +117,32 @@ def calibrateSpeeds():
         #changed from sleep(1) to sleep(3)
         time.sleep(3)
         # Reset tick counts and print out speed corresponding to pwm values
+        print("PWMVal,  Speed")
         print(startVar, getSpeeds())
-
-        time.sleep(3)
+        var1 = getSpeeds()
+        time.sleep(1)
+        print(startVar, getSpeeds())
+        var2 = getSpeeds()
+        time.sleep(1)
+        print(startVar, getSpeeds())
+        var3 = getSpeeds()
+        time.sleep(1)
+        print(startVar, getSpeeds())
+        var4 = getSpeeds()
+        time.sleep(1)
+        print(startVar, getSpeeds())
+        var5 = getSpeeds()
+        time.sleep(2)
+        solidVar = ((var1[0] + var2[0] + var3[0] +var4[0] +var5[0]) / 5)
+        print(startVar, solidVar)
 
         currentSpeeds = getSpeeds()
         currentLeftSpeeds = currentSpeeds[0]
         currentRightSpeeds = currentSpeeds[1]
 
         # write pwm as key and currentSpeeds as value
-        CalibrateMap[startVar] = currentSpeeds[0]
-        CalibrateMap[startVar] = currentSpeeds[1]
+        CalibrationMap[startVar] = currentSpeeds[0]
+        CalibrationMap[startVar] = currentSpeeds[1]
 
         # write pwm and speed values for startVar to file
         l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
@@ -167,7 +183,10 @@ pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 signal.signal(signal.SIGINT, ctrlC)
 initEncoders()
 calibrateSpeeds()
-
+i = 1.3
+for l in CalibrationMap:
+    print(CalibrationMap[i])
+    i = i + .01
 # Prevent the program from exiting by adding a looping delay.
 while True:
     time.sleep(1)

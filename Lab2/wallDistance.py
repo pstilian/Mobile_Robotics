@@ -223,16 +223,15 @@ while True:
     pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
 
     # Converts readings from centimeters to inches
-    inchDistance = fDistance * 0.394                    # 0.394 is the conversion rate from cm to inches
-
-    # Determining error amount
-   # fError = desiredDistance - inchDistance
-
-   if inchDistance <= desiredDistance:
-    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-    lSensor.stop_ranging()
-    fSensor.stop_ranging()
-    rSensor.stop_ranging()
-    exit()
+    inchDistance = fDistance * 0.394
+    # 0.394 is the conversion rate from cm to inches Determining error amount
+    # fError = desiredDistance - inchDistance
+    
+    if inchDistance <= desiredDistance:
+       pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+       pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+       lSensor.stop_ranging()
+       fSensor.stop_ranging()
+       rSensor.stop_ranging()
+       exit()
 
