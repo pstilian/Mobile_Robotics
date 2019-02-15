@@ -6,7 +6,6 @@ import VL53L0X
 import RPi.GPIO as GPIO
 import signal
 import decimal
-import Forward.py
 import math
 import Adafruit_PCA9685
 
@@ -106,6 +105,16 @@ def onRightEncode(pin):
     rRevolutions = float(rCount / 32)
     currentTime = time.time() - startTime
     lSpeed = rRevolutions / currentTime
+    
+def setSpeedsIPS(ipsLeft, ipsRight):
+    # Function sets speed of robot to move over a linear speed with a set angular velocity
+    # v = inches per second         w = angular velocity
+    # positive w values spin counterclockwise       negative w values spin clockwise
+    rpsLeft = round(float(ipsLeft / 8.20), 2)
+    rpsRight = round(float(ipsRight / 8.20), 2)
+    
+    #Calculates the PWM values by using RPS
+    setSpeedsRPS(rpsLeft, rpsRight)
 
 
 # Pins that the sensors are connected to
@@ -180,7 +189,7 @@ initEncoders()
 checkValidSpeed()
 
 # Open file to record data.
-sensorOutput open("LFRDistance.txt", "w+")
+sensorOutput = open("LFRDistance.txt", "w+")
 
 #set the distance to 0 prior to movement, set distanceInc to 7.87 due to
 # 20 cm = 7.87, and stopDistance = 86.61 because 220 cm is the asked  
@@ -215,8 +224,8 @@ for count in range(0, 11):
     rDistance = rSensor.get_distance()
     
     # Print each measurement
-    sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + write(str(rDistance) + ", Forward Distance: "  + write(str(fDistance) +  "\n")
-    print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
+    sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
+    #print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
 
 
     selectCommand = ' '
