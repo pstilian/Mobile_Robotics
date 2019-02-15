@@ -186,7 +186,7 @@ initEncoders()
 
 # Takes input from user for distance and time to travel while also checking
 # for bad input.
-checkValidSpeed()
+# checkValidSpeed()
 
 # Open file to record data.
 sensorOutput = open("LFRDistance.txt", "w+")
@@ -202,8 +202,11 @@ stopDistance = 86.61
 # This for loop will step through and make the robot run in a straight line
 # taking distance measurements every 7.87 inches from the left right and top
 for count in range(0, 11):
-    distanceT =  (8.20 * ((lRevolutions + rRevolutions) / 2))
+    distanceT = 0
     #need Movement here!!!
+    
+    print("in for loop distance t = ", distanceT)
+    
     while distanceT <= distanceInc:
         pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
@@ -216,7 +219,7 @@ for count in range(0, 11):
     distanceTraveled = distanceTraveled + distanceInc
 
     #set sleep to .3 to ensure accurate measuement 
-    sleep(.3)
+    time.sleep(.3)
 
     # Get a measurement from each sensor
     lDistance = lSensor.get_distance()
@@ -227,13 +230,13 @@ for count in range(0, 11):
     sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
     #print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
 
-
+    print("before select command")
     selectCommand = ' '
 
     while selectCommand != 's':
 	    selectCommand = input("Please enter \'s\' to begin robot movement:")
         
-    #now = time.time()
+    now = time.time()
     resetCounts()
 
 
