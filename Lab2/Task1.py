@@ -74,6 +74,8 @@ lRevolutions = 0
 rRevolutions = 0
 startTime = time.time()
 currentTime = 0
+leftflag = False
+rightflag = False
 
 
 
@@ -149,6 +151,64 @@ def onRightEncode(pin):
     rRevolutions = float(rCount / 32)
     currentTime = time.time() - startTime
     lSpeed = rRevolutions / currentTime
+
+def setSpeedsRPS(rpsLeft, rpsRight):
+    # needs to convert from RPS to PWM values
+    global leftflag, rightflag
+    # Calculating pwm values from the respective dictionaries
+    left = round(float(rpsLeft), 2)#.55
+    right = round(float(rpsRight), 2)#.55
+    leftflag = False
+    rightflag = False
+
+    
+    # Loop compares rpsLeft values with rps values from calibration document
+    while leftflag != True:
+
+        l = open("LeftSpeedCalibration.txt", "r")
+        for line in l:
+            currentLine = line.split(" ")
+            rpsValue = round(float(currentLine[0]), 2)
+            pwmValue = round(float(currentLine[1]), 2)
+
+            if left == rpsValue:
+                lPwmValue = pwmValue
+                print("LPWMVALUE: ", lPwmValue)
+                leftflag = True
+                break
+            elif left > 0.78:
+                lPwmValue = 0
+                leftflag = False
+                break
+        l.close()
+        left = round(left + 0.01, 2)
+
+    # Loop compares rpsRight values with rps values from calibration document
+    while rightflag != True:
+
+        r = open("RightSpeedCalibration.txt", "r")
+        for line in r:
+            currentLine = line.split(" ")
+            rpsValue = round(float(currentLine[0]), 2)
+            pwmValue = round(float(currentLine[1]), 2)
+
+            if right == rpsValue:
+                rPwmValue = pwmValue
+                print("RPWMVALUE: ", rPwmValue)
+                rightflag = True
+                break
+            elif right > 0.80:
+                rPwmValue = 0
+                rightflag = False
+                break
+        r.close()
+        right = round(right + 0.01, 2)
+        
+    # If both right and left values are found then statement sets speeds to desired imputs
+    if rightflag == True and leftflag == True:
+        # Setting appropiate speeds to the servos
+        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))  
     
 def setSpeedsIPS(ipsLeft, ipsRight):
     # Function sets speed of robot to move over a linear speed with a set angular velocity
@@ -198,19 +258,35 @@ distanceIn = 7.87402
 distanceTraveled = 0
 stopDistance = 86.6142
 
-
+moveFlag = True
+count = 0
 # This for loop will step through and make the robot run in a straight line
 # taking distance measurements every 7.87 inches from the left right and top
 
-for count in range(1, 220):
+while moveFlag != False:
     # Get a measurement from each sensor
     lDistance = lSensor.get_distance()
     fDistance = fSensor.get_distance()
     rDistance = rSensor.get_distance()
-    
-    # Print each measurement
-    #sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
-    print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
+    distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
+
+    pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
+    pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
+
+    if (distanceIn - distanceT) <= 0:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+
+        # Print each measurement
+        #sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
+        print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
+        lRevolutions = 0
+        rRevolutions = 0
+        count += 1
+
+    if count == 11:
+        moveFlag = False
+
 
 
 # Stop measurement for all sensors
