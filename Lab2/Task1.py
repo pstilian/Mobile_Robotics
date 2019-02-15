@@ -20,6 +20,50 @@ RENCODER = 18
 LSERVO = 0
 RSERVO = 1
 
+# Pins that the sensors are connected to
+LSHDN = 27
+FSHDN = 22
+RSHDN = 23
+
+DEFAULTADDR = 0x29 # All sensors use this address by default, don't change this
+LADDR = 0x2a
+RADDR = 0x2b
+
+# Set the pin numbering scheme to the numbering shown on the robot itself.
+GPIO.setmode(GPIO.BCM)
+
+# Setup pins
+GPIO.setup(LSHDN, GPIO.OUT)
+GPIO.setup(FSHDN, GPIO.OUT)
+GPIO.setup(RSHDN, GPIO.OUT)
+
+# Shutdown all sensors
+GPIO.output(LSHDN, GPIO.LOW)
+GPIO.output(FSHDN, GPIO.LOW)
+GPIO.output(RSHDN, GPIO.LOW)
+
+time.sleep(0.01)
+
+# Initialize all sensors
+lSensor = VL53L0X.VL53L0X(address=LADDR)
+fSensor = VL53L0X.VL53L0X(address=DEFAULTADDR)
+rSensor = VL53L0X.VL53L0X(address=RADDR)
+
+# Connect the left sensor and start measurement
+GPIO.output(LSHDN, GPIO.HIGH)
+time.sleep(0.01)
+lSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
+
+# Connect the right sensor and start measurement
+GPIO.output(RSHDN, GPIO.HIGH)
+time.sleep(0.01)
+rSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
+
+# Connect the front sensor and start measurement
+GPIO.output(FSHDN, GPIO.HIGH)
+time.sleep(0.01)
+fSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
+
 # Used Values
 lCount = 0
 rCount = 0
@@ -117,50 +161,6 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     setSpeedsRPS(rpsLeft, rpsRight)
 
 
-# Pins that the sensors are connected to
-LSHDN = 27
-FSHDN = 22
-RSHDN = 23
-
-DEFAULTADDR = 0x29 # All sensors use this address by default, don't change this
-LADDR = 0x2a
-RADDR = 0x2b
-
-# Set the pin numbering scheme to the numbering shown on the robot itself.
-GPIO.setmode(GPIO.BCM)
-
-# Setup pins
-GPIO.setup(LSHDN, GPIO.OUT)
-GPIO.setup(FSHDN, GPIO.OUT)
-GPIO.setup(RSHDN, GPIO.OUT)
-
-# Shutdown all sensors
-GPIO.output(LSHDN, GPIO.LOW)
-GPIO.output(FSHDN, GPIO.LOW)
-GPIO.output(RSHDN, GPIO.LOW)
-
-time.sleep(0.01)
-
-# Initialize all sensors
-lSensor = VL53L0X.VL53L0X(address=LADDR)
-fSensor = VL53L0X.VL53L0X(address=DEFAULTADDR)
-rSensor = VL53L0X.VL53L0X(address=RADDR)
-
-# Connect the left sensor and start measurement
-GPIO.output(LSHDN, GPIO.HIGH)
-time.sleep(0.01)
-lSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
-
-# Connect the right sensor and start measurement
-GPIO.output(RSHDN, GPIO.HIGH)
-time.sleep(0.01)
-rSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
-
-# Connect the front sensor and start measurement
-GPIO.output(FSHDN, GPIO.HIGH)
-time.sleep(0.01)
-fSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
-
 
 #******************************* MAINLINE CODE *****************************************************
 # This program makees the robot move straight for 220 cm taking measurements
@@ -194,50 +194,23 @@ sensorOutput = open("LFRDistance.txt", "w+")
 #set the distance to 0 prior to movement, set distanceInc to 7.87 due to
 # 20 cm = 7.87, and stopDistance = 86.61 because 220 cm is the asked  
 # distance to travel and 220 cm  = 86.61 inches.
-distanceInc = 7.87
+distanceIn = 7.87402
 distanceTraveled = 0
-stopDistance = 86.61
+stopDistance = 86.6142
 
 
 # This for loop will step through and make the robot run in a straight line
 # taking distance measurements every 7.87 inches from the left right and top
-for count in range(0, 11):
-    distanceT = 0
 
-    
-    print("in for loop distance t = ", distanceT)
-    
-    while distanceT <= distanceInc:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
-        pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
-        distanceT =  (8.20 * ((lRevolutions + rRevolutions) / 2))
-
-    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
-    pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
-
-    #calculate the distance
-    distanceTraveled = distanceTraveled + distanceInc
-
-    #set sleep to .3 to ensure accurate measuement 
-    time.sleep(.3)
-
+for count in range(1, 220):
     # Get a measurement from each sensor
     lDistance = lSensor.get_distance()
     fDistance = fSensor.get_distance()
     rDistance = rSensor.get_distance()
     
     # Print each measurement
-    sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
-    #print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
-
-    print("before select command")
-    selectCommand = ' '
-
-    while selectCommand != 's':
-	    selectCommand = input("Please enter \'s\' to begin robot movement:")
-        
-    now = time.time()
-    resetCounts()
+    #sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
+    print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
 
 
 # Stop measurement for all sensors
