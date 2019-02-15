@@ -69,8 +69,8 @@ def checkValidSpeed():
 
 # Resets the tick count
 def resetCounts():
-    Lcounts = 0
-    Rcounts = 0
+    rCount = 0
+    lCount = 0
 
 # Returns the previous tick counts as a touple
 def getCounts():
@@ -203,7 +203,7 @@ stopDistance = 86.61
 # taking distance measurements every 7.87 inches from the left right and top
 for count in range(0, 11):
     distanceT = 0
-    #need Movement here!!!
+
     
     print("in for loop distance t = ", distanceT)
     
