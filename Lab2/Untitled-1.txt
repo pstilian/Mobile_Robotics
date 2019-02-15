@@ -1,0 +1,58 @@
+// in C-space, Q = Qfree + Ui Q0i, and motion planning is the task of finding
+// a 
+// **Globa Knowledge of the Goal may involve knowing its precise location
+// relative orientation, distance to it, etc.
+
+//**Local Knowledge of the environment, may involve tactile sensing of an 
+//obstacle.
+
+# Bug algorithms use simple behaviors:
+# -Wall-Following
+# A known direction to goal from an point including start position
+# A known distance d(x,y) between any points  (X1,Y1) to (X2,Y2)
+#Local sensing of walls and obstacles.
+# Reasonable world
+#1) finitely many obstacles in an area
+
+
+
+# algorithms
+
+# 1) Head towards goal (if not blocked by an obstacle).
+# 2) If an obstacle is encountered then turn left(or right) when hitting obstacle 
+# always same left or right turn when hitting obstacles)
+# 3) Follow obstacle until robot can head toward goal again at leave point
+# 4) Repeat until reaching Goal.
+
+
+
+
+
+# what Functions we need:
+# Velocity function to adjust speed
+# Omega function 
+# State Functon to determine where the robot is
+# turn function 
+# main
+
+# program should run as this
+#  Main
+# starts
+# takes input
+#  Velocity 
+# calls velocity function
+# Loop
+# sense 
+# move
+# r(t) = desiredXDistanceToGoal()
+# y(t) = distance from robot to the goal
+# e(t) = distance error; e(t) = r(t) - y(t)
+# K =proportionak gain or correction error gain
+# u(t) = control Signal corresponding to robot velocity
+# Ur(t) = control signal corosponding to saturated robot velocity
+# Ur(t) = Already Made!!!!
+
+
+
+
+# - Motion To Goal
