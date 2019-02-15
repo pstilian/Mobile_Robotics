@@ -83,6 +83,15 @@ rightflag = False
 # It's intended for properly exiting the program.
 def ctrlC(signum, frame):
     print("Exiting")
+    
+    GPIO.cleanup()
+    # Write an initial value of 1.5, which keeps the servos stopped.
+    # Due to how servos work, and the design of the Adafruit library,
+    # The value must be divided by 20 and multiplied by 4096.
+    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+
+    exit()
 
 def checkValidSpeed():
     # Reads input values for distance to travel and time of travel

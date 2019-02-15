@@ -72,8 +72,10 @@ def ctrlC(signum, frame):
 
 # Resets the tick count
 def resetCounts():
-    Lcounts = 0
-    Rcounts = 0
+    global Lcount, rCount, startTime
+    lCount = 0
+    rCount = 0
+    startTime = time.time()
 
 # Returns the previous tick counts as a touple
 def getCounts():
@@ -172,7 +174,7 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     rpsRight = round(float(ipsRight / 8.20), 2)
     
     #Calculates the PWM values by using RPS
-    setSpeedsRPS(rpsLeft, rpsRight)
+
 
 
 #******************************* MAINLINE CODE *****************************************************

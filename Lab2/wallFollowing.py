@@ -13,15 +13,7 @@ import Adafruit_PCA9685
 leftflag = False
 rightflag = False
 dAxis = 3.95
-lCount = 0
-rCount = 0
-TotalCount = (0, 0)
-lSpeed = 0
-rSpeed = 0
-lRevolutions = 0
-rRevolutions = 0
-startTime = time.time()
-currentTime = 0
+
 
 # Pins that the encoders are connected to
 LENCODER = 17
@@ -96,28 +88,6 @@ def ctrlC(signum, frame):
 
     exit()
 
-# Resets the tick count
-def resetCounts():
-    global Lcount, rCount, startTime
-    lCount = 0
-    rCount = 0
-    startTime = time.time()
-
-# Returns the previous tick counts as a touple
-def getCounts():
-    return (lCount, rCount)
-
-def setDifference(speed):
-    diff = speed - 1.5
-    return 1.5 - diff
-
-# Returns instantious speeds for both left and right wheels as a touple
-def getSpeeds():
-    global lCount, rCount, currentTime, lSpeed, rSpeed
-    currentTime = time.time() - startTime
-    lSpeed = (lCount / 32) / currentTime
-    rSpeed = (rCount / 32) / currentTime
-    return (lSpeed, rSpeed)
 
 def setSpeedsRPS(rpsLeft, rpsRight):
     # needs to convert from RPS to PWM values
@@ -214,25 +184,22 @@ else:
 	print("Invalid Command Exiting the program")
 	exit()
 
+#linearSpeed = 5
 
-# While loop that monitors speed vs distance
 while True:
-    # Reads Distance From Sensor
-    fDistance = fSensor.get_distance()
-    pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096))
-    pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
+	fDistance = fSensor.get_distance()
+	# rDistance = rSensor.get_distance()
+	inchesDistanceF = fDistance * 0.0393700787 		# why this number?
+	# inchesDistanceR = rDistance * 0.0393700787
 
-    # Converts readings from centimeters to inches
-    inchDistance = fDistance * 0.394                    # 0.394 is the conversion rate from cm to inches
+	print("FRONT DISTANCE: ", inchesDistanceF)
 
-    # Determining error amount
-   # fError = desiredDistance - inchDistance
+	fError = 5.0 - inchesDistanceF
+	# rError = 5.0 - inchesDistanceR
 
-   if inchDistance <= desiredDistance:
-    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-    lSensor.stop_ranging()
-    fSensor.stop_ranging()
-    rSensor.stop_ranging()
-    exit()
+	setSpeedsvw(linearSpeed, linearSpeed)			# needs to be modified goes straight as test case
 
+	# if inchesDistanceF < 5.0:						corrects if robot is too far from wall
+	#	turnLeft()									need to create this function
+
+	if 
