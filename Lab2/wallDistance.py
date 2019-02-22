@@ -195,43 +195,46 @@ def setSpeedsvw(v, w):
 
 	setSpeedsIPS(velocityLeft, velocityRight)
 
+###############################
+def saturationFunction(ips):
+    signal = ips
+    if signal > 7.1:
+        signal = 7.1
+    elif signal < -7.1:
+        signal = -7.1
+    return signal
+
 
 #--------------------------------------MAINLINE CODE----------------------------------------------------
 desiredDistance = 5.0
-#kpValue = 0.9
+kpValue = 4.0
 
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 time.sleep(2)
 
-# Command to begin running the program
-startFlag = False
-selectCommand = input("Please enter \'s\' to begin robot movement: ")
-if selectCommand == "s":
-	startFlag = True
-else:
-	print("Invalid Command Exiting the program")
-	exit()
-
-
 # While loop that monitors speed vs distance
 while True:
     # Reads Distance From Sensor
     fDistance = fSensor.get_distance()
-    pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096))
-    pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
 
     # Converts readings from centimeters to inches
     inchDistance = fDistance * 0.394
     # 0.394 is the conversion rate from cm to inches Determining error amount
-    # fError = desiredDistance - inchDistance
-    
-    if inchDistance <= desiredDistance:
-       pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-       pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-       lSensor.stop_ranging()
-       fSensor.stop_ranging()
-       rSensor.stop_ranging()
-       exit()
 
+    # fError is the calculated respective error value aka the e(t) value
+    fError = desiredDistance - inchDistance
+    
+    # Control Signal aka u(t)  = Kp * e(t)
+    controlSignal = kpValue * fError
+
+    # Calculating new control signal value by running control signal through saturation function
+    newSignal = saturationFunction(controlSignal)
+
+    setSpeedsIPS(newSignal, newSignal)
+
+# Stop measurement for all sensors
+lSensor.stop_ranging()
+fSensor.stop_ranging()
+rSensor.stop_ranging()
