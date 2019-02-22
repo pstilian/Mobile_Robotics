@@ -9,7 +9,6 @@ import RPi.GPIO as GPIO
 import signal
 import decimal
 
-
 # Pins that the encoders are connected to
 LENCODER = 17
 RENCODER = 18
@@ -30,11 +29,43 @@ rRevolutions = 0
 startTime = time.time()
 currentTime = 0
 
-LWSpeed = {}
-RWSpeed = {}
+# innitialize left and right wheel speed dictionaries
+leftWheelSpeedMap = {}
+rightWheelSpeedMap = {}
 
-#map
-CalibrationMap = {}
+
+
+# Give this a shot, i think it will be more accurate
+# It should pair each value in the left and right dictionaries
+# to the closest pairs for straight line forward movement
+# knowing this we should be able to easily change direction
+# while also mainaining our current position and heading, although we will 
+# need to set an oriantation variable that tracks the wheels movement and rotation.
+# functions will probably need syntactical fixing
+# The idea behnd the function is to use the euclidean formula to find the
+# Closest pair of points, this is contained within distanceSpeed
+# if it is smaller than the previous val it will become the min
+# needs work, while the distance is right i havent yet tested
+
+def distance(PWM1, leftSpeed, PWM2, rightSpeed):
+   
+
+def closestVals():
+    for key, value in leftWheelSpeedMap.items():
+        min = 100000
+        k1 = key
+        v1 = value
+        for key, value in rightWheelSpeedMap.values():
+            closestSpeed = math.sqrt( (k1 - key) * (k1 - key) + (v1 - value) * (v1 - value))
+            if (closestSpeed < min)
+                min = closestSpeed
+                closestPairMap[k1] = key
+#           
+#           
+#       
+#
+
+
 
 # This function is called when the left encoder detects a rising edge signal.
 def onLeftEncode(pin):
@@ -114,41 +145,56 @@ def calibrateSpeeds():
     while startVar <= endVar:
         pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
-        #changed from sleep(1) to sleep(3)
-        time.sleep(3)
+        
+        
         # Reset tick counts and print out speed corresponding to pwm values
-        print("PWMVal,  Speed")
-        print(startVar, getSpeeds())
-        var1 = getSpeeds()
-        time.sleep(1)
-        print(startVar, getSpeeds())
-        var2 = getSpeeds()
-        time.sleep(1)
-        print(startVar, getSpeeds())
-        var3 = getSpeeds()
-        time.sleep(1)
-        print(startVar, getSpeeds())
-        var4 = getSpeeds()
-        time.sleep(1)
-        print(startVar, getSpeeds())
-        var5 = getSpeeds()
-        time.sleep(2)
-        solidVar = ((var1[0] + var2[0] + var3[0] +var4[0] +var5[0]) / 5)
-        print(startVar, solidVar)
 
-        currentSpeeds = getSpeeds()
-        currentLeftSpeeds = currentSpeeds[0]
-        currentRightSpeeds = currentSpeeds[1]
+        #changed from sleep(1) to sleep(3)
+        # Allow the bot to reach a stable speed 
+        # taking readings after every 3 seconds
+        # over 5 iterations, then averaging the five results for accuracy
+        checks = 0
+        CLS1 = 0
+        CLR1 = 0
 
+        while checks < 5:
+            currentSpeeds = getSpeeds()
+            CLS1 = CLS1 + currentSpeeds[0]
+            CRS1 = CRS1 + currentSpeeds[1]
+            checks += 1
+
+        currentLeftSpeeds = CLS1 / 5
+        currentRightSpeeds = CLR1 / 5
+
+        
         # write pwm as key and currentSpeeds as value
-        CalibrationMap[startVar] = currentSpeeds[0]
-        CalibrationMap[startVar] = currentSpeeds[1]
+        # for the two maps with current average speed
+        leftWheelSpeedMap[startVar] = format(currentLeftSpeeds, .2f)
+        rightWheelSpeedMap[startVar] = format(currentRightSpeeds, .2f)
+
+        #############################################################################
+        #
+        #   how we can traverse both maps when needed to call upon each maching pwm
+        #                   
+        # for common_key in leftWheelSpeedMap.keys() & RightWheelSpeedMap.keys():
+        #   print(leftWheelSpeedMap[common_key], rightWheelSpeedMap[common_key])
+        #
+        #   leftWheelSpeedMap[startVar]
+        #   rightWheelSpeedMap[startVar]
+        #
+        #   for key, value in leftWheelSpeedMap.items():
+        #
+        #
+        #
+        #
+        #
+        #
+        #############################################################################
+
 
         # write pwm and speed values for startVar to file
-        l.write(str(currentLeftSpeeds) + " " + str(startVar) + "\n")
-        r.write(str(currentRightSpeeds) + " " + str(startVar) + "\n")
-        LWSpeed[setDifference(startVar)] = currentLeftSpeeds
-        RWSpeed[setDifference(startVar)] = currentRightSpeeds
+        l.write(str(format(currentLeftSpeeds, .2f) + " " + str(startVar) + "\n")
+        r.write(str(currentRightSpeeds, .2f) + " " + str(startVar) + "\n")
         
         # Increment loop
         startVar += 0.01
@@ -162,6 +208,12 @@ def calibrateSpeeds():
 
     l.close()
     r.close()
+
+
+
+    #create a new map that matches the closest values and stores them as a pair 
+    
+
 
 
 #---------------------------------------MAINLINE TEXT------------------------------------------------------------
@@ -183,10 +235,7 @@ pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 signal.signal(signal.SIGINT, ctrlC)
 initEncoders()
 calibrateSpeeds()
-i = 1.3
-for l in CalibrationMap:
-    print(CalibrationMap[i])
-    i = i + .01
+
 # Prevent the program from exiting by adding a looping delay.
 while True:
     time.sleep(1)
