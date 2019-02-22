@@ -169,8 +169,8 @@ def calibrateSpeeds():
         
         # write pwm as key and currentSpeeds as value
         # for the two maps with current average speed
-        leftWheelSpeedMap[startVar] = format(currentLeftSpeeds, .2f)
-        rightWheelSpeedMap[startVar] = format(currentRightSpeeds, .2f)
+        leftWheelSpeedMap[startVar] = float("{0:.2f}".format(currentLeftSpeeds))
+        rightWheelSpeedMap[startVar] = float("{0:.2f}".format(currentRightSpeeds))
 
         #############################################################################
         #
@@ -193,11 +193,14 @@ def calibrateSpeeds():
 
 
         # write pwm and speed values for startVar to file
-        l.write(str(format(currentLeftSpeeds, .2f) + " " + str(startVar) + "\n")
-        r.write(str(currentRightSpeeds, .2f) + " " + str(startVar) + "\n")
+        l.write(str("{0:.2f}".format(currentLeftSpeeds)) + " " + str(startVar) + "\n")
+        r.write(str("{0:.2f}".format(currentRightSpeeds)) + " " + str(startVar) + "\n")
         
         # Increment loop
         startVar += 0.01
+
+        # Print current pwm value 
+        print(startVar, getSpeeds())
 
         #changed from sleep(1) to sleep(3)
         time.sleep(3)
