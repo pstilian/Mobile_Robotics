@@ -216,7 +216,7 @@ signal.signal(signal.SIGINT, ctrlC)
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-time.sleep(5)
+time.sleep(10)
 
 print("Beginning Loop")
 
