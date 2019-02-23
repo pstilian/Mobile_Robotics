@@ -136,38 +136,6 @@ def ctrlC(signum, frame):
 def setDifference(speed):
     diff = speed - 1.5
     return 1.5 - diff
-
-# This function creates a calibration map comparing the servo input to output based on microseconds
-# Measures the speeds of each wheel based on different input values
-#def calibrateSpeeds():
-#    # Initial start pwm value is at complete stop
-#    startVar = 1.3
-#    endVar = 1.71
-#
-#    while startVar < endVar:
-#        pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
-#        pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
-#        # Reset tick counts and print out speed corresponding to pwm values
-#
-#        time.sleep(3)
-#
-#        currentSpeeds = getSpeeds()
-#        currentLeftSpeeds = currentSpeeds[0]
-#        currentRightSpeeds = currentSpeeds[1]
-        # write pwm and speed values for startVar to dictionary
-#        LWSpeed[round(startVar,2)] = round(currentLeftSpeeds,3)
-#        RWSpeed[round(startVar,2)] = round(currentRightSpeeds,3)
-
-#        print(LWSpeed)
-#        print(RWSpeed)
-                   
-        # Increment loop
-#        startVar = round(startVar + 0.01,2)
-        
-        # Reset counts for next loop!
-#        resetCounts()
-#    LWSpeed[1.71] = 0
-#    RWSpeed[1.71] = 0
         
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
@@ -196,12 +164,12 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 
 ###############################
 def saturationFunction(ips):
-    signal = ips
-    if signal > 7.1:
-        signal = 7.1
-    elif signal < -7.1:
-        signal = -7.1
-    return signal
+    controlSignal = ips
+    if controlSignal > 7.1:
+        controlSignal = 7.1
+    elif controlSignal < -7.1:
+        controlSignal = -7.1
+    return controlSignal
 
 
 #--------------------------------------MAINLINE CODE----------------------------------------------------
@@ -211,17 +179,11 @@ kpValue = 4.0
 # Attach the Ctrl+C signal interrupt and initialize encoders
 signal.signal(signal.SIGINT, ctrlC)
 
-#calibrateSpeeds()
-
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 time.sleep(10)
 
-print("Beginning Loop")
-
-#input("Press any key to make me run free!")
-#startTime = time.time()
 
 # While loop that monitors speed vs distance
 while True:
@@ -233,10 +195,10 @@ while True:
     # 0.394 is the conversion rate from cm to inches Determining error amount
 
     # fError is the calculated respective error value aka the e(t) value
-    fError = desiredDistance - inchDistance
+    error = desiredDistance - inchDistance
     
     # Control Signal aka u(t)  = Kp * e(t)
-    controlSignal = kpValue * fError
+    controlSignal = kpValue * error
 
     # Calculating new control signal value by running control signal through saturation function
     newSignal = saturationFunction(controlSignal)
