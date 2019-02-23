@@ -105,6 +105,20 @@ def resetCounts():
     rCount = 0
     startTime = time.time()
 
+# Function that sets up and initializes the econders for the robot
+def initEncoders():
+    # Set the pin numbering scheme to the numbering shown on the robot itself.
+    GPIO.setmode(GPIO.BCM)
+    # Set encoder pins as input
+    # Also enable pull-up resistors on the encoder pins
+    # This ensures a clean 0V and 3.3V is always outputted from the encoders.
+    GPIO.setup(LENCODER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(RENCODER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    # Attach a rising edge interrupt to the encoder pins
+    GPIO.add_event_detect(LENCODER, GPIO.RISING, onLeftEncode)
+    GPIO.add_event_detect(RENCODER, GPIO.RISING, onRightEncode)
+
+
 # Returns the previous tick counts as a touple
 def getCounts():
     return (lCount, rCount)
@@ -190,12 +204,19 @@ def saturationFunction(ips):
 
 #--------------------------------------MAINLINE CODE----------------------------------------------------
 desiredDistance = 5.0
-kpValue = 4.0
+kpValue = 0.9
+
+# Attach the Ctrl+C signal interrupt and initialize encoders
+signal.signal(signal.SIGINT, ctrlC)
+initEncoders()
 
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 time.sleep(2)
+
+input("Press any key to make me run free!")
+#startTime = time.time()
 
 # While loop that monitors speed vs distance
 while True:
@@ -212,16 +233,11 @@ while True:
     # Control Signal aka u(t)  = Kp * e(t)
     controlSignal = kpValue * fError
 
-    print("controlSignal = ", controlSignal)
-
     # Calculating new control signal value by running control signal through saturation function
     newSignal = saturationFunction(controlSignal)
 
-    print("newSignal = ", newSignal)
-
     setSpeedsIPS(newSignal, newSignal)
 
-    print("NEW SPEED SET!!")
 
 # Stop measurement for all sensors
 lSensor.stop_ranging()
