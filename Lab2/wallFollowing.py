@@ -177,7 +177,7 @@ def saturationFunction(ips):
 
 def leftTurn():#####################
       setSpeedsIPS(1.3,0)
-      time.sleep(1)
+      time.sleep(4.75)
       setSpeedsIPS(0,0)
 
 #def rightTurn():###################
