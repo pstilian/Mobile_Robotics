@@ -230,3 +230,5 @@ while True:
       # Calculating new control signal value by running control signal through saturation function
       fNewSignal = saturationFunction(fControlSignal)
       rNewSignal = saturationFunction(rControlSignal)
+
+      setSpeedsvw(linearSpeed, -rNewSignal)
