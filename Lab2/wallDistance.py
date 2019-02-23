@@ -22,6 +22,8 @@ lRevolutions = 0
 rRevolutions = 0
 startTime = time.time()
 currentTime = 0
+LWSpeed = {}
+RWSpeed = {}
 
 # Pins that the encoders are connected to
 LENCODER = 17
@@ -119,91 +121,61 @@ def getSpeeds():
     rSpeed = (rCount / 32) / currentTime
     return (lSpeed, rSpeed)
 
-def setSpeedsRPS(rpsLeft, rpsRight):
-    # needs to convert from RPS to PWM values
-    global leftflag, rightflag
-    # Calculating pwm values from the respective dictionaries
-    left = round(float(rpsLeft), 2)#.55
-    right = round(float(rpsRight), 2)#.55
+# This function creates a calibration map comparing the servo input to output based on microseconds
+# Measures the speeds of each wheel based on different input values
+def calibrateSpeeds():
+    # Initial start pwm value is at complete stop
+    startVar = 1.3
+    endVar = 1.71
 
+    while startVar < endVar:
+        pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
+        # Reset tick counts and print out speed corresponding to pwm values
 
-    
-    # Loop compares rpsLeft values with rps values from calibration document
+        time.sleep(3)
 
-    # If both right and left values are found then statement sets speeds to desired imputs
-    if rightflag == True and leftflag == True:
-        # Setting appropiate speeds to the servos
-        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+        currentSpeeds = getSpeeds()
+        currentLeftSpeeds = currentSpeeds[0]
+        currentRightSpeeds = currentSpeeds[1]
+        # write pwm and speed values for startVar to dictionary
+        LWSpeed[round(startVar,2)] = round(currentLeftSpeeds,3)
+        RWSpeed[round(startVar,2)] = round(currentRightSpeeds,3)
+
+        print(LWSpeed)
+        print(RWSpeed)
+                   
+        # Increment loop
+        startVar = round(startVar + 0.01,2)
+        
+        # Reset counts for next loop!
+        resetCounts()
+    LWSpeed[1.71] = 0
+    RWSpeed[1.71] = 0
         
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
-    # Function sets speed of robot to move over a linear speed with a set angular velocity
-    # v = inches per second         w = angular velocity
-    # positive w values spin counterclockwise       negative w values spin clockwise
-    rpsLeft = round(float(ipsLeft / 8.20), 2)
-    rpsRight = round(float(ipsRight / 8.20), 2)
-    leftflag = False
-    rightflag = False
+    # Converting inches per second into revolutions per second
+    rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
+    rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
 
     if rpsLeft < 0:
         rpsLeft = 0 - rpsLeft
     if rpsRight < 0:
         rpsRight = 0 - rpsRight
 
-    #Calculating pwm values by pulling from calibration text file
-    while leftflag != True:
+    # Calculating pwm values from the respective dictionaries
+    lPwmValue = float(LWSpeed[rpsLeft])
+    rPwmValue = float(RWSpeed[rpsRight])
 
-        l = open("LeftSpeedCalibration.txt", "r")
-        for line in l:
-            currentLine = line.split(" ")
-            rpsValue = round(float(currentLine[0]), 2)
-            pwmValue = round(float(currentLine[1]), 2)
-
-            if rpsLeft == rpsValue:
-                lPwmValue = pwmValue
-                print("LPWMVALUE: ", lPwmValue)
-                leftflag = True
-                break
-            elif rpsLeft > 0.78:
-                lPwmValue = 0
-                leftflag = False
-                break
-        l.close()
-        rpsLeft = round(left + 0.01, 2)
-
-    # Loop compares rpsRight values with rps values from calibration document
-    while rightflag != True:
-
-        r = open("RightSpeedCalibration.txt", "r")
-        for line in r:
-            currentLine = line.split(" ")
-            rpsValue = round(float(currentLine[0]), 2)
-            pwmValue = round(float(currentLine[1]), 2)
-
-            if rpsRight == rpsValue:
-                rPwmValue = pwmValue
-                print("RPWMVALUE: ", rPwmValue)
-                rightflag = True
-                break
-            elif rpsRight > 0.80:
-                rPwmValue = 0
-                rightflag = False
-                break
-        r.close()
-        rpsRight = round(right + 0.01, 2)
-
-
-    if rpsLeft < 0 or rpsRight < 0:
-        pwm.set_pwm(LSERVO, 0,math.floor(lPwmValue / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0,math.floor(setDifference(rPwmValue)/ 20 * 4096))
+    if ipsLeft < 0 or ipsRight < 0:
+        # Setting appropiate speeds to the servos when going forwards
+        pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
     elif ipsLeft >= 0 or ipsRight >= 0:
-        pwm.set_pwm(LSERVO, 0,math.floor(setDiifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0,math.floor(rPwmValue / 20 * 4096))
-    
-    #Calculates the PWM values by using RPS
-    #setSpeedsRPS(rpsLeft, rpsRight)
-
+        # Setting apporpiate speeds to the servos when going backwards
+        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
 
 
 ###############################
