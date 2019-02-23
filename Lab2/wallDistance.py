@@ -181,10 +181,10 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 ###############################
 def saturationFunction(ips):
     signal = ips
-    if signal > 7.0:
-        signal = 7.0
-    elif signal < -7.0:
-        signal = -7.0
+    if signal > 7.1:
+        signal = 7.1
+    elif signal < -7.1:
+        signal = -7.1
     return signal
 
 
@@ -194,7 +194,7 @@ kpValue = 4.0
 
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 time.sleep(2)
 
 # While loop that monitors speed vs distance
@@ -220,6 +220,8 @@ while True:
     print("newSignal = ", newSignal)
 
     setSpeedsIPS(newSignal, newSignal)
+
+    print("NEW SPEED SET!!")
 
 # Stop measurement for all sensors
 lSensor.stop_ranging()
