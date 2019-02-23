@@ -176,8 +176,11 @@ def saturationFunction(ips):
     return controlSignal
 
 def leftTurn():#####################
+      setSpeedsIPS(1.3,0)
+      time.sleep(1)
+      setSpeedsIPS(0,0)
 
-def rightTurn():###################
+#def rightTurn():###################
 
 def setSpeedsvw(v, w):
       velocityLeft1 = float(( v + ( w * dAxis)))
@@ -232,3 +235,6 @@ while True:
       rNewSignal = saturationFunction(rControlSignal)
 
       setSpeedsvw(linearSpeed, -rNewSignal)
+
+      if fInchDistance < 5.0:
+            leftTurn()
