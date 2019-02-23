@@ -46,20 +46,17 @@ rightWheelSpeedMap = {}
 # Closest pair of points, this is contained within distanceSpeed
 # if it is smaller than the previous val it will become the min
 # needs work, while the distance is right i havent yet tested
-
-def distance(PWM1, leftSpeed, PWM2, rightSpeed):
    
-
-def closestVals():
-    for key, value in leftWheelSpeedMap.items():
-        min = 100000
-        k1 = key
-        v1 = value
-        for key, value in rightWheelSpeedMap.values():
-            closestSpeed = math.sqrt( (k1 - key) * (k1 - key) + (v1 - value) * (v1 - value))
-            if (closestSpeed < min)
-                min = closestSpeed
-                closestPairMap[k1] = key
+#def closestVals():
+#   for key, value in leftWheelSpeedMap.items():
+#        min = 100000
+#       k1 = key
+#        v1 = value
+#        for key, value in rightWheelSpeedMap.values():
+#            closestSpeed = math.sqrt( (k1 - key) * (k1 - key) + (v1 - value) * (v1 - value))
+#            if (closestSpeed < min)
+#                min = closestSpeed
+#                closestPairMap[k1] = key
 #           
 #           
 #       
