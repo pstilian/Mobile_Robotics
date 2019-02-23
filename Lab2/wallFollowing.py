@@ -176,11 +176,14 @@ def saturationFunction(ips):
     return controlSignal
 
 def leftTurn():#####################
-      setSpeedsIPS(1.3,0)
-      time.sleep(4.75)
+      setSpeedsIPS(1.3,-1.3)
+      time.sleep(3)
       setSpeedsIPS(0,0)
 
-#def rightTurn():###################
+def rightTurn():###################
+      setSpeedIPS(-1.3,1.3)
+      time.sleep(3)
+      setSpeedsIPS(0,0)
 
 def setSpeedsvw(v, w):
       velocityLeft1 = float(( v + ( w * dAxis)))
@@ -211,7 +214,7 @@ startFlag =True
 # Set Linear Speed to 5 inches per second
 linearSpeed = 5
 
-while True:
+while startFlag == True:
       # Reads Distance From Sensors
       fDistance = fSensor.get_distance()
       rDistance = rSensor.get_distance()
@@ -237,7 +240,33 @@ while True:
       fNewSignal = saturationFunction(fControlSignal)
       rNewSignal = saturationFunction(rControlSignal)
 
-      setSpeedsvw(linearSpeed, -rNewSignal)
+      #setSpeedsvw(linearSpeed, -rNewSignal)
 
-      if fInchDistance < 5.0:
+      if fInchDistance > 5.0 and rInchDistance > 5.0:
+
+            if rError > 0 and rError < 1:
+                  print("STRAIGHT AHEAD")
+                  setSpeedsvw(rNewSignalr,0)
+
+            elif rError < 0:
+                  print("PIVOT RIGHT")
+                  arcpath = float(3.14) * float(40)
+                  linearSpeed = float(arcpath) / 5        #might need modification
+                  omega = linearSpeed / 40
+                  setSpeedsvw(4, omega)
+
+            elif rError > 1:
+                  print("PIVOT LEFT")
+                  arcpath = float(3.14) * float(40)
+                  linearSpeed = float(arcpath) / 5        #might need modification
+                  omega = linearSpeed / 40
+                  setSpeedsvw(4, -omega)
+
+      elif fInchDistance < 5.0:
+            print("LEFT TURN")
+            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+            time.sleep(0.5)
             leftTurn()
+            time.sleep(0.5)
+            
