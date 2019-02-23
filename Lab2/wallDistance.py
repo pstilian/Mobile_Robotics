@@ -10,12 +10,9 @@ import math
 import Adafruit_PCA9685
 
 # variables
-leftflag = False
-rightflag = False
-dAxis = 3.95
 lCount = 0
 rCount = 0
-TotalCount = (0, 0)
+#TotalCount = (0, 0)
 lSpeed = 0
 rSpeed = 0
 lRevolutions = 0
@@ -41,7 +38,7 @@ LWSpeed = {
             0.75: 1.59, 0.76: 1.59, 0.77: 1.60, 0.78: 1.60, 0.79: 1.61,
             0.80: 1.61, 0.81: 1.61, 0.82: 1.61, 0.83: 1.62, 0.84: 1.63,
             0.85: 1.64, 0.86: 1.65, 0.87: 1.70
-}
+            }
 RWSpeed = {
             0.00: 1.50, 0.01: 1.50, 0.02: 1.50, 0.03: 1.505, 0.04: 1.505,
             0.05: 1.505, 0.06: 1.505, 0.07: 1.505, 0.08: 1.51, 0.09: 1.51,
@@ -61,7 +58,7 @@ RWSpeed = {
             0.75: 1.58, 0.76: 1.58, 0.77: 1.59, 0.78: 1.59, 0.79: 1.60,
             0.80: 1.60, 0.81: 1.60, 0.82: 1.61, 0.83: 1.62, 0.84: 1.62,
             0.85: 1.62, 0.86: 1.65, 0.87: 1.70
-}
+            }
 
 # Pins that the encoders are connected to
 LENCODER = 17
@@ -136,92 +133,41 @@ def ctrlC(signum, frame):
 
     exit()
 
-# This function is called when the left encoder detects a rising edge signal.
-def onLeftEncode(pin):
-    global lCount, lRevolutions, lSpeed, currentTime
-    lCount += 1
-    lRevolutions = float(lCount / 32)
-    currentTime = time.time() - startTime
-    lSpeed = lRevolutions / currentTime
-    
-
-# This function is called when the right encoder detects a rising edge signal.
-def onRightEncode(pin):
-    global rCount, rRevolutions, rSpeed, currentTime
-    rCount += 1
-    rRevolutions = float(rCount / 32)
-    currentTime = time.time() - startTime
-    lSpeed = rRevolutions / currentTime
-
-
-# Resets the tick count
-def resetCounts():
-    global Lcount, rCount, startTime
-    lCount = 0
-    rCount = 0
-    startTime = time.time()
-
-# Function that sets up and initializes the econders for the robot
-def initEncoders():
-    # Set the pin numbering scheme to the numbering shown on the robot itself.
-    GPIO.setmode(GPIO.BCM)
-    # Set encoder pins as input
-    # Also enable pull-up resistors on the encoder pins
-    # This ensures a clean 0V and 3.3V is always outputted from the encoders.
-    GPIO.setup(LENCODER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(RENCODER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    # Attach a rising edge interrupt to the encoder pins
-    GPIO.add_event_detect(LENCODER, GPIO.RISING, onLeftEncode)
-    GPIO.add_event_detect(RENCODER, GPIO.RISING, onRightEncode)
-
-
-# Returns the previous tick counts as a touple
-def getCounts():
-    return (lCount, rCount)
-
 def setDifference(speed):
     diff = speed - 1.5
     return 1.5 - diff
 
-# Returns instantious speeds for both left and right wheels as a touple
-def getSpeeds():
-    global lCount, rCount, currentTime, lSpeed, rSpeed
-    currentTime = time.time() - startTime
-    lSpeed = (lCount / 32) / currentTime
-    rSpeed = (rCount / 32) / currentTime
-    return (lSpeed, rSpeed)
-
 # This function creates a calibration map comparing the servo input to output based on microseconds
 # Measures the speeds of each wheel based on different input values
-def calibrateSpeeds():
-    # Initial start pwm value is at complete stop
-    startVar = 1.3
-    endVar = 1.71
-
-    while startVar < endVar:
-        pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
-        # Reset tick counts and print out speed corresponding to pwm values
-
-        time.sleep(3)
-
-        currentSpeeds = getSpeeds()
-        currentLeftSpeeds = currentSpeeds[0]
-        currentRightSpeeds = currentSpeeds[1]
+#def calibrateSpeeds():
+#    # Initial start pwm value is at complete stop
+#    startVar = 1.3
+#    endVar = 1.71
+#
+#    while startVar < endVar:
+#        pwm.set_pwm(LSERVO, 0, math.floor(startVar / 20 * 4096))
+#        pwm.set_pwm(RSERVO, 0, math.floor(startVar / 20 * 4096))
+#        # Reset tick counts and print out speed corresponding to pwm values
+#
+#        time.sleep(3)
+#
+#        currentSpeeds = getSpeeds()
+#        currentLeftSpeeds = currentSpeeds[0]
+#        currentRightSpeeds = currentSpeeds[1]
         # write pwm and speed values for startVar to dictionary
-        LWSpeed[round(startVar,2)] = round(currentLeftSpeeds,3)
-        RWSpeed[round(startVar,2)] = round(currentRightSpeeds,3)
+#        LWSpeed[round(startVar,2)] = round(currentLeftSpeeds,3)
+#        RWSpeed[round(startVar,2)] = round(currentRightSpeeds,3)
 
-        print(LWSpeed)
-        print(RWSpeed)
+#        print(LWSpeed)
+#        print(RWSpeed)
                    
         # Increment loop
-        startVar = round(startVar + 0.01,2)
+#        startVar = round(startVar + 0.01,2)
         
         # Reset counts for next loop!
-        resetCounts()
-    LWSpeed[1.71] = 0
-    RWSpeed[1.71] = 0
+#        resetCounts()
+#    LWSpeed[1.71] = 0
+#    RWSpeed[1.71] = 0
         
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
@@ -259,19 +205,18 @@ def saturationFunction(ips):
 
 
 #--------------------------------------MAINLINE CODE----------------------------------------------------
-desiredDistance = -5.0
+desiredDistance = 5.0
 kpValue = 4.0
 
 # Attach the Ctrl+C signal interrupt and initialize encoders
 signal.signal(signal.SIGINT, ctrlC)
-#initEncoders()
 
 #calibrateSpeeds()
 
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-time.sleep(2)
+time.sleep(5)
 
 print("Beginning Loop")
 
@@ -284,7 +229,7 @@ while True:
     fDistance = fSensor.get_distance()
 
     # Converts readings from centimeters to inches
-    inchDistance = (fDistance * 0.3937) * (-1)
+    inchDistance = fDistance * 0.3937
     # 0.394 is the conversion rate from cm to inches Determining error amount
 
     # fError is the calculated respective error value aka the e(t) value
