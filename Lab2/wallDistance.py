@@ -259,12 +259,12 @@ def saturationFunction(ips):
 
 
 #--------------------------------------MAINLINE CODE----------------------------------------------------
-desiredDistance = 5.0
-kpValue = 0.9
+desiredDistance = -5.0
+kpValue = 4.0
 
 # Attach the Ctrl+C signal interrupt and initialize encoders
 signal.signal(signal.SIGINT, ctrlC)
-initEncoders()
+#initEncoders()
 
 #calibrateSpeeds()
 
@@ -273,7 +273,9 @@ pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 time.sleep(2)
 
-input("Press any key to make me run free!")
+print("Beginning Loop")
+
+#input("Press any key to make me run free!")
 #startTime = time.time()
 
 # While loop that monitors speed vs distance
@@ -282,7 +284,7 @@ while True:
     fDistance = fSensor.get_distance()
 
     # Converts readings from centimeters to inches
-    inchDistance = fDistance * 0.394
+    inchDistance = (fDistance * 0.3937) * (-1)
     # 0.394 is the conversion rate from cm to inches Determining error amount
 
     # fError is the calculated respective error value aka the e(t) value
