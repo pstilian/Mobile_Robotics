@@ -197,7 +197,7 @@ signal.signal(signal.SIGINT, ctrlC)
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-time.sleep(5)
+time.sleep(2)
 
 #--------------------------------------MAINLINE CODE----------------------------------------------------
 startFlag = False
@@ -221,6 +221,9 @@ while True:
       fInchDistance = fDistance * 0.3937
       rInchDistance = rDistance * 0.3937
       # 0.394 is the conversion rate from cm to inches Determining error amount
+
+      print("FRONT DISTANCE : ", fInchDistance)
+      print("RIGHT DISTANCE : ", rInchDistance)
 
       # fError is the calculated respective error value aka the e(t) value
       fError = desiredDistance - fInchDistance
