@@ -260,7 +260,7 @@ while startFlag == True:
             setSpeedsIPS(fNewSignal, rNewSignal)
             if rError > 0 and rError < 1:
                   print("STRAIGHT AHEAD")
-                  setSpeedsvw(rNewSignalr,0)
+                  setSpeedsvw(rNewSignal,0)
 
             elif rError < 0:
                   print("PIVOT RIGHT")
