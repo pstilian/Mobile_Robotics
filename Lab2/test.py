@@ -194,9 +194,12 @@ def setSpeedsvw(v, w):
 desiredDistance = 5.0
 kpValue = 0.9
 
+# Attach the Ctrl+C signal interrupt and initialize encoders
+signal.signal(signal.SIGINT, ctrlC)
+
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-time.sleep(3)
+time.sleep(1)
 
 flagStart = False
 startInput = input("Press 'm' to start robot wall following.")
@@ -208,107 +211,34 @@ else:
 
 linearSpeed = 5
 
-#while True:
-#    fDistance = fSensor.get_distance()
-#    rDistance = rSensor.get_distance()
-#    inchesDistanceFront = fDistance * 0.0393700787
-#    inchesDistanceRight = rDistance * 0.0393700787
-    #print("FRONT DISTANCE: ", inchesDistanceFront)
-    #print("RIGHT DISTANCE: ", inchesDistanceRight)
-#    errorf = 5.0 - inchesDistanceFront
-#    errorr = 5.0 - inchesDistanceRight
-#    controlSignalf = kpValue * errorf
-#    controlSignalr = kpValue * errorr
-#    newSignalf = saturationFunction(controlSignalf)
-#    newSignalr = saturationFunctionRight(controlSignalr)
-
-#    setSpeedsvw(linearSpeed,-newSignalr)
-
-#    if inchesDistanceRight > 20:
-#        flagStart = False
-#        setSpeedsvw(linearSpeed, 2)
-#        flagStart = True
-
-#    if inchesDistanceFront < 5.0:
-#        setSpeedsvw(linearSpeed, -2)
-#        flagStart = False
-#        while inchesDistanceFront < 10.0:
-#            fDistance = fSensor.get_distance()
-#            inchesDistanceFront = fDistance * 0.0393700787
-#        setSpeedsvw(linearSpeed, -2)
-#        time.sleep(1)
-#        flagStart = False
-#        turnLeft()
-
-
-
-
-while flagStart == True:
-    fDistance = fSensor.get_distance()
-    ##print (fDistance)
-    inchesDistance = fDistance * 0.0393700787
-    ##print (inchesDistance)
-    error = desiredDistance - inchesDistance
-    ##print (error)
-    controlSignal = kpValue * error
-    newSignal = saturationFunction(controlSignal)
-    
-    setSpeedsIPS(newSignal, newSignal)
-
+while True:
     fDistance = fSensor.get_distance()
     rDistance = rSensor.get_distance()
     inchesDistanceFront = fDistance * 0.0393700787
     inchesDistanceRight = rDistance * 0.0393700787
-    print("FRONT DISTANCE: ", inchesDistanceFront)
-    print("RIGHT DISTANCE: ", inchesDistanceRight)
+    #print("FRONT DISTANCE: ", inchesDistanceFront)
+    #print("RIGHT DISTANCE: ", inchesDistanceRight)
     errorf = 5.0 - inchesDistanceFront
     errorr = 5.0 - inchesDistanceRight
     controlSignalf = kpValue * errorf
     controlSignalr = kpValue * errorr
     newSignalf = saturationFunction(controlSignalf)
-    newSignalr = saturationFunction(controlSignalr)
+    newSignalr = saturationFunctionRight(controlSignalr)
 
-    if inchesDistanceRight > 150.0:
-        print("RIGHT TURN")
-        flagStart = False
-        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-        time.sleep(1)
-        turnRight()
-        time.sleep(1)
-        flagStart = True
+    setSpeedsvw(linearSpeed,-newSignalr)
 
-    elif inchesDistanceFront > 5.0:
-        setSpeedsIPS(newSignalf, newSignalf)
-        if errorr > 0 and errorr < 1:
-            print("STRAIGHT AHEAD")
-            setSpeedsvw(newSignalr, 0)
-        elif errorr < 0:
-            #Perform right swirl
-            print("RIGHT SWIRL")
-            arcpath = float(3.14159) * float(40)
-            linearSpeed = float(arcpath)/5.6338
-            omega = linearSpeed/40
-            setSpeedsvw(4, omega)
-        elif errorr > 1:
-            #Perform left swirl
-            print("LEFT SWIRL")
-            arcpath = float(3.14159) * float(40)
-            linearSpeed = float(arcpath)/5.6338
-            omega = linearSpeed/40
-            setSpeedsvw(4, -omega)
+#    if inchesDistanceRight > 20:
+        #flagStart = False
+#        setSpeedsvw(linearSpeed, 2)
+        #flagStart = True
 
-    elif inchesDistanceFront < 5.0:
-        print("LEFT TURN")
-        flagStart = False
-        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-        time.sleep(1)
+    if inchesDistanceFront < 5.0:
+        #setSpeedsvw(linearSpeed, -2)
+        #flagStart = False
+        #while inchesDistanceFront < 10.0:
+        #    fDistance = fSensor.get_distance()
+        #    inchesDistanceFront = fDistance * 0.0393700787
+        #setSpeedsvw(linearSpeed, -2)
+        #time.sleep(1)
+        #flagStart = False
         turnLeft()
-        time.sleep(1)
-        flagStart = True
-
-## Stop measurement for all sensors
-#lSensor.stop_ranging()
-#fSensor.stop_ranging()
-#rSensor.stop_ranging()
