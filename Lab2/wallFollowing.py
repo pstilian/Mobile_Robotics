@@ -231,8 +231,8 @@ while True:
       #lDistance = lSensor.get_distance()
 
       # Converts readings from centimeters to inches
-      fInchDistance = fDistance / 0.0394
-      rInchDistance = rDistance / 0.0394
+      fInchDistance = fDistance * 0.0394
+      rInchDistance = rDistance * 0.0394
       # 0.394 is the conversion rate from cm to inches Determining error amount
 
       print("FRONT DISTANCE : ", fInchDistance)
@@ -256,7 +256,7 @@ while True:
       # Setting speed of the robot. 
       setSpeedsvw(linearSpeed, -rNewSignal)
 
-      if fInchDistance > 5.0:
+      if fInchDistance < 5.0:
 
             sensorCount += 1
 
