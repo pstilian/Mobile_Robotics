@@ -10,15 +10,10 @@ import math
 import Adafruit_PCA9685
 
 # variables
-lCount = 0
-rCount = 0
-#TotalCount = (0, 0)
-lSpeed = 0
-rSpeed = 0
-lRevolutions = 0
-rRevolutions = 0
 startTime = time.time()
 currentTime = 0
+
+# dictionaries containing calibrated speed to pwm values
 LWSpeed = {
             0.00: 1.50, 0.01: 1.505, 0.02: 1.505, 0.03: 1.51, 0.04: 1.51,
             0.05: 1.51, 0.06: 1.51, 0.07: 1.51, 0.08: 1.515, 0.09: 1.515,
@@ -190,6 +185,8 @@ while True:
     # Reads Distance From Sensor
     fDistance = fSensor.get_distance()
 
+    print("FRONT DISTANCE : ", fDistance)
+
     # Converts readings from centimeters to inches
     inchDistance = fDistance * 0.3937
     # 0.394 is the conversion rate from cm to inches Determining error amount
@@ -202,6 +199,8 @@ while True:
 
     # Calculating new control signal value by running control signal through saturation function
     newSignal = saturationFunction(controlSignal)
+
+    print("NEW SIGNAL (IPS) : ",newSignal)
 
     setSpeedsIPS(newSignal, newSignal)
 
