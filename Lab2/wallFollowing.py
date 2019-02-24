@@ -217,7 +217,9 @@ while startFlag == True:
 
       # Reads Distance From Sensors
       fDistance = fSensor.get_distance()
+      print(fDistance)
       rDistance = rSensor.get_distance()
+      print(rDistance)
       #lDistance = lSensor.get_distance()
 
       # Converts readings from centimeters to inches
