@@ -215,6 +215,7 @@ startFlag =True
 linearSpeed = 5
 
 while startFlag == True:
+
       # Reads Distance From Sensors
       fDistance = fSensor.get_distance()
       rDistance = rSensor.get_distance()
@@ -240,7 +241,7 @@ while startFlag == True:
       fNewSignal = saturationFunction(fControlSignal)
       rNewSignal = saturationFunction(rControlSignal)
 
-      #setSpeedsvw(linearSpeed, -rNewSignal)
+      setSpeedsIPS(fNewSignal, fNewSignal)
 
       if rInchDistance > 5:
             print("RIGHT TURN")
