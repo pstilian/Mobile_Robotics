@@ -182,7 +182,7 @@ def leftTurn():#####################
       setSpeedsIPS(0,0)
 
 def rightTurn():###################
-      setSpeedsgiIPS(-1.3,1.3)
+      setSpeedsIPS(-1.3,1.3)
       time.sleep(3)
       setSpeedsIPS(0,0)
 
