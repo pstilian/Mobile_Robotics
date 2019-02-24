@@ -175,16 +175,6 @@ def saturationFunction(ips):
         controlSignal = -0.5
     return controlSignal
 
-def leftTurn():#####################
-      setSpeedsIPS(1.3,-1.3)
-      time.sleep(3)
-      setSpeedsIPS(0,0)
-
-def rightTurn():###################
-      setSpeedIPS(-1.3,1.3)
-      time.sleep(3)
-      setSpeedsIPS(0,0)
-
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
     # Converting inches per second into revolutions per second
@@ -210,6 +200,15 @@ def setSpeedsIPS(ipsLeft, ipsRight):
         pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
 
 
+def leftTurn():#####################
+      setSpeedsIPS(1.3,-1.3)
+      time.sleep(3)
+      setSpeedsIPS(0,0)
+
+def rightTurn():###################
+      setSpeedIPS(-1.3,1.3)
+      time.sleep(3)
+      setSpeedsIPS(0,0)
 
 def setSpeedsvw(v, w):
       velocityLeft1 = float(( v + ( w * dAxis)))
