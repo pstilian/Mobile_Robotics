@@ -242,8 +242,16 @@ while startFlag == True:
 
       #setSpeedsvw(linearSpeed, -rNewSignal)
 
-      if fInchDistance > 5.0 and rInchDistance > 5.0:
+      if rInchDistance > 5:
+            print("RIGHT TURN")
+            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+            time.sleep(0.5)
+            rightTurn()
+            time.sleep(0.5)
 
+      elif fInchDistance > 5.0:
+            setSpeedsIPS(fNewSignal, rNewSignal)
             if rError > 0 and rError < 1:
                   print("STRAIGHT AHEAD")
                   setSpeedsvw(rNewSignalr,0)
@@ -269,4 +277,3 @@ while startFlag == True:
             time.sleep(0.5)
             leftTurn()
             time.sleep(0.5)
-            
