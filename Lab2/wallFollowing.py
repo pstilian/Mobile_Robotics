@@ -224,8 +224,8 @@ while startFlag == True:
       #lDistance = lSensor.get_distance()
 
       # Converts readings from centimeters to inches
-      fInchDistance = fDistance * 0.3937
-      rInchDistance = rDistance * 0.3937
+      fInchDistance = fDistance / 25.4
+      rInchDistance = rDistance / 25.4
       # 0.394 is the conversion rate from cm to inches Determining error amount
 
       print("FRONT DISTANCE : ", fInchDistance)
