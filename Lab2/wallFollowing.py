@@ -235,6 +235,9 @@ while startFlag == True:
       fError = desiredDistance - fInchDistance
       rError = desiredDistance - rInchDistance
 
+      print("FRONT ERROR : ", fError)
+      print("RIGHT ERROR : ", rError)
+
       # Control Signal aka u(t)  = Kp * e(t)
       fControlSignal = kpValue * fError
       rControlSignal = kpValue * rError
