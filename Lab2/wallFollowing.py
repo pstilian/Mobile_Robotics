@@ -253,7 +253,7 @@ while startFlag == True:
 #            rightTurn()
 #            time.sleep(0.5)
 
-      elif fInchDistance > 5.0:
+      if fInchDistance > 5.0:
             setSpeedsIPS(fNewSignal, rNewSignal)
             if rError > 0 and rError < 1:
                   print("STRAIGHT AHEAD")
