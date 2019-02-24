@@ -227,18 +227,18 @@ while True:
 
     setSpeedsvw(linearSpeed,-newSignalr)
 
-#    if inchesDistanceRight > 20:
-        #flagStart = False
-#        setSpeedsvw(linearSpeed, 2)
-        #flagStart = True
+    if inchesDistanceRight > 20:
+        flagStart = False
+        setSpeedsvw(linearSpeed, 2)
+        flagStart = True
 
     if inchesDistanceFront < 5.0:
-        #setSpeedsvw(linearSpeed, -2)
-        #flagStart = False
-        #while inchesDistanceFront < 10.0:
-        #    fDistance = fSensor.get_distance()
-        #    inchesDistanceFront = fDistance * 0.0393700787
-        #setSpeedsvw(linearSpeed, -2)
-        #time.sleep(1)
-        #flagStart = False
+        setSpeedsvw(linearSpeed, -2)
+        flagStart = False
+        while inchesDistanceFront < 10.0:
+            fDistance = fSensor.get_distance()
+            inchesDistanceFront = fDistance * 0.0393700787
+        setSpeedsvw(linearSpeed, -2)
+        time.sleep(1)
+        flagStart = False
         turnLeft()
