@@ -194,8 +194,12 @@ while True:
     # fError is the calculated respective error value aka the e(t) value
     error = desiredDistance - inchDistance
     
+    print("ERROR : ", error)
+
     # Control Signal aka u(t)  = Kp * e(t)
     controlSignal = kpValue * error
+
+    print("CONTROL SIGNAL : ",controlSignal)
 
     # Calculating new control signal value by running control signal through saturation function
     newSignal = saturationFunction(controlSignal)
