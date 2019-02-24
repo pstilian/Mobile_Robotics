@@ -143,27 +143,31 @@ def setDifference(speed):
         
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
-    # Converting inches per second into revolutions per second
-    rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
-    rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
+      # Converting inches per second into revolutions per second
+      rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
+      rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
 
-    if rpsLeft < 0:
-        rpsLeft = 0 - rpsLeft
-    if rpsRight < 0:
-        rpsRight = 0 - rpsRight
+      if rpsLeft < 0:
+            rpsLeft = 0 - rpsLeft
+      if rpsRight < 0:
+            rpsRight = 0 - rpsRight
 
-    # Calculating pwm values from the respective dictionaries
-    lPwmValue = float(LWSpeed[rpsLeft])
-    rPwmValue = float(RWSpeed[rpsRight])
+      # Calculating pwm values from the respective dictionaries
+      lPwmValue = float(LWSpeed[rpsLeft])
+      rPwmValue = float(RWSpeed[rpsRight])
 
-    if ipsLeft < 0 or ipsRight < 0:
-        # Setting appropiate speeds to the servos when going forwards
-        pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
-    elif ipsLeft >= 0 or ipsRight >= 0:
-        # Setting apporpiate speeds to the servos when going backwards
-        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+      if ipsLeft < 0 and ipsRight < 0:
+            # Setting appropiate speeds to the servos when going forwards
+            pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+      elif ipsLeft >= 0 and ipsRight >= 0:
+            # Setting apporpiate speeds to the servos when going backwards
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+      elif ipsLeft >= 0 and ipsRight < 0
+            # Setting appropriate speedsto the servos while making a turn
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
 
 
 ###############################
@@ -190,7 +194,7 @@ def setSpeedsvw(v, w):
       velocityLeft1 = float(( v + ( w * dAxis)))
       velocityRight1 = float(( v - ( w * dAxis)))
 
-      setSpeedsIPS(velocityLeft1, velocityRight1)
+      setSpeedsIPS(-velocityLeft1, -velocityRight1)
 
 desiredDistance = 5.0
 kpValue = 0.9
@@ -214,7 +218,10 @@ startFlag =True
 # Set Linear Speed to 5 inches per second
 linearSpeed = 5
 
-while startFlag == True:
+# Setting a counter to keep track of BIG front sensor reading
+sensorCount = 0
+
+while True:
 
       # Reads Distance From Sensors
       fDistance = fSensor.get_distance()
@@ -224,8 +231,8 @@ while startFlag == True:
       #lDistance = lSensor.get_distance()
 
       # Converts readings from centimeters to inches
-      fInchDistance = fDistance / 25.4
-      rInchDistance = rDistance / 25.4
+      fInchDistance = fDistance / 0.0394
+      rInchDistance = rDistance / 0.0394
       # 0.394 is the conversion rate from cm to inches Determining error amount
 
       print("FRONT DISTANCE : ", fInchDistance)
@@ -246,40 +253,15 @@ while startFlag == True:
       fNewSignal = saturationFunction(fControlSignal)
       rNewSignal = saturationFunction(rControlSignal)
 
-      setSpeedsIPS(fNewSignal, fNewSignal)
-
-      if rInchDistance > 5:
-            print("RIGHT TURN")
-            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-            time.sleep(0.5)
-            rightTurn()
-            time.sleep(0.5)
+      # Setting speed of the robot. 
+      setSpeedsvw(linearSpeed, -rNewSignal)
 
       if fInchDistance > 5.0:
-            setSpeedsIPS(fNewSignal, rNewSignal)
-            if rError > 0 and rError < 1:
-                  print("STRAIGHT AHEAD")
-                  setSpeedsvw(rNewSignal,0)
 
-            elif rError < 0:
-                  print("PIVOT RIGHT")
-                  arcpath = float(3.14) * float(40)
-                  linearSpeed = float(arcpath) / 5        #might need modification
-                  omega = linearSpeed / 40
-                  setSpeedsvw(4, omega)
+            sensorCount += 1
 
-            elif rError > 1:
-                  print("PIVOT LEFT")
-                  arcpath = float(3.14) * float(40)
-                  linearSpeed = float(arcpath) / 5        #might need modification
-                  omega = linearSpeed / 40
-                  setSpeedsvw(4, -omega)
+            if sensorCOunt > 4:
+                  leftTurn()
 
-      elif fInchDistance < 5.0:
-            print("LEFT TURN")
-            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-            time.sleep(0.5)
-            leftTurn()
-            time.sleep(0.5)
+      else:
+            sensorCount = 0
