@@ -259,19 +259,19 @@ while startFlag == True:
                   print("STRAIGHT AHEAD")
                   setSpeedsvw(rNewSignalr,0)
 
-            elif rError < 0:
-                  print("PIVOT RIGHT")
-                  arcpath = float(3.14) * float(40)
-                  linearSpeed = float(arcpath) / 5        #might need modification
-                  omega = linearSpeed / 40
-                  setSpeedsvw(4, omega)
+#            elif rError < 0:
+#                  print("PIVOT RIGHT")
+#                  arcpath = float(3.14) * float(40)
+#                  linearSpeed = float(arcpath) / 5        #might need modification
+#                  omega = linearSpeed / 40
+#                  setSpeedsvw(4, omega)
 
-            elif rError > 1:
-                  print("PIVOT LEFT")
-                  arcpath = float(3.14) * float(40)
-                  linearSpeed = float(arcpath) / 5        #might need modification
-                  omega = linearSpeed / 40
-                  setSpeedsvw(4, -omega)
+#            elif rError > 1:
+#                  print("PIVOT LEFT")
+#                  arcpath = float(3.14) * float(40)
+#                  linearSpeed = float(arcpath) / 5        #might need modification
+#                  omega = linearSpeed / 40
+#                  setSpeedsvw(4, -omega)
 
       elif fInchDistance < 5.0:
             print("LEFT TURN")
