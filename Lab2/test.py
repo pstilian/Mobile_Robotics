@@ -213,12 +213,25 @@ linearSpeed = 5
 
 while flagStart == True:
     fDistance = fSensor.get_distance()
-    print (fDistance)
+    #print (fDistance)
     inchesDistance = fDistance * 0.0393700787
-    print (inchesDistance)
+    #print (inchesDistance)
     error = desiredDistance - inchesDistance
-    print (error)
+    #print (error)
     controlSignal = kpValue * error
     newSignal = saturationFunction(controlSignal)
-    print (newSignal)
+    #print (newSignal)
     setSpeedsIPS(newSignal, newSignal)
+
+    fDistance = fSensor.get_distance()
+    rDistance = rSensor.get_distance()
+    inchesDistanceFront = fDistance * 0.0393700787
+    inchesDistanceRight = rDistance * 0.0393700787
+    print("FRONT DISTANCE: ", inchesDistanceFront)
+    print("RIGHT DISTANCE: ", inchesDistanceRight)
+    errorf = 5.0 - inchesDistanceFront
+    errorr = 5.0 - inchesDistanceRight
+    controlSignalf = kpValue * errorf
+    controlSignalr = kpValue * errorr
+    newSignalf = saturationFunction(controlSignalf)
+    newSignalr = saturationFunction(controlSignalr)
