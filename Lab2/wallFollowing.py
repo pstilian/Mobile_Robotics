@@ -182,7 +182,7 @@ def leftTurn():#####################
       setSpeedsIPS(0,0)
 
 def rightTurn():###################
-      setSpeedsIPS(-1.3,1.3)
+      setSpeedsgiIPS(-1.3,1.3)
       time.sleep(3)
       setSpeedsIPS(0,0)
 
@@ -245,13 +245,13 @@ while startFlag == True:
 
       setSpeedsIPS(fNewSignal, fNewSignal)
 
-      if rInchDistance > 5:
-            print("RIGHT TURN")
-            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-            time.sleep(0.5)
-            rightTurn()
-            time.sleep(0.5)
+#      if rInchDistance > 5:
+#            print("RIGHT TURN")
+#            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+#            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+#            time.sleep(0.5)
+#            rightTurn()
+#            time.sleep(0.5)
 
       elif fInchDistance > 5.0:
             setSpeedsIPS(fNewSignal, rNewSignal)
