@@ -10,6 +10,13 @@ import math
 import Adafruit_PCA9685
 
 # variables
+lCount = 0
+rCount = 0
+#TotalCount = (0, 0)
+lSpeed = 0
+rSpeed = 0
+lRevolutions = 0
+rRevolutions = 0
 startTime = time.time()
 currentTime = 0
 dAxis = float(3.95)
