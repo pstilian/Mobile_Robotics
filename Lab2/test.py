@@ -7,16 +7,10 @@ import RPi.GPIO as GPIO
 import signal
 import decimal
 import math
+import csv
 import Adafruit_PCA9685
 
 # variables
-lCount = 0
-rCount = 0
-#TotalCount = (0, 0)
-lSpeed = 0
-rSpeed = 0
-lRevolutions = 0
-rRevolutions = 0
 startTime = time.time()
 currentTime = 0
 dAxis = float(3.95)
@@ -99,22 +93,17 @@ def ctrlC(signum, frame):
 
       exit()
 
-def readCalibration():
-    l = open("LeftSpeedCalibration.txt", "r")
-    for line in l:
-        currentLine = line.split(" ")
-        LWSpeed[currentLine[0]] = currentLine[1]
-    r = open("RightSpeedCalibration.txt", "r")
-    for line in r:
-        currentLine = line.split(" ")
-        RWSpeed[currentLine[0]] = currentLine[1]
+def readCSV():
+    lReader = csv.DictReader(open('LeftSpeedCalibration.csv', 'rb'))
+    for line in lReader:
+        LWSpeed.append(line)
 
-    print(LWSpeed)
+    rReader = csv.DictReader(open('RightSpeedCalibration.csv', 'rb'))
+    for line in rReader:
+        RWSpeed.append(line)
 
-    print(RWSpeed)
-
-    l.close()
-    r.close()
+    print("*******LEFTSPEEDS*******\n", LWSpeed)
+    print("*******RIGHTSPEEDS******\n", RWSpeed)
 
 def setDifference(speed):
     diff = speed - 1.5
@@ -216,15 +205,15 @@ while True:
       rInchDistance = rDistance * 0.0394
       # 0.394 is the conversion rate from millimeters to inches Determining error amount
 
-      print("FRONT DISTANCE : ", fInchDistance)
-      print("RIGHT DISTANCE : ", rInchDistance)
+      #print("FRONT DISTANCE : ", fInchDistance)
+      #print("RIGHT DISTANCE : ", rInchDistance)
 
       # fError is the calculated respective error value aka the e(t) value
       fError = desiredDistance - fInchDistance
       rError = desiredDistance - rInchDistance
 
-      print("FRONT ERROR : ", fError)
-      print("RIGHT ERROR : ", rError)
+      #print("FRONT ERROR : ", fError)
+      #print("RIGHT ERROR : ", rError)
 
       # Control Signal aka u(t)  = Kp * e(t)
       fControlSignal = kpValue * fError

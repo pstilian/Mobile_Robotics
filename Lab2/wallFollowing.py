@@ -228,15 +228,15 @@ while True:
       rInchDistance = rDistance * 0.0394
       # 0.394 is the conversion rate from millimeters to inches Determining error amount
 
-      print("FRONT DISTANCE : ", fInchDistance)
-      print("RIGHT DISTANCE : ", rInchDistance)
+      #print("FRONT DISTANCE : ", fInchDistance)
+      #print("RIGHT DISTANCE : ", rInchDistance)
 
       # fError is the calculated respective error value aka the e(t) value
       fError = desiredDistance - fInchDistance
       rError = desiredDistance - rInchDistance
 
-      print("FRONT ERROR : ", fError)
-      print("RIGHT ERROR : ", rError)
+      #print("FRONT ERROR : ", fError)
+      #print("RIGHT ERROR : ", rError)
 
       # Control Signal aka u(t)  = Kp * e(t)
       fControlSignal = kpValue * fError
