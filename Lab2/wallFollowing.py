@@ -233,7 +233,7 @@ while True:
       # Converts readings from centimeters to inches
       fInchDistance = fDistance * 0.0394
       rInchDistance = rDistance * 0.0394
-      # 0.394 is the conversion rate from cm to inches Determining error amount
+      # 0.394 is the conversion rate from millimeters to inches Determining error amount
 
       print("FRONT DISTANCE : ", fInchDistance)
       print("RIGHT DISTANCE : ", rInchDistance)
@@ -253,9 +253,10 @@ while True:
       fNewSignal = saturationFunction(fControlSignal)
       rNewSignal = saturationFunction(rControlSignal)
 
-      # Setting speed of the robot. 
+      # Setting speed of the robot.
       setSpeedsvw(linearSpeed, -rNewSignal)
 
+      # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
       if fInchDistance < 5.0:
 
             sensorCount += 1
