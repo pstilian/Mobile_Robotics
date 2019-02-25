@@ -103,11 +103,11 @@ def readCalibration():
     l = open("LeftSpeedCalibration.txt", "r")
     for line in l:
         currentLine = line.split(" ")
-        LWSpeed[round(float(currentLine[0]),2)] = round(float(currentLine[1]),2)
+        LWSpeed[currentLine[0]] = currentLine[1]
     r = open("RightSpeedCalibration.txt", "r")
     for line in r:
         currentLine = line.split(" ")
-        RWSpeed[round(float(currentLine[0]),2)] = round(float(currentLine[1]),2)
+        RWSpeed[currentLine[0]] = currentLine[1]
 
     print(LWSpeed)
 
