@@ -155,6 +155,7 @@ def calibrateSpeeds():
         CLR1 = 0
 
         while checks < 5:
+            sleep(3)
             currentSpeeds = getSpeeds()
             CLS1 = CLS1 + currentSpeeds[0]
             CRS1 = CRS1 + currentSpeeds[1]
