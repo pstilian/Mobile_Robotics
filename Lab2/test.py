@@ -94,13 +94,14 @@ def ctrlC(signum, frame):
       exit()
 
 def readCSV():
-    lReader = csv.DictReader(open('LeftSpeedCalibration.csv', 'rb'))
-    for line in lReader:
-        LWSpeed.append(line)
-
-    rReader = csv.DictReader(open('RightSpeedCalibration.csv', 'rb'))
-    for line in rReader:
-        RWSpeed.append(line)
+    global LWSpeed, RWSpeed
+    with open('LeftSpeedCalibration.csv', newline='') as LeftCalibrate:
+        lReader = csv.reader(LeftCalibrate)
+        LWSpeed = dict(map(float,x) for x in lReader) # pulls in each row as a key-value pair
+        
+    with open('RightSpeedCalibration.csv', newline= '') as RightCalibrate:
+        rReader = csv.reader(RightCalibrate)
+        RWSpeed = dict(map(float,x) for x in rReader) # pulls in each row as a key-value pair
 
     print("*******LEFTSPEEDS*******\n", LWSpeed)
     print("*******RIGHTSPEEDS******\n", RWSpeed)
@@ -178,7 +179,7 @@ pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 startFlag = False
 selectCommand = ' '
 
-readCalibration()
+readCSV()
 
 while selectCommand != 's':
       selectCommand = input("Please enter \'s\' to begin robot movement: ")
