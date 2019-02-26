@@ -33,35 +33,27 @@ currentTime = 0
 leftWheelSpeedMap = {}
 rightWheelSpeedMap = {}
 
+#pair of closest speed values within left and right maps
+#finds the closest two pwm values and sums them together
+#and finds the optimal pwm value, argument must be changed.
+#may or may not be useful?
+def speedPair(speedInput):
+    minX = .785
+    minPWM = 1.3
+    maxX = .823
+    maxPWM = 1.43
 
 
-# Give this a shot, i think it will be more accurate
-# It should pair each value in the left and right dictionaries
-# to the closest pairs for straight line forward movement
-# knowing this we should be able to easily change direction
-# while also mainaining our current position and heading, although we will 
-# need to set an oriantation variable that tracks the wheels movement and rotation.
-# functions will probably need syntactical fixing
-# The idea behnd the function is to use the euclidean formula to find the
-# Closest pair of points, this is contained within distanceSpeed
-# if it is smaller than the previous val it will become the min
-# needs work, while the distance is right i havent yet tested
-   
-#def closestVals():
-#   for key, value in leftWheelSpeedMap.items():
-#        min = 100000
-#       k1 = key
-#        v1 = value
-#        for key, value in rightWheelSpeedMap.values():
-#            closestSpeed = math.sqrt( (k1 - key) * (k1 - key) + (v1 - value) * (v1 - value))
-#            if (closestSpeed < min)
-#                min = closestSpeed
-#                closestPairMap[k1] = key
-#           
-#           
-#       
-#
+    for j, k in leftWheelSpeedMap.items():
+        if k > speedInput and k < maxX:
+            maxX = k
+            maxPWM = j
+        if k < speedInput and k > minX:
+            minX = k
+            minPWM = j
 
+    foundPWM = (maxPWM + minPWM)/2
+# End pairing function
 
 
 # This function is called when the left encoder detects a rising edge signal.
