@@ -265,6 +265,7 @@ stopDistance = 86.6142
 
 moveFlag = True
 count = 0
+fDistance = 0
 # This for loop will step through and make the robot run in a straight line
 # taking distance measurements every 7.87 inches from the left right and top
 sensorOutput.write("***** Front Distance ******" "\n")
