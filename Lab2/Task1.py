@@ -8,6 +8,7 @@ import signal
 import decimal
 import math
 import Adafruit_PCA9685
+import csv
 
 
 
@@ -228,12 +229,17 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     #Calculates the PWM values by using RPS
     setSpeedsRPS(rpsLeft, rpsRight)
 
-
+def writePlot1(fDistance, mDistance):
+    with open("Task1Plot1.csv", mode = 'w') as plot1:
+        plot1 = csv.writer(plot1, delimiter=',', quotechar='"', quoting = csv.QUOTE_MINIMAL)
+        plot1.writerow([fDistance, mDistance])
+        
 
 #******************************* MAINLINE CODE *****************************************************
 # This program makees the robot move straight for 220 cm taking measurements
 # every 20 cm from the left, right, and forward sensor, once measurements
 # have been take we can then write them to a new file to create a scatter plot.
+selectCommand = " "
 
 # Attach the Ctrl+C signal interrupt
 signal.signal(signal.SIGINT, ctrlC)
@@ -263,6 +269,7 @@ distanceIn = 7.87402
 distanceTraveled = 0
 stopDistance = 86.6142
 
+
 moveFlag = True
 count = 0
 fDistance = 0
@@ -274,29 +281,37 @@ while moveFlag != False:
     #lDistance = lSensor.get_distance()
     
     #rDistance = rSensor.get_distance()
-
+    
+    print("*************************************")
+    print("before lRevo: ", lRevolutions, " before rRevo: ", rRevolutions)
     distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
     pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
+    print("after lRevo: ", lRevolutions, " after rRevo: ", rRevolutions)
+    
     
     #changed if statement due to issues.
-    print("count: (", count, ") distanceT: ", distanceT)
+    
     if distanceT >= distanceIn:
-        #pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
-        #pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+        mDistance = 72 - distanceT
+        print("distanceIn: ", distanceIn)
+        distanceIn = distanceIn + 7.87402
+        print("count: (", count, ") distanceT: ", distanceT)
         distanceTraveled += distanceIn
         print("Distance Traveled: ", distanceTraveled)
 
         # Print each measurement
-        #sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
         fDistance = fSensor.get_distance()
         sensorOutput.write(str(fDistance) + "\n")
         print("Front: ", fDistance)
-        lRevolutions = 0
-        rRevolutions = 0
-        distanceT = 0
         count += 1
+        writePlot1(fDistance, mDistance)
+        while selectCommand != 's':
+            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+            selectCommand = input("Please enter \'s\' to begin robot movement: ")
+        selectCommand = " "
 
     if count == 11:
         moveFlag = False
