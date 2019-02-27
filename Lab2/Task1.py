@@ -83,7 +83,7 @@ rightflag = False
 # It's intended for properly exiting the program.
 def ctrlC(signum, frame):
     print("Exiting")
-    
+
     GPIO.cleanup()
     # Write an initial value of 1.5, which keeps the servos stopped.
     # Due to how servos work, and the design of the Adafruit library,
@@ -151,7 +151,7 @@ def onLeftEncode(pin):
     lRevolutions = float(lCount / 32)
     currentTime = time.time() - startTime
     lSpeed = lRevolutions / currentTime
-    
+
 
 # This function is called when the right encoder detects a rising edge signal.
 def onRightEncode(pin):
@@ -170,7 +170,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
     leftflag = False
     rightflag = False
 
-    
+
     # Loop compares rpsLeft values with rps values from calibration document
     while leftflag != True:
 
@@ -212,7 +212,7 @@ def setSpeedsRPS(rpsLeft, rpsRight):
                 break
         r.close()
         right = round(right + 0.01, 2)
-        
+
     # If both right and left values are found then statement sets speeds to desired imputs
     if rightflag == True and leftflag == True:
         # Setting appropiate speeds to the servos
@@ -225,7 +225,6 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     # positive w values spin counterclockwise       negative w values spin clockwise
     rpsLeft = round(float(ipsLeft / 8.20), 2)
     rpsRight = round(float(ipsRight / 8.20), 2)
-    
     #Calculates the PWM values by using RPS
     setSpeedsRPS(rpsLeft, rpsRight)
 
@@ -271,7 +270,7 @@ moveFlag = True
 count = 0
 # This for loop will step through and make the robot run in a straight line
 # taking distance measurements every 7.87 inches from the left right and top
-
+sensorOutput.write("***** Front Distance ******" "\n")
 while moveFlag != False:
     # Get a measurement from each sensor
     lDistance = lSensor.get_distance()
@@ -281,7 +280,7 @@ while moveFlag != False:
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
     pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
-
+    sensorOutput.write(str(fDistance) + "\n")
     if (distanceIn - distanceT) <= 0:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
