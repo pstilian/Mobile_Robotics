@@ -289,6 +289,7 @@ while moveFlag != False:
         print("Front: ", fDistance)
         lRevolutions = 0
         rRevolutions = 0
+        distanceT = 0
         count += 1
 
     if count == 11:
