@@ -286,7 +286,7 @@ while moveFlag != False:
         #pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
         #pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
         distanceTraveled += distanceIn
-        print("Distance Traveled: " distanceTraveled)
+        print("Distance Traveled: ", distanceTraveled)
 
         # Print each measurement
         #sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
