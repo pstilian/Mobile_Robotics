@@ -280,6 +280,7 @@ while moveFlag != False:
     pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
     sensorOutput.write(str(fDistance) + "\n")
     #changed if statement due to issues.
+    print("count: (", count, ") "distanceT: ", distanceT)
     if distanceT >= distanceIn:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
