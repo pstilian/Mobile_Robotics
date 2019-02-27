@@ -296,9 +296,10 @@ while moveFlag != False:
         distanceT = 0
         count += 1
 
-    #if count == 11:
-    if distanceTraveled == stopDistance:
+    if count == 11:
         moveFlag = False
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
 
 
 
