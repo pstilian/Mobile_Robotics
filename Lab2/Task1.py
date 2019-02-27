@@ -252,9 +252,6 @@ pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
 
 initEncoders()
 
-# Takes input from user for distance and time to travel while also checking
-# for bad input.
-# checkValidSpeed()
 
 # Open file to record data.
 sensorOutput = open("LFRDistance.txt", "w+")
@@ -272,22 +269,24 @@ count = 0
 # taking distance measurements every 7.87 inches from the left right and top
 sensorOutput.write("***** Front Distance ******" "\n")
 while moveFlag != False:
-    # Get a measurement from each sensor
-    lDistance = lSensor.get_distance()
+    #Get a measurement from each sensor
+    #lDistance = lSensor.get_distance()
     fDistance = fSensor.get_distance()
-    rDistance = rSensor.get_distance()
+    #rDistance = rSensor.get_distance()
+
     distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
     pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
     sensorOutput.write(str(fDistance) + "\n")
-    if (distanceIn - distanceT) <= 0:
+    #changed if statement due to issues.
+    if distanceT >= distanceIn:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
 
         # Print each measurement
         #sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
-        print("Left: {}\tFront: {}\tRight: {}".format(lDistance, fDistance, rDistance))
+        print("Front: ", fDistance)
         lRevolutions = 0
         rRevolutions = 0
         count += 1
