@@ -278,22 +278,25 @@ while moveFlag != False:
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
     pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
-    sensorOutput.write(str(fDistance) + "\n")
+    
     #changed if statement due to issues.
     print("count: (", count, ") "distanceT: ", distanceT)
     if distanceT >= distanceIn:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
+        distanceTraveled += distanceIn
 
         # Print each measurement
         #sensorOutput.write( "Left Distance: " +  str(lDistance) + ", Right Distance: " + str(rDistance) + ", Forward Distance: "  + str(fDistance) +  "\n")
+        sensorOutput.write(str(fDistance) + "\n")
         print("Front: ", fDistance)
         lRevolutions = 0
         rRevolutions = 0
         distanceT = 0
         count += 1
 
-    if count == 11:
+    #if count == 11:
+    if distanceTraveled == stopDistance:
         moveFlag = False
 
 
