@@ -11,7 +11,8 @@ import Adafruit_PCA9685
 import csv
 
 
-
+mDis = {}
+fDis = {}
 # Pins that the encoders are connected to
 LENCODER = 17
 RENCODER = 18
@@ -286,7 +287,7 @@ while moveFlag != False:
     print("before lRevo: ", lRevolutions, " before rRevo: ", rRevolutions)
     distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
-    pwm.set_pwm(LSERVO, 0, math.floor(1.6 / 20 * 4096));
+    pwm.set_pwm(LSERVO, 0, math.floor(1.65 / 20 * 4096));
     pwm.set_pwm(RSERVO, 0, math.floor(1.4 / 20 * 4096));
     print("after lRevo: ", lRevolutions, " after rRevo: ", rRevolutions)
     
@@ -306,12 +307,13 @@ while moveFlag != False:
         sensorOutput.write(str(fDistance) + "\n")
         print("Front: ", fDistance)
         count += 1
-        writePlot1(fDistance, mDistance)
+
         while selectCommand != 's':
             pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096));
             pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096));
             selectCommand = input("Please enter \'s\' to begin robot movement: ")
         selectCommand = " "
+
 
     if count == 11:
         moveFlag = False
@@ -324,3 +326,7 @@ while moveFlag != False:
 lSensor.stop_ranging()
 fSensor.stop_ranging()
 rSensor.stop_ranging()
+
+
+
+    

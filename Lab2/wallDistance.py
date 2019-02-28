@@ -8,7 +8,7 @@ import signal
 import decimal
 import math
 import Adafruit_PCA9685
-
+import csv
 # variables
 startTime = time.time()
 currentTime = 0
@@ -145,11 +145,13 @@ def saturationFunction(ips):
 
 #--------------------------------------MAINLINE CODE----------------------------------------------------
 desiredDistance = 5.0
-kpValue = 4.0
+kpValue = 5
 
 # Attach the Ctrl+C signal interrupt and initialize encoders
 signal.signal(signal.SIGINT, ctrlC)
 
+fDistance = fSensor.get_distance()
+print(fDistance)
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -157,13 +159,23 @@ time.sleep(2)
 
 # Imports dictionary from the calibration CSV file
 readCSV()
-
+#added
+sTime = time.time()
+printTime = time.time()
 # While loop that monitors speed vs distance
 while True:
     # Reads Distance From Sensor
     fDistance = fSensor.get_distance()
-
-    print("FRONT DISTANCE : ", fDistance)
+    #added
+    intTime = time.time() - sTime
+    
+    newTime = time.time() - printTime
+    
+    if newTime > 3:
+        print("Ptime: ", newTime)
+        print("Time: ", intTime)
+        print("FRONT DISTANCE : ", fDistance)
+        printTime = time.time()
 
     # Converts readings from milimeters to inches
     inchDistance = fDistance * 0.03937
@@ -171,18 +183,18 @@ while True:
 
     # fError is the calculated respective error value aka the e(t) value
     error = desiredDistance - inchDistance
-    
-    print("ERROR : ", error)
+    #commented to make clear
+    #print("ERROR : ", error)
 
     # Control Signal aka u(t)  = Kp * e(t)
     controlSignal = kpValue * error
-
-    print("CONTROL SIGNAL : ",controlSignal)
+    #commented to make clear
+    #print("CONTROL SIGNAL : ",controlSignal)
 
     # Calculating new control signal value by running control signal through saturation function
     newSignal = saturationFunction(controlSignal)
-
-    print("NEW SIGNAL (IPS) : ",newSignal)
+    #commented to make clear
+    #print("NEW SIGNAL (IPS) : ",newSignal)
 
     setSpeedsIPS(newSignal, newSignal)
 
