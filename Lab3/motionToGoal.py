@@ -188,10 +188,10 @@ def saturationFunction(ips):
 # Sets boundary speed for robot movement
 def saturationFunctionGoalFacing(ips):
 	controlSignal = ips
-	if controlSignal > 1.0:
-		controlSignal = 1.0
-	elif controlSignal < -1.0:
-		controlSignal = -1.0
+	if controlSignal > 0.5:
+		controlSignal = 0.5
+	elif controlSignal < -0.5:
+		controlSignal = -0.5
 	return controlSignal
 
 # Pivots robot on an axis to make a left turn
