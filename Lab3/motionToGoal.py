@@ -152,6 +152,7 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 
 # Spins robot in a circle based on IPS
 def spinIPS(ipsLeft, ipsRight):
+	print("I'm spinning WEEEEEEE!!!")
     # Converting inches per second into revolutions per second
     rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
     rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
@@ -279,8 +280,8 @@ def goalSearching():
 
 
 	else:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+		pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
 
 
 
@@ -332,8 +333,6 @@ cv.namedWindow(WINDOW2)
 
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-
-startFlag = False
 
 startFlag = False
 selectCommand = ' '
