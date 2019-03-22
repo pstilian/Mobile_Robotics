@@ -326,14 +326,13 @@ while startFlag:
     cv.imshow(WINDOW1, mask)
     cv.imshow(WINDOW2, frame_with_keypoints)
 
+    for keypoint in keypoints:
+    	xPos = keypoint.pt[0]
 
-    fDistance = fSensor.get_distance()
-    finches = fDistance * 0.039370078
-
-    if not keypoints:
+    if x_pos <= 77 or x_pos >= 83
         goalSearching()
 
-    elif keypoints: 
+    elif x_pos > 77 or x_pos < 83: 
         motionToGoal()
 
     # Check for user input
