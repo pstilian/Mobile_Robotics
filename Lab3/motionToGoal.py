@@ -158,23 +158,23 @@ def spinIPS(ipsLeft, ipsRight):
 	rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
 
     # makes sure RPS is always a positive number
-    if rpsLeft < 0:
-        rpsLeft = 0 - rpsLeft
-    if rpsRight < 0:
-        rpsRight = 0 - rpsRight
+	if rpsLeft < 0:
+		rpsLeft = 0 - rpsLeft
+	if rpsRight < 0:
+		rpsRight = 0 - rpsRight
 
     # Calculating pwm values from the respective dictionaries
-    lPwmValue = float(LWSpeed[rpsLeft])
-    rPwmValue = float(RWSpeed[rpsRight])
+	lPwmValue = float(LWSpeed[rpsLeft])
+	rPwmValue = float(RWSpeed[rpsRight])
 
-    if ipsLeft < 0 and ipsRight < 0:
+	if ipsLeft < 0 and ipsRight < 0:
         # Setting appropiate speeds to the servos when going forwards
-        pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
-    elif ipsLeft >= 0 and ipsRight >= 0:
+		pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
+	    pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+	elif ipsLeft >= 0 and ipsRight >= 0:
         # Setting apporpiate speeds to the servos when going backwards
-        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+		pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
 
 # Sets boundary speed for robot movement
 def saturationFunction(ips):
