@@ -83,6 +83,15 @@ def saturationFunction(ips):
 
 #########################Camera Blob Start######################################
 
+# Window names
+WINDOW1 = "Adjustable Mask - Press Esc to quit"
+WINDOW2 = "Detected Blobs - Press Esc to quit"
+
+# Default HSV ranges
+# Note: the range for hue is 0-180, not 0-255
+minH =   130; minS = 148; minV = 0;
+maxH = 180; maxS = 255; maxV = 255;
+
 # These functions are called when the user moves a trackbar
 def onMinHTrackbar(val):
     # Calculate a valid minimum red value and re-set the trackbar.
@@ -137,14 +146,7 @@ readCSV()
 
 FPS_SMOOTHING = 0.9
 
-# Window names
-WINDOW1 = "Adjustable Mask - Press Esc to quit"
-WINDOW2 = "Detected Blobs - Press Esc to quit"
 
-# Default HSV ranges
-# Note: the range for hue is 0-180, not 0-255
-minH =   130; minS = 148; minV = 0;
-maxH = 180; maxS = 255; maxV = 255;
 
 
 # Initialize the threaded camera
