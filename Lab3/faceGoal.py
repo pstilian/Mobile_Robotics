@@ -176,7 +176,13 @@ fs.release()
 cv.namedWindow(WINDOW1)
 cv.namedWindow(WINDOW2)
 
-
+# Create trackbars
+cv.createTrackbar("Min Hue", WINDOW1, minH, 0, onMinHTrackbar)
+cv.createTrackbar("Max Hue", WINDOW1, maxH, 0, onMaxHTrackbar)
+cv.createTrackbar("Min Sat", WINDOW1, minS, 68, onMinSTrackbar)
+cv.createTrackbar("Max Sat", WINDOW1, maxS, 100, onMaxSTrackbar)
+cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
+cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
 fps, prev = 0.0, 0.0
 
