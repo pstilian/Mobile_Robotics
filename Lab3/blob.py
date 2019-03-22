@@ -25,7 +25,7 @@ WINDOW2 = "Detected Blobs - Press Esc to quit"
 
 # Default HSV ranges
 # Note: the range for hue is 0-180, not 0-255
-minH =   88; minS = 148; minV =   92;
+minH =   88; minS = 148; minV = 92;
 maxH = 180; maxS = 255; maxV = 255;
 
 
