@@ -20,6 +20,7 @@ currentTime = 0
 
 fps = 0.0
 prev = 0.0
+x_pos = 0
 
 kpValue = 0.4
 
