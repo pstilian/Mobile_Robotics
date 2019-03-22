@@ -329,7 +329,7 @@ while startFlag:
     for keypoint in keypoints:
     	xPos = keypoint.pt[0]
 
-    if x_pos <= 77 or x_pos >= 83
+    if x_pos <= 77 or x_pos >= 83:
         goalSearching()
 
     elif x_pos > 77 or x_pos < 83: 
