@@ -264,7 +264,8 @@ def motionToGoal():
 def goalSearching():
 	print("Searching for goal...")
 	
-	if len(keypoints) >= 1:
+	#if len(keypoints) >= 1:
+	if x_pos >= 77 or x_pos <= 83:
 		print("GOAL FOUND!")
 
 		# Calculating error based on x value of blob
