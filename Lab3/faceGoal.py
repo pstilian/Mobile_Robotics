@@ -19,15 +19,6 @@ startTime = time.time()
 currentTime = 0
 FPS_SMOOTHING = 0.9
 
-# Window names
-WINDOW1 = "Adjustable Mask - Press Esc to quit"
-WINDOW2 = "Detected Blobs - Press Esc to quit"
-
-# Default HSV ranges
-# Note: the range for hue is 0-180, not 0-255
-minH =   88; minS = 148; minV = 92;
-maxH = 180; maxS = 255; maxV = 255;
-
 # Pins that the encoders are connected to
 LENCODER = 17
 RENCODER = 18
@@ -265,7 +256,7 @@ cv.namedWindow(WINDOW2)
 
 fps, prev = 0.0, 0.0
 
-pwm.set_pwm(LSERVO, 0, math.floor(1.45 / 20 * 4096))
+pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
 
@@ -312,8 +303,8 @@ while True:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
     if not keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
 camera.stop()
 
