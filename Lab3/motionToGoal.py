@@ -201,16 +201,16 @@ def motionToGoal():
 
 	# Converts readings from milimeters to inches
 	inchDistance = fDistance * 0.03937
-    # 0.394 is the conversion rate from cm to inches Determining error amount
+   	# 0.394 is the conversion rate from cm to inches Determining error amount
 
     # fError is the calculated respective error value aka the e(t) value
-    error = desiredDistance - inchDistance
+	error = desiredDistance - inchDistance
 
     # Control Signal aka u(t)  = Kp * e(t)
-    controlSignal = kpValue * error
+	controlSignal = kpValue * error
 
     # Calculating new control signal value by running control signal through saturation function
-    newSignal = saturationFunction(controlSignal)
+	newSignal = saturationFunction(controlSignal)
 
     setSpeedsIPS(newSignal, newSignal)
 
@@ -218,12 +218,12 @@ def motionToGoal():
 def goalSearching():
 	print("Searching for goal...")
 	if not keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
+		pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
 
-    if keypoints
-        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+	if keypoints:
+		pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
     
     # Initialization functions

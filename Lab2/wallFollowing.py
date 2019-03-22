@@ -151,13 +151,13 @@ def saturationFunction(ips):
 # Pivots robot on an axis to make a left turn
 def leftTurn():
       setSpeedsIPS(1.3,-1.3)
-      time.sleep(3)
+      time.sleep(1)
       setSpeedsIPS(0,0)
 
 # Pivots robot on an axis to make a right turn
 def rightTurn():
       setSpeedsIPS(-1.3,1.3)
-      time.sleep(3)
+      time.sleep(1)
       setSpeedsIPS(0,0)
 
 def setSpeedsvw(v, w):
