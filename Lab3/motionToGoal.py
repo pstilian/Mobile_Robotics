@@ -200,7 +200,7 @@ def motionToGoal():
 	sensorCount = 0
 
 	# Converts readings from milimeters to inches
-    inchDistance = fDistance * 0.03937
+	inchDistance = fDistance * 0.03937
     # 0.394 is the conversion rate from cm to inches Determining error amount
 
     # fError is the calculated respective error value aka the e(t) value
