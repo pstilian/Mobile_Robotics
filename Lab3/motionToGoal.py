@@ -263,7 +263,7 @@ def motionToGoal():
 def goalSearching():
 	print("Searching for goal...")
 	
-	if keypoints:
+	if len(keypoints) >= 1:
 		print("GOAL FOUND!")
 
 		# Calculating error based on x value of blob
@@ -279,8 +279,8 @@ def goalSearching():
 
 
 	else:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
+		pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
 
 
