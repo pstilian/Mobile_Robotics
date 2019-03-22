@@ -272,6 +272,7 @@ cv.namedWindow(WINDOW2)
     ########################## MAIN LINE CODE ####################################
 
 fps = 0.0
+prev = 0.0
 
 # Declares Goal distance to wall
 goalDistance = 5
