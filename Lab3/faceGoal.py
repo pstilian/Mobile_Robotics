@@ -19,15 +19,6 @@ startTime = time.time()
 currentTime = 0
 FPS_SMOOTHING = 0.9
 
-# Window names
-WINDOW1 = "Adjustable Mask - Press Esc to quit"
-WINDOW2 = "Detected Blobs - Press Esc to quit"
-
-# Default HSV ranges
-# Note: the range for hue is 0-180, not 0-255
-minH =   88; minS = 148; minV = 92;
-maxH = 180; maxS = 255; maxV = 255;
-
 # Pins that the encoders are connected to
 LENCODER = 17
 RENCODER = 18
@@ -51,43 +42,6 @@ RSHDN = 23
 DEFAULTADDR = 0x29 # All sensors use this address by default, don't change this
 LADDR = 0x2a
 RADDR = 0x2b
-
-# Set the pin numbering scheme to the numbering shown on the robot itself.
-GPIO.setmode(GPIO.BCM)
-
-# Setup pins
-GPIO.setup(LSHDN, GPIO.OUT)
-GPIO.setup(FSHDN, GPIO.OUT)
-GPIO.setup(RSHDN, GPIO.OUT)
-
-# Shutdown all sensors
-GPIO.output(LSHDN, GPIO.LOW)
-GPIO.output(FSHDN, GPIO.LOW)
-GPIO.output(RSHDN, GPIO.LOW)
-
-time.sleep(0.01)
-
-# Initialize all sensors
-lSensor = VL53L0X.VL53L0X(address=LADDR)
-fSensor = VL53L0X.VL53L0X(address=DEFAULTADDR)
-rSensor = VL53L0X.VL53L0X(address=RADDR)
-
-# Connect the left sensor and start measurement
-GPIO.output(LSHDN, GPIO.HIGH)
-time.sleep(0.01)
-lSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
-
-# Connect the right sensor and start measurement
-GPIO.output(RSHDN, GPIO.HIGH)
-time.sleep(0.01)
-rSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
-
-# Connect the front sensor and start measurement
-GPIO.output(FSHDN, GPIO.HIGH)
-time.sleep(0.01)
-fSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
-
-
 
 def ctrlC(signum, frame):
     print("Exiting")
@@ -114,34 +68,8 @@ def readCSV():
     #print("*******LEFTSPEEDS*******\n", LWSpeed)
     #print("*******RIGHTSPEEDS******\n", RWSpeed)
 
-def setDifference(speed):
-    diff = speed - 1.5
-    return 1.5 - diff
-        
-# Sets speed of motors in Inches per econd
-def setSpeedsIPS(ipsLeft, ipsRight):
-    # Converting inches per second into revolutions per second
-    rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
-    rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
 
-    # makes sure RPS is always a positive number
-    if rpsLeft < 0:
-        rpsLeft = 0 - rpsLeft
-    if rpsRight < 0:
-        rpsRight = 0 - rpsRight
 
-    # Calculating pwm values from the respective dictionaries
-    lPwmValue = float(LWSpeed[rpsLeft])
-    rPwmValue = float(RWSpeed[rpsRight])
-
-    if ipsLeft < 0 and ipsRight < 0:
-        # Setting appropiate speeds to the servos when going forwards
-        pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
-    elif ipsLeft >= 0 and ipsRight >= 0:
-        # Setting apporpiate speeds to the servos when going backwards
-        pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
 
 
 ###############################
@@ -192,13 +120,6 @@ def onMaxVTrackbar(val):
     global maxV
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
-
-
-
-
-
-
-
 
 #------------------------------MAIN-------------------------------------
 
@@ -255,17 +176,11 @@ fs.release()
 cv.namedWindow(WINDOW1)
 cv.namedWindow(WINDOW2)
 
-# Create trackbars uncomment for trackbars
-# cv.createTrackbar("Min Hue", WINDOW1, minH, 0, onMinHTrackbar)
-# cv.createTrackbar("Max Hue", WINDOW1, maxH, 0, onMaxHTrackbar)
-# cv.createTrackbar("Min Sat", WINDOW1, minS, 68, onMinSTrackbar)
-# cv.createTrackbar("Max Sat", WINDOW1, maxS, 100, onMaxSTrackbar)
-# cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
-# cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
+
 
 fps, prev = 0.0, 0.0
 
-pwm.set_pwm(LSERVO, 0, math.floor(1.45 / 20 * 4096))
+pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
 
@@ -311,50 +226,10 @@ while True:
     if keypoints:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+        
+        
     if not keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
 camera.stop()
-
-    #fDistance = fSensor.get_distance()
-
-
-
-    #added
-    #intTime = time.time() - sTime
-    
-    #newTime = time.time() - printTime
-    
-    #if newTime > 3:
-     #   print("Ptime: ", newTime)
-     #   print("Time: ", intTime)
-     #   print("FRONT DISTANCE : ", fDistance)
-     #   printTime = time.time()
-
-    # Converts readings from milimeters to inches
-    #inchDistance = fDistance * 0.03937
-    # 0.394 is the conversion rate from cm to inches Determining error amount
-
-    # fError is the calculated respective error value aka the e(t) value
-    #error = desiredDistance - inchDistance
-    #commented to make clear
-    #print("ERROR : ", error)
-
-    # Control Signal aka u(t)  = Kp * e(t)
-    #controlSignal = kpValue * error
-    #commented to make clear
-    #print("CONTROL SIGNAL : ",controlSignal)
-
-    # Calculating new control signal value by running control signal through saturation function
-    #newSignal = saturationFunction(controlSignal)
-    #commented to make clear
-    #print("NEW SIGNAL (IPS) : ",newSignal)
-
-    #setSpeedsIPS(newSignal, newSignal)
-
-
-# Stop measurement for all sensors
-lSensor.stop_ranging()
-fSensor.stop_ranging()
-rSensor.stop_ranging()
