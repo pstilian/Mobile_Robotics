@@ -25,7 +25,7 @@ WINDOW2 = "Detected Blobs - Press Esc to quit"
 
 # Default HSV ranges
 # Note: the range for hue is 0-180, not 0-255
-minH =   88; minS = 148; minV = 92;
+minH =   0; minS = 127 minV =    0;
 maxH = 180; maxS = 255; maxV = 255;
 
 
@@ -98,10 +98,10 @@ cv.namedWindow(WINDOW1)
 cv.namedWindow(WINDOW2)
 
 # Create trackbars
-cv.createTrackbar("Min Hue", WINDOW1, minH, 0, onMinHTrackbar)
-cv.createTrackbar("Max Hue", WINDOW1, maxH, 0, onMaxHTrackbar)
-cv.createTrackbar("Min Sat", WINDOW1, minS, 68, onMinSTrackbar)
-cv.createTrackbar("Max Sat", WINDOW1, maxS, 100, onMaxSTrackbar)
+cv.createTrackbar("Min Hue", WINDOW1, minH, 180, onMinHTrackbar)
+cv.createTrackbar("Max Hue", WINDOW1, maxH, 180, onMaxHTrackbar)
+cv.createTrackbar("Min Sat", WINDOW1, minS, 255, onMinSTrackbar)
+cv.createTrackbar("Max Sat", WINDOW1, maxS, 255, onMaxSTrackbar)
 cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
 cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
