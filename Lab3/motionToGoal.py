@@ -222,7 +222,7 @@ def goalSearching():
 		pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
 
 	if keypoints:
-	print("GOAL FOUND!")
+		print("GOAL FOUND!")
 		pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 		pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
