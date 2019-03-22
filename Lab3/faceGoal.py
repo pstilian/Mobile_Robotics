@@ -256,16 +256,7 @@ fps, prev = 0.0, 0.0
 pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
 
-
-
-
 while True:
-    if keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-    if not keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
     # Calculate FPS
     now = time.time()
     fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
@@ -296,6 +287,13 @@ while True:
     # Display the frame
     cv.imshow(WINDOW1, mask)
     cv.imshow(WINDOW2, frame_with_keypoints)
+
+    if keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+    if not keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
     
     # Check for user input
     c = cv.waitKey(1)
