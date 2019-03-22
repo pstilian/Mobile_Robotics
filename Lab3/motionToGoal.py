@@ -21,7 +21,7 @@ currentTime = 0
 fps = 0.0
 prev = 0.0
 
-KPvalue = 0.4
+kpValue = 0.4
 
 # Pins that the encoders are connected to
 LENCODER = 17
