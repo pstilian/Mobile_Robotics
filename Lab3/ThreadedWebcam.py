@@ -11,9 +11,9 @@ class ThreadedWebcam:
 		# as the camera may end up displaying an incorrect image.
 		# Alternatively, frames can be resized afterwards using the resize() function.
 		self.stream = cv.VideoCapture(src)
-		self.stream.set(cv.CAP_PROP_FRAME_WIDTH, 360)
+		self.stream.set(cv.CAP_PROP_FRAME_WIDTH, 180)
 		self.stream.set(cv.CAP_PROP_FRAME_HEIGHT, 480)
-		#self.stream.set(cv.CAP_PROP_BUFFERSIZE, 1)
+		self.stream.set(cv.CAP_PROP_BUFFERSIZE, 1)
 		
 		if not self.stream.isOpened():
 			print("Failed to open camera!")
