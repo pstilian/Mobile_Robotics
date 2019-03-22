@@ -278,7 +278,7 @@ def goalSearching():
 		spinIPS(newSignal, newSignal)
 
 
-	if not keypoints:
+	else:
 		pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
 		pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
 
