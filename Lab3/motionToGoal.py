@@ -212,7 +212,7 @@ def motionToGoal():
     # Calculating new control signal value by running control signal through saturation function
 	newSignal = saturationFunction(controlSignal)
 
-    setSpeedsIPS(newSignal, newSignal)
+	setSpeedsIPS(newSignal, newSignal)
 
 
 def goalSearching():
