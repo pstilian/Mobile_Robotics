@@ -218,8 +218,8 @@ def motionToGoal():
 def goalSearching():
 	print("Searching for goal...")
 	if not keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
 
     if keypoints
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
