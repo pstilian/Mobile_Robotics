@@ -14,6 +14,8 @@ import cv2 as cv
 from ThreadedWebcam import ThreadedWebcam
 from UnthreadedWebcam import UnthreadedWebcam
 
+FPS_SMOOTHING
+
 #Global Variables
 startTime = time.time()
 currentTime = 0
@@ -270,6 +272,8 @@ cv.namedWindow(WINDOW2)
 
 
     ########################## MAIN LINE CODE ####################################
+
+fps = 0.0
 
 # Declares Goal distance to wall
 goalDistance = 5
