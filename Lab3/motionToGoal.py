@@ -178,10 +178,10 @@ def spinIPS(ipsLeft, ipsRight):
 # Sets boundary speed for robot movement
 def saturationFunction(ips):
     controlSignal = ips
-    if controlSignal > 2.0:
-        controlSignal = 2.0
-    elif controlSignal < -2.0:
-        controlSignal = -2.0
+    if controlSignal > 4.0:
+        controlSignal = 4.0
+    elif controlSignal < -4.0:
+        controlSignal = -4.0
     return controlSignal
 
 # Sets boundary speed for robot movement
