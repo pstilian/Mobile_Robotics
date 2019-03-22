@@ -281,8 +281,8 @@ def goalSearching():
 
 
 	else:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
+		pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
 
 
