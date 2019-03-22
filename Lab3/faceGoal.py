@@ -17,16 +17,10 @@ from UnthreadedWebcam import UnthreadedWebcam
 #Global Variables
 startTime = time.time()
 currentTime = 0
-FPS_SMOOTHING = 0.9
 
-# Window names
-WINDOW1 = "Adjustable Mask - Press Esc to quit"
-WINDOW2 = "Detected Blobs - Press Esc to quit"
 
-# Default HSV ranges
-# Note: the range for hue is 0-180, not 0-255
-minH =   88; minS = 148; minV = 92;
-maxH = 180; maxS = 255; maxV = 255;
+
+
 
 # Pins that the encoders are connected to
 LENCODER = 17
@@ -152,8 +146,18 @@ def saturationFunction(ips):
     elif controlSignal < -7.1:
         controlSignal = -7.1
     return controlSignal
+#------------------------------MAIN-------------------------------------
 
-#########################Camera Blob Start######################################
+FPS_SMOOTHING = 0.9
+
+# Window names
+WINDOW1 = "Adjustable Mask - Press Esc to quit"
+WINDOW2 = "Detected Blobs - Press Esc to quit"
+
+# Default HSV ranges
+# Note: the range for hue is 0-180, not 0-255
+minH =   88; minS = 148; minV = 92;
+maxH = 180; maxS = 255; maxV = 255;
 
 # These functions are called when the user moves a trackbar
 def onMinHTrackbar(val):
@@ -193,16 +197,6 @@ def onMaxVTrackbar(val):
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
-
-
-
-
-
-
-
-#------------------------------MAIN-------------------------------------
-
-
 # Attach the Ctrl+C signal interrupt and initialize encoders
 signal.signal(signal.SIGINT, ctrlC)
 
@@ -213,12 +207,6 @@ time.sleep(2)
 
 # Imports dictionary from the calibration CSV file
 readCSV()
-
-FPS_SMOOTHING = 0.9
-
-# Window names
-WINDOW1 = "Adjustable Mask - Press Esc to quit"
-WINDOW2 = "Detected Blobs - Press Esc to quit"
 
 # Default HSV ranges
 # Note: the range for hue is 0-180, not 0-255
