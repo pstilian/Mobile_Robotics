@@ -268,15 +268,16 @@ def goalSearching():
 		print("GOAL FOUND!")
 
 		# Calculating error based on x value of blob
-		error = 80 - x_pos
+		#error = 80 - x_pos
 
 		# Control Signal aka u(t)  = Kp * e(t)
-		controlSignal = kpValue * error
+		#controlSignal = kpValue * error
 
     	# Calculating new control signal value by running control signal through saturation function
-		newSignal = saturationFunctionGoalFacing(controlSignal)
+		#newSignal = saturationFunctionGoalFacing(controlSignal)
 
-		spinIPS(newSignal, newSignal)
+		#spinIPS(newSignal, newSignal)
+		motionToGoal()
 
 
 	else:
@@ -379,11 +380,11 @@ while startFlag:
     for keypoint in keypoints:
     	xpos = keypoint.pt[0]
 
-    if x_pos <= 77 or x_pos >= 83:
-        goalSearching()
+    #if x_pos <= 77 or x_pos >= 83:
+    goalSearching()
 
-    else: 
-        motionToGoal()
+    #else: 
+    #    motionToGoal()
 
     # Check for user input
     c = cv.waitKey(1)
