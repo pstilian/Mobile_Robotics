@@ -273,7 +273,7 @@ def goalSearching():
 		controlSignal = kpValue * error
 
     	# Calculating new control signal value by running control signal through saturation function
-		newSignal = saturationFunction(controlSignal)
+		newSignal = saturationFunctionGoalFacing(controlSignal)
 
 		spinIPS(newSignal, newSignal)
 
