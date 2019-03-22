@@ -22,7 +22,7 @@ fps = 0.0
 prev = 0.0
 x_pos = 0
 
-kpValue = 0.4
+kpValue = 0.9
 
 # Pins that the encoders are connected to
 LENCODER = 17
@@ -264,23 +264,13 @@ def motionToGoal():
 def goalSearching():
 	print("Searching for goal...")
 	
-	if len(keypoints) >= 1:
-		print("GOAL FOUND!")
+	#if len(keypoints) >= 1:
+	#	print("GOAL FOUND!")
 
-		# Calculating error based on x value of blob
-		#error = 80 - x_pos
+	#	motionToGoal()
 
-		# Control Signal aka u(t)  = Kp * e(t)
-		#controlSignal = kpValue * error
-
-    	# Calculating new control signal value by running control signal through saturation function
-		#newSignal = saturationFunctionGoalFacing(controlSignal)
-
-		#spinIPS(newSignal, newSignal)
-		motionToGoal()
-
-
-	else:
+	#else:
+	if not keypoints:
 		pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
 		pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
@@ -347,7 +337,7 @@ startFlag =True
 # 
 while startFlag:
 	# Calculate FPS
-    now = time.time()
+	now = time.time()
     fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
     prev = now
 
@@ -374,17 +364,17 @@ while startFlag:
     cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
     
     # Display the frame
-    cv.imshow(WINDOW1, mask)
-    cv.imshow(WINDOW2, frame_with_keypoints)
+	cv.imshow(WINDOW1, mask)
+	cv.imshow(WINDOW2, frame_with_keypoints)
 
-    for keypoint in keypoints:
-    	xpos = keypoint.pt[0]
+	for keypoint in keypoints:
+		x_pos = keypoint.pt[0]
 
-    #if x_pos <= 77 or x_pos >= 83:
-    goalSearching()
+	if x_pos <= 77 or x_pos >= 83:
+		goalSearching()
 
-    #else: 
-    #    motionToGoal()
+	elif xpos >= 77 and x_pos <= 83:
+		motionToGoal()
 
     # Check for user input
     c = cv.waitKey(1)
