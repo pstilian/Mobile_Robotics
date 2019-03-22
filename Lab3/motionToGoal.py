@@ -204,6 +204,8 @@ def motionToGoal():
 	print("IM GOING THE GOALLLLLL!!!!")
 	sensorCount = 0
 
+	# Gets Distance From Sensor
+	fDistance = fSensor.get_distance()
 	# Converts readings from milimeters to inches
 	inchDistance = fDistance * 0.03937
    	# 0.394 is the conversion rate from cm to inches Determining error amount
@@ -331,7 +333,7 @@ while startFlag:
     if not keypoints:
         goalSearching()
 
-    if keypoints: 
+    elif keypoints: 
         motionToGoal()
 
     # Check for user input
