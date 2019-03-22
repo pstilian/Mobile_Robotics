@@ -149,10 +149,10 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 # Sets boundary speed for robot movement
 def saturationFunction(ips):
     controlSignal = ips
-    if controlSignal > 7.1:
-        controlSignal = 7.1
-    elif controlSignal < -7.1:
-        controlSignal = -7.1
+    if controlSignal > 4.0:
+        controlSignal = 4.0
+    elif controlSignal < -4.0:
+        controlSignal = -4.0
     return controlSignal
 
 # Pivots robot on an axis to make a left turn
