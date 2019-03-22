@@ -170,7 +170,7 @@ def spinIPS(ipsLeft, ipsRight):
 	if ipsLeft < 0 and ipsRight < 0:
         # Setting appropiate speeds to the servos when going forwards
 		pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
-	    pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
 	elif ipsLeft >= 0 and ipsRight >= 0:
         # Setting apporpiate speeds to the servos when going backwards
 		pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
@@ -178,21 +178,21 @@ def spinIPS(ipsLeft, ipsRight):
 
 # Sets boundary speed for robot movement
 def saturationFunction(ips):
-    controlSignal = ips
-    if controlSignal > 4.0:
-        controlSignal = 4.0
-    elif controlSignal < -4.0:
-        controlSignal = -4.0
-    return controlSignal
+	controlSignal = ips
+	if controlSignal > 4.0:
+		controlSignal = 4.0
+	elif controlSignal < -4.0:
+		controlSignal = -4.0
+	return controlSignal
 
 # Sets boundary speed for robot movement
 def saturationFunctionGoalFacing(ips):
-    controlSignal = ips
-    if controlSignal > 1.0:
-        controlSignal = 1.0
-    elif controlSignal < -1.0:
-        controlSignal = -1.0
-    return controlSignal
+	controlSignal = ips
+	if controlSignal > 1.0:
+		controlSignal = 1.0
+	elif controlSignal < -1.0:
+		controlSignal = -1.0
+	return controlSignal
 
 # Pivots robot on an axis to make a left turn
 def leftTurn():
