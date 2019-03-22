@@ -18,6 +18,11 @@ from UnthreadedWebcam import UnthreadedWebcam
 startTime = time.time()
 currentTime = 0
 
+fps = 0.0
+prev = 0.0
+
+KPvalue = 0.4
+
 # Pins that the encoders are connected to
 LENCODER = 17
 RENCODER = 18
@@ -271,11 +276,6 @@ cv.namedWindow(WINDOW2)
 
 
     ########################## MAIN LINE CODE ####################################
-
-fps = 0.0
-prev = 0.0
-
-KPvalue = 0.4
 
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
