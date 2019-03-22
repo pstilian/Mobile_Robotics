@@ -204,7 +204,7 @@ def motionToGoal():
    	# 0.394 is the conversion rate from cm to inches Determining error amount
 
     # fError is the calculated respective error value aka the e(t) value
-	error = desiredDistance - inchDistance
+	error = 5.0 - inchDistance
 
     # Control Signal aka u(t)  = Kp * e(t)
 	controlSignal = kpValue * error
@@ -222,6 +222,7 @@ def goalSearching():
 		pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
 
 	if keypoints:
+	print("GOAL FOUND!")
 		pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 		pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
@@ -273,9 +274,6 @@ cv.namedWindow(WINDOW2)
 
 fps = 0.0
 prev = 0.0
-
-# Declares Goal distance to wall
-goalDistance = 5
 
 KPvalue = 0.4
 
