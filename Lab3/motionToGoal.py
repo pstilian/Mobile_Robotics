@@ -14,8 +14,6 @@ import cv2 as cv
 from ThreadedWebcam import ThreadedWebcam
 from UnthreadedWebcam import UnthreadedWebcam
 
-FPS_SMOOTHING
-
 #Global Variables
 startTime = time.time()
 currentTime = 0
