@@ -154,8 +154,8 @@ def setSpeedsIPS(ipsLeft, ipsRight):
 def spinIPS(ipsLeft, ipsRight):
 	print("I'm spinning WEEEEEEE!!!")
     # Converting inches per second into revolutions per second
-    rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
-    rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
+	rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
+	rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
 
     # makes sure RPS is always a positive number
     if rpsLeft < 0:
