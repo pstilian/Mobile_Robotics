@@ -327,7 +327,7 @@ while startFlag:
     cv.imshow(WINDOW2, frame_with_keypoints)
 
     for keypoint in keypoints:
-    	xPos = keypoint.pt[0]
+    	xpos = keypoint.pt[0]
 
     if x_pos <= 77 or x_pos >= 83:
         goalSearching()
