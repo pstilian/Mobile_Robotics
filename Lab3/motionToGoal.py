@@ -150,6 +150,12 @@ def saturationFunction(ips):
         controlSignal = -7.1
     return controlSignal
 
+# Pivots robot on an axis to make a left turn
+def leftTurn():
+      setSpeedsIPS(1.3,-1.3)
+      time.sleep(1)
+      setSpeedsIPS(0,0)
+
 ###### OPEN CV FUNCTIONS #######
 
 def onMinHTrackbar(val):
@@ -189,6 +195,37 @@ def onMaxVTrackbar(val):
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
+def motionToGoal():
+	print("IM GOING THE GOALLLLLL!!!!")
+	sensorCount = 0
+
+	# Converts readings from milimeters to inches
+    inchDistance = fDistance * 0.03937
+    # 0.394 is the conversion rate from cm to inches Determining error amount
+
+    # fError is the calculated respective error value aka the e(t) value
+    error = desiredDistance - inchDistance
+
+    # Control Signal aka u(t)  = Kp * e(t)
+    controlSignal = kpValue * error
+
+    # Calculating new control signal value by running control signal through saturation function
+    newSignal = saturationFunction(controlSignal)
+
+    setSpeedsIPS(newSignal, newSignal)
+
+
+def goalSearching():
+	print("Searching for goal...")
+	if not keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+
+    if keypoints
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+
+    
     # Initialization functions
 
 # Attach the Ctrl+C signal interrupt and initialize encoders
@@ -233,3 +270,78 @@ cv.namedWindow(WINDOW2)
 
 
     ########################## MAIN LINE CODE ####################################
+
+# Declares Goal distance to wall
+goalDistance = 5
+
+KPvalue = 0.4
+
+pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+
+startFlag = False
+
+startFlag = False
+selectCommand = ' '
+
+# Holds program until command value is entered
+while selectCommand != 's':
+      selectCommand = input("Please enter \'s\' to begin robot movement: ")
+
+startFlag =True
+
+# 
+while startFlag:
+	# Calculate FPS
+    now = time.time()
+    fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
+    prev = now
+
+    # Get a frame
+    frame = camera.read()
+    
+    # Blob detection works better in the HSV color space 
+    # (than the RGB color space) so the frame is converted to HSV.
+    frame_hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    
+    # Create a mask using the given HSV range
+    mask = cv.inRange(frame_hsv, (minH, minS, minV), (maxH, maxS, maxV))
+    
+    # Run the SimpleBlobDetector on the mask.
+    # The results are stored in a vector of 'KeyPoint' objects,
+    # which describe the location and size of the blobs.
+    keypoints = detector.detect(mask)
+    
+    # For each detected blob, draw a circle on the frame
+    frame_with_keypoints = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    
+    # Write text onto the frame
+    cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+    cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+    
+    # Display the frame
+    cv.imshow(WINDOW1, mask)
+    cv.imshow(WINDOW2, frame_with_keypoints)
+
+
+    fDistance = fSensor.get_distance()
+    finches = fDistance * 0.039370078
+
+    if not keypoints:
+        goalSearching()
+
+    if keypoints: 
+        motionToGoal()
+
+    # Check for user input
+    c = cv.waitKey(1)
+    if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
+        camera.stop()
+        break
+
+# Stop using camera
+camera.stop()
+# Stop measurement for all sensors
+lSensor.stop_ranging()
+fSensor.stop_ranging()
+rSensor.stop_ranging()
