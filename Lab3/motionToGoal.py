@@ -124,6 +124,34 @@ def setDifference(speed):
         
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
+      # Converting inches per second into revolutions per second
+      rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
+      rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
+
+      if rpsLeft < 0:
+            rpsLeft = 0 - rpsLeft
+      if rpsRight < 0:
+            rpsRight = 0 - rpsRight
+
+      # Calculating pwm values from the respective dictionaries
+      lPwmValue = float(LWSpeed[rpsLeft])
+      rPwmValue = float(RWSpeed[rpsRight])
+
+      if ipsLeft < 0 and ipsRight < 0:
+            # Setting appropiate speeds to the servos when going forwards
+            pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+      elif ipsLeft >= 0 and ipsRight >= 0:
+            # Setting apporpiate speeds to the servos when going backwards
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+      elif ipsLeft >= 0 and ipsRight < 0:
+            # Setting appropriate speedsto the servos while making a turn
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+
+# Spins robot in a circle based on IPS
+def spinIPS(ipsLeft, ipsRight):
     # Converting inches per second into revolutions per second
     rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
     rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
@@ -141,11 +169,11 @@ def setSpeedsIPS(ipsLeft, ipsRight):
     if ipsLeft < 0 and ipsRight < 0:
         # Setting appropiate speeds to the servos when going forwards
         pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
     elif ipsLeft >= 0 and ipsRight >= 0:
         # Setting apporpiate speeds to the servos when going backwards
         pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
 
 # Sets boundary speed for robot movement
 def saturationFunction(ips):
@@ -225,14 +253,27 @@ def motionToGoal():
 
 def goalSearching():
 	print("Searching for goal...")
-	if not keypoints:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
-
+	
 	if keypoints:
 		print("GOAL FOUND!")
-		pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+
+		# Calculating error based on x value of blob
+		error = 80 - x_pos
+
+		# Control Signal aka u(t)  = Kp * e(t)
+		controlSignal = kpValue * error
+
+    	# Calculating new control signal value by running control signal through saturation function
+		newSignal = saturationFunction(controlSignal)
+
+		spinIPS(newSignal, newSignal)
+
+
+	if not keypoints:
+		pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
+
+
 
     
     # Initialization functions
