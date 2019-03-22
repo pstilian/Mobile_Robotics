@@ -382,7 +382,7 @@ while startFlag:
     if x_pos <= 77 or x_pos >= 83:
         goalSearching()
 
-    elif x_pos >= 77 or x_pos <= 83: 
+    else: 
         motionToGoal()
 
     # Check for user input
