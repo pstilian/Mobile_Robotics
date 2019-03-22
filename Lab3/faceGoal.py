@@ -8,12 +8,11 @@ import signal
 import decimal
 import math
 import Adafruit_PCA9685
-import cv2
+import csv
 
 import cv2 as cv
 from ThreadedWebcam import ThreadedWebcam
 from UnthreadedWebcam import UnthreadedWebcam
-
 
 #Global Variables
 startTime = time.time()
@@ -156,45 +155,46 @@ def saturationFunction(ips):
 
 #########################Camera Blob Start######################################
 
-#Run the Cam
-def runCam():
-    #Frames per Second
-    now = time.time()
-    fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
-    prev = now
+# These functions are called when the user moves a trackbar
+def onMinHTrackbar(val):
+    # Calculate a valid minimum red value and re-set the trackbar.
+    global minH
+    global maxH
+    minH = min(val, maxH - 1)
+    cv.setTrackbarPos("Min Hue", WINDOW1, minH)
 
-    # Get a frame
-    frame = camera.read()
+def onMinSTrackbar(val):
+    global minS
+    global maxS
+    minS = min(val, maxS - 1)
+    cv.setTrackbarPos("Min Sat", WINDOW1, minS)
 
-    # frame is converted to HSV.
-    frame_hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+def onMinVTrackbar(val):
+    global minV
+    global maxV
+    minV = min(val, maxV - 1)
+    cv.setTrackbarPos("Min Val", WINDOW1, minV)
 
-    # Create a mask using the given HSV range
-    mask = cv.inRange(frame_hsv, (minH, minS, minV), (maxH, maxS, maxV))
+def onMaxHTrackbar(val):
+    global minH
+    global maxH
+    maxH = max(val, minH + 1)
+    cv.setTrackbarPos("Max Hue", WINDOW1, maxH)
 
-    # The results are stored in a vector of 'KeyPoint' objects,
-    # which describe the location and size of the blobs.
-    keypoints = detector.detect(mask)
+def onMaxSTrackbar(val):
+    global minS
+    global maxS
+    maxS = max(val, minS + 1)
+    cv.setTrackbarPos("Max Sat", WINDOW1, maxS)
 
-    # For each detected blob, draw a circle on the frame
-    frame_with_keypoints = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    
-    # Write text onto the frame
-    cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-    cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-    
-    # Display the frame
-    cv.imshow(WINDOW1, mask)
-    cv.imshow(WINDOW2, frame_with_keypoints)
-    
-    # Check for user input
-    #c = cv.waitKey(1)
-    #if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
-        #camera.stop()
-        #break
+def onMaxVTrackbar(val):
+    global minV
+    global maxV
+    maxV = max(val, minV + 1)
+    cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
-def camStop():
-    camera.stop()
+
+
 
 
 
@@ -202,14 +202,10 @@ def camStop():
 
 #------------------------------MAIN-------------------------------------
 
-#desiredDistance = 5.0
-#kpValue = 5
 
 # Attach the Ctrl+C signal interrupt and initialize encoders
 signal.signal(signal.SIGINT, ctrlC)
 
-fDistance = fSensor.get_distance()
-print(fDistance)
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -217,9 +213,18 @@ time.sleep(2)
 
 # Imports dictionary from the calibration CSV file
 readCSV()
-#added
-sTime = time.time()
-printTime = time.time()
+
+FPS_SMOOTHING = 0.9
+
+# Window names
+WINDOW1 = "Adjustable Mask - Press Esc to quit"
+WINDOW2 = "Detected Blobs - Press Esc to quit"
+
+# Default HSV ranges
+# Note: the range for hue is 0-180, not 0-255
+minH =   88; minS = 148; minV = 92;
+maxH = 180; maxS = 255; maxV = 255;
+
 
 # Initialize the threaded camera
 # You can run the unthreaded camera instead by changing the line below.
@@ -250,29 +255,67 @@ fs.release()
 cv.namedWindow(WINDOW1)
 cv.namedWindow(WINDOW2)
 
+# Create trackbars uncomment for trackbars
+# cv.createTrackbar("Min Hue", WINDOW1, minH, 0, onMinHTrackbar)
+# cv.createTrackbar("Max Hue", WINDOW1, maxH, 0, onMaxHTrackbar)
+# cv.createTrackbar("Min Sat", WINDOW1, minS, 68, onMinSTrackbar)
+# cv.createTrackbar("Max Sat", WINDOW1, maxS, 100, onMaxSTrackbar)
+# cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
+# cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
+
 fps, prev = 0.0, 0.0
 
 pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
-pwm.set_pwm(RSERVO, 0, math.floor(1.6 / 20 * 4096))
-# While loop that monitors speed vs distance
+pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
+
+
+
+
 while True:
-    #while blob is not detected spin until detected
     if keypoints:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-    
-    runCam()
-
     if not keypoints:
         pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.6 / 20 * 4096))
-    #while blob is detected move forward until desired distance
-    #runCam()
-    #Reads Distance From Sensor
+        pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
+    # Calculate FPS
+    now = time.time()
+    fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
+    prev = now
 
+    # Get a frame
+    frame = camera.read()
+    
+    # Blob detection works better in the HSV color space 
+    # (than the RGB color space) so the frame is converted to HSV.
+    frame_hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    
+    # Create a mask using the given HSV range
+    mask = cv.inRange(frame_hsv, (minH, minS, minV), (maxH, maxS, maxV))
+    
+    # Run the SimpleBlobDetector on the mask.
+    # The results are stored in a vector of 'KeyPoint' objects,
+    # which describe the location and size of the blobs.
+    keypoints = detector.detect(mask)
+    
+    # For each detected blob, draw a circle on the frame
+    frame_with_keypoints = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    
+    # Write text onto the frame
+    cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+    cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+    
+    # Display the frame
+    cv.imshow(WINDOW1, mask)
+    cv.imshow(WINDOW2, frame_with_keypoints)
+    
+    # Check for user input
+    c = cv.waitKey(1)
     if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
         camera.stop()
         break
+
+camera.stop()
 
     #fDistance = fSensor.get_distance()
 

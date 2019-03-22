@@ -106,7 +106,16 @@ cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
 cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
 fps, prev = 0.0, 0.0
+
+pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
+pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
 while True:
+    if keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+    if not keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
     # Calculate FPS
     now = time.time()
     fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
