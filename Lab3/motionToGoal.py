@@ -264,15 +264,22 @@ def motionToGoal():
 def goalSearching():
 	print("Searching for goal...")
 	
-	#if len(keypoints) >= 1:
-	#	print("GOAL FOUND!")
+	if len(keypoints) >= 1:
+		print("GOAL FOUND!")
 
-	#	motionToGoal()
+		error = 160 - x_pos
 
-	#else:
-	if not keypoints:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+		# Control Signal aka u(t)  = Kp * e(t)
+		controlSignal = kpValue * error
+
+    	# Calculating new control signal value by running control signal through saturation function
+		newSignal = saturationFunction(controlSignal)
+
+		spinIPS(newSignal, newSignal)
+
+	else:
+		pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
 
 
 
@@ -338,11 +345,11 @@ startFlag =True
 while startFlag:
 	# Calculate FPS
 	now = time.time()
-    fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
-    prev = now
+	fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
+	prev = now
 
     # Get a frame
-    frame = camera.read()
+	frame = camera.read()
     
     # Blob detection works better in the HSV color space 
     # (than the RGB color space) so the frame is converted to HSV.
@@ -362,22 +369,27 @@ while startFlag:
     # Write text onto the frame
     cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
     cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-    
+
     # Display the frame
 	cv.imshow(WINDOW1, mask)
 	cv.imshow(WINDOW2, frame_with_keypoints)
 
+	# Prints FPS and number of blobs on string
+	print("FPS : ", fps)
+	print("Number of Blobs", len(keypoints))
+
 	for keypoint in keypoints:
 		x_pos = keypoint.pt[0]
+		print("x: ", x_pos)
 
-	if x_pos <= 77 or x_pos >= 83:
+	if x_pos <= 155 or x_pos >= 165:
 		goalSearching()
 
-	elif xpos >= 77 and x_pos <= 83:
+	else:
 		motionToGoal()
 
     # Check for user input
-    c = cv.waitKey(1)
+	c = cv.waitKey(1)
     if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
         camera.stop()
         break
