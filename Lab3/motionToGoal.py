@@ -286,6 +286,9 @@ def motionToGoal():
 # Attach the Ctrl+C signal interrupt and initialize encoders
 signal.signal(signal.SIGINT, ctrlC)
 
+#fpsvalue for smoothing
+FPS_SMOOTHING = 0.9
+
 # Initialized servos to zero movement
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -370,6 +373,16 @@ while startFlag:
     # Display the frame
     cv.imshow(WINDOW1, mask)
     cv.imshow(WINDOW2, frame_with_keypoints)
+
+    if keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+        find = False
+            
+    if not keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+
 
     # Prints FPS and number of blobs on string
     print("FPS : ", fps)
