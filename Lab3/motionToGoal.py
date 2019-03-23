@@ -213,6 +213,30 @@ def onMaxVTrackbar(val):
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
+def faceGoal():
+    find = True
+    pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+    while True:
+        if keypoints:
+            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+            find = False
+            
+        if not keypoints:
+            pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+
+        while keypoints:
+            startTime = time.time()
+            pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+        endTime = time.now - startTime
+
+        pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
+        time.sleep(endTime)
+
 def motionToGoal():
 	print("IM GOING THE GOALLLLLL!!!!")
 	sensorCount = 0
