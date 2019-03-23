@@ -375,8 +375,8 @@ while startFlag:
         print("x: ", x_pos)
 
     if len(keypoints) < 1:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
 
     elif len(keypoints) >= 1:
     	motionToGoal()
