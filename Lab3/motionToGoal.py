@@ -335,13 +335,13 @@ startFlag =True
 
 # 
 while startFlag:
-	# Calculate FPS
-	now = time.time()
-	fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
-	prev = now
+    # Calculate FPS
+    now = time.time()
+    fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
+    prev = now
 
     # Get a frame
-	frame = camera.read()
+    frame = camera.read()
     
     # Blob detection works better in the HSV color space 
     # (than the RGB color space) so the frame is converted to HSV.
@@ -363,21 +363,21 @@ while startFlag:
     cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
     # Display the frame
-	cv.imshow(WINDOW1, mask)
-	cv.imshow(WINDOW2, frame_with_keypoints)
+    cv.imshow(WINDOW1, mask)
+    cv.imshow(WINDOW2, frame_with_keypoints)
 
-	# Prints FPS and number of blobs on string
-	print("FPS : ", fps)
-	print("Number of Blobs", len(keypoints))
+    # Prints FPS and number of blobs on string
+    print("FPS : ", fps)
+    print("Number of Blobs", len(keypoints))
 
-	for keypoint in keypoints:
-		x_pos = keypoint.pt[0]
-		print("x: ", x_pos)
+    for keypoint in keypoints:
+        x_pos = keypoint.pt[0]
+        print("x: ", x_pos)
 
-	goalSearching()
+    goalSearching()
 
     # Check for user input
-	c = cv.waitKey(1)
+    c = cv.waitKey(1)
     if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
         camera.stop()
         break
