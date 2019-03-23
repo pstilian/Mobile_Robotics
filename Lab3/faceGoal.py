@@ -139,12 +139,12 @@ def rotateTarget():
         tSleep = 1.48
         pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
-        sleep(3)
+        time.sleep(3)
     if not keypoints:
         tSleep = 1.52
         pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
-        sleep(1.5)
+        time.sleep(1.5)
     while keypoints:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
