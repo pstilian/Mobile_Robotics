@@ -25,7 +25,7 @@ WINDOW2 = "Detected Blobs - Press Esc to quit"
 
 # Default HSV ranges
 # Note: the range for hue is 0-180, not 0-255
-minH =   0; minS = 127 minV =    0;
+minH =   0; minS = 127; minV =   0;
 maxH = 180; maxS = 255; maxV = 255;
 
 
@@ -106,16 +106,7 @@ cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
 cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
 fps, prev = 0.0, 0.0
-
-pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
-pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
 while True:
-    if keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-    if not keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.4 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(-1.4 / 20 * 4096))
     # Calculate FPS
     now = time.time()
     fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
@@ -135,10 +126,11 @@ while True:
     # The results are stored in a vector of 'KeyPoint' objects,
     # which describe the location and size of the blobs.
     keypoints = detector.detect(mask)
+    #print(keypoints)
     
     # For each detected blob, draw a circle on the frame
     frame_with_keypoints = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    
+    print(frame_with_keypoints)
     # Write text onto the frame
     cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
     cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
