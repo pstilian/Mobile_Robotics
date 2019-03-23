@@ -248,7 +248,7 @@ def faceGoal():
         # Display the frame
         cv.imshow(WINDOW1, mask)
         cv.imshow(WINDOW2, frame_with_keypoints)
-        
+
         if keypoints:
             pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
             pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -258,15 +258,6 @@ def faceGoal():
             pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
             pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
-        while keypoints:
-            startTime = time.time()
-            pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
-        endTime = time.now - startTime
-
-        pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
-        time.sleep(endTime)
 
 def motionToGoal():
 	print("IM GOING THE GOALLLLLL!!!!")
