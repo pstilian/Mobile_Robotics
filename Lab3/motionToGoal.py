@@ -150,32 +150,6 @@ def setSpeedsIPS(ipsLeft, ipsRight):
             pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
             pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
 
-# Spins robot in a circle based on IPS
-def spinIPS(ipsLeft, ipsRight):
-	print("I'm spinning WEEEEEEE!!!")
-    # Converting inches per second into revolutions per second
-	rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
-	rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
-
-    # makes sure RPS is always a positive number
-	if rpsLeft < 0:
-		rpsLeft = 0 - rpsLeft
-	if rpsRight < 0:
-		rpsRight = 0 - rpsRight
-
-    # Calculating pwm values from the respective dictionaries
-	lPwmValue = float(LWSpeed[rpsLeft])
-	rPwmValue = float(RWSpeed[rpsRight])
-
-	if ipsLeft < 0 and ipsRight < 0:
-        # Setting appropiate speeds to the servos when going forwards
-		pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
-	elif ipsLeft >= 0 and ipsRight >= 0:
-        # Setting apporpiate speeds to the servos when going backwards
-		pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
-
 # Sets boundary speed for robot movement
 def saturationFunction(ips):
 	controlSignal = ips
@@ -259,21 +233,6 @@ def motionToGoal():
 	newSignal = saturationFunction(controlSignal)
 
 	setSpeedsIPS(newSignal, newSignal)
-
-
-def goalSearching():
-	print("Searching for goal...")
-	
-	if len(keypoints) >= 1:
-		print("GOAL FOUND!")
-
-		motionToGoal()
-
-	else:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
-
-
 
     
     # Initialization functions
@@ -375,8 +334,8 @@ while startFlag:
         print("x: ", x_pos)
 
     if len(keypoints) < 1:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.53 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.54 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.54 / 20 * 4096))
 
     elif len(keypoints) >= 1:
     	motionToGoal()
