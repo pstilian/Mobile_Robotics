@@ -130,6 +130,25 @@ def onMaxVTrackbar(val):
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
+def rotateTarget():
+    tSleep = 1.52
+    pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
+    sleep(1.5)
+    if not keypoints:
+        tSleep = 1.48
+        pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
+        sleep(3)
+    if not keypoints:
+        tSleep = 1.52
+        pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
+        sleep(1.5)
+    while keypoints:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+
 #------------------------------MAIN-------------------------------------
 
 
@@ -144,7 +163,8 @@ time.sleep(2)
 # Imports dictionary from the calibration CSV file
 readCSV()
 
-FPS_SMOOTHING = 0.9
+# changed from 0.9 too 0.4
+FPS_SMOOTHING = 0.4
 
 
 
@@ -188,8 +208,8 @@ cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
 fps, prev = 0.0, 0.0
 
-pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
-pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
 
 
@@ -234,6 +254,7 @@ while True:
     if keypoints:
         pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+        rotateTarget()
         
         
     if not keypoints:
