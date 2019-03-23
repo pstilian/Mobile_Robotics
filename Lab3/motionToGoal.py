@@ -374,16 +374,6 @@ while startFlag:
     cv.imshow(WINDOW1, mask)
     cv.imshow(WINDOW2, frame_with_keypoints)
 
-    if keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-        find = False
-            
-    if not keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
-
-
     # Prints FPS and number of blobs on string
     print("FPS : ", fps)
     print("Number of Blobs", len(keypoints))
@@ -393,8 +383,8 @@ while startFlag:
         print("x: ", x_pos)
 
     if len(keypoints) < 1:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.54 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.54 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
     elif len(keypoints) >= 1:
     	motionToGoal()
