@@ -143,8 +143,8 @@ def leftTurn():
         inchDistance = fDistance * 0.03937
    	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
-        time.sleep(0.25)
-        setSpeedsIPS(0,0)
+    pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
 
 # Pivots robot on an axis to make a right turn
 def rightTurn():
