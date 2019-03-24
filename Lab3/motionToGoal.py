@@ -281,6 +281,19 @@ def motionToGoal():
 
 		setSpeedsIPS(newSignal, newSignal)
 
+	elif spinFlag == False:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.49 / 20 * 4096))
+        time.sleep(0.5)
+
+    elif spinFlag == True:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+        time.sleep(0.5)
+
+
+
+
     
     # Initialization functions
 
@@ -350,6 +363,7 @@ while selectCommand != 's':
       selectCommand = input("Please enter \'s\' to begin robot movement: ")
 
 startFlag =True
+spinFlag = False
 
 # 
 while startFlag:
