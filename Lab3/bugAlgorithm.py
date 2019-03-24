@@ -17,6 +17,9 @@ from UnthreadedWebcam import UnthreadedWebcam
 #Global Variables
 startTime = time.time()
 currentTime = 0
+dAxis = float(3.95)
+LWSpeed = {}
+RWSpeed = {}
 
 fps = 0.0
 prev = 0.0
