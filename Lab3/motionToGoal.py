@@ -261,24 +261,25 @@ def faceGoal():
 
 def motionToGoal():
 	print("IM GOING THE GOALLLLLL!!!!")
-	sensorCount = 0
+	if x_pos > 260 and x_pos < 280
+		sensorCount = 0
 
-	# Gets Distance From Sensor
-	fDistance = fSensor.get_distance()
-	# Converts readings from milimeters to inches
-	inchDistance = fDistance * 0.03937
-   	# 0.394 is the conversion rate from cm to inches Determining error amount
+		# Gets Distance From Sensor
+		fDistance = fSensor.get_distance()
+		# Converts readings from milimeters to inches
+		inchDistance = fDistance * 0.03937
+   		# 0.394 is the conversion rate from cm to inches Determining error amount
 
-    # fError is the calculated respective error value aka the e(t) value
-	error = 5.0 - inchDistance
+    	# fError is the calculated respective error value aka the e(t) value
+		error = 5.0 - inchDistance
 
-    # Control Signal aka u(t)  = Kp * e(t)
-	controlSignal = kpValue * error
+    	# Control Signal aka u(t)  = Kp * e(t)
+		controlSignal = kpValue * error
 
-    # Calculating new control signal value by running control signal through saturation function
-	newSignal = saturationFunction(controlSignal)
+    	# Calculating new control signal value by running control signal through saturation function
+		newSignal = saturationFunction(controlSignal)
 
-	setSpeedsIPS(newSignal, newSignal)
+		setSpeedsIPS(newSignal, newSignal)
 
     
     # Initialization functions
@@ -395,7 +396,7 @@ while startFlag:
         pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
-    elif len(keypoints) >= 1 and x_pos > 260 and x_pos < 280:
+    elif len(keypoints) >= 1:
     	motionToGoal()
 
     # Check for user input
