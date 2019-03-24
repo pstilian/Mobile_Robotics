@@ -260,28 +260,28 @@ def faceGoal():
 
 
 def motionToGoal():
-	print("IM GOING THE GOALLLLLL!!!!")
-	if x_pos > 260 and x_pos < 280:
-		sensorCount = 0
+    print("IM GOING THE GOALLLLLL!!!!")
+    if x_pos > 260 and x_pos < 280:
+        sensorCount = 0
 
-		# Gets Distance From Sensor
-		fDistance = fSensor.get_distance()
-		# Converts readings from milimeters to inches
-		inchDistance = fDistance * 0.03937
-   		# 0.394 is the conversion rate from cm to inches Determining error amount
+	# Gets Distance From Sensor
+        fDistance = fSensor.get_distance()
+	# Converts readings from milimeters to inches
+        inchDistance = fDistance * 0.03937
+   	# 0.394 is the conversion rate from cm to inches Determining error amount
 
     	# fError is the calculated respective error value aka the e(t) value
-		error = 5.0 - inchDistance
+        error = 5.0 - inchDistance
 
     	# Control Signal aka u(t)  = Kp * e(t)
-		controlSignal = kpValue * error
+        controlSignal = kpValue * error
 
     	# Calculating new control signal value by running control signal through saturation function
-		newSignal = saturationFunction(controlSignal)
+        newSignal = saturationFunction(controlSignal)
 
-		setSpeedsIPS(newSignal, newSignal)
+        setSpeedsIPS(newSignal, newSignal)
 
-	elif spinFlag == False:
+    elif spinFlag == False:
         pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.49 / 20 * 4096))
         time.sleep(0.5)
