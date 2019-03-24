@@ -69,6 +69,10 @@ def readCSV():
     #print("*******LEFTSPEEDS*******\n", LWSpeed)
     #print("*******RIGHTSPEEDS******\n", RWSpeed)
 
+def setDifference(speed):
+    diff = speed - 1.5
+    return 1.5 - diff
+    
 # Sets speed of motors in Inches per econd
 def spinIPS(ipsLeft, ipsRight):
       # Converting inches per second into revolutions per second
