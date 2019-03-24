@@ -243,8 +243,8 @@ def goalSearch():
     	spinIPS(newSignal, newSignal)
 
     else:
-		pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-		pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
 def motionToGoal():
     print("IM GOING THE GOALLLLLL!!!!")
@@ -375,7 +375,7 @@ while startFlag:
     if x_pos < 250 or x_pos > 310:
         goalSearch()
 
-    if len(keypoints) >= 1:
+    elif x_pos >= 250 and x_pos <= 310:  #len(keypoints) >= 1:
     	motionToGoal()
 
     # Check for user input
