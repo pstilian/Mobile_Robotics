@@ -349,15 +349,6 @@ cv.namedWindow(WINDOW2)
 pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
-
-# Create trackbars
-#cv.createTrackbar("Min Hue", WINDOW1, minH, 180, onMinHTrackbar)
-#cv.createTrackbar("Max Hue", WINDOW1, maxH, 180, onMaxHTrackbar)
-#cv.createTrackbar("Min Sat", WINDOW1, minS, 255, onMinSTrackbar)
-#cv.createTrackbar("Max Sat", WINDOW1, maxS, 255, onMaxSTrackbar)
-#cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
-#cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
-
 startFlag = False
 selectCommand = ' '
 
@@ -410,8 +401,8 @@ while startFlag:
         print("x: ", x_pos)
 
     if len(keypoints) < 1:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
     elif len(keypoints) >= 1:
     	motionToGoal()

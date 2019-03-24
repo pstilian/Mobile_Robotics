@@ -18,7 +18,6 @@ from UnthreadedWebcam import UnthreadedWebcam
 startTime = time.time()
 currentTime = 0
 FPS_SMOOTHING = 0.9
-kpValue = 0.9
 
 # Pins that the encoders are connected to
 LENCODER = 17
@@ -66,16 +65,6 @@ def readCSV():
         rReader = csv.reader(RightCalibrate)
         RWSpeed = dict(map(float,x) for x in rReader) # pulls in each row as a key-value pair
 
-    #print("*******LEFTSPEEDS*******\n", LWSpeed)
-    #print("*******RIGHTSPEEDS******\n", RWSpeed)
-
-def saturationFunction(ips):
-    controlSignal = ips
-    if controlSignal > 7.1:
-        controlSignal = 7.1
-    elif controlSignal < -7.1:
-        controlSignal = -7.1
-    return controlSignal
 
 #########################Camera Blob Start######################################
 
@@ -127,7 +116,6 @@ def onMaxVTrackbar(val):
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
 def targetFinder():
-
     if x_pos >= 250 and x_pos <= 310:
         pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
@@ -149,8 +137,6 @@ readCSV()
 
 # changed from 0.9 too 0.4
 FPS_SMOOTHING = 0.4
-
-
 
 
 # Initialize the threaded camera
@@ -182,21 +168,8 @@ fs.release()
 cv.namedWindow(WINDOW1)
 cv.namedWindow(WINDOW2)
 
-# Create trackbars
-#cv.createTrackbar("Min Hue", WINDOW1, minH, 88, onMinHTrackbar)
-#cv.createTrackbar("Max Hue", WINDOW1, maxH, 180, onMaxHTrackbar)
-#cv.createTrackbar("Min Sat", WINDOW1, minS, 148, onMinSTrackbar)
-#cv.createTrackbar("Max Sat", WINDOW1, maxS, 255, onMaxSTrackbar)
-#cv.createTrackbar("Min Val", WINDOW1, minV, 92, onMinVTrackbar)
-#cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
 fps, prev = 0.0, 0.0
-
-pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
-
-
-
 
 while True:
     # Calculate FPS
@@ -243,8 +216,7 @@ while True:
         pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
         #rotateTarget()
-        
-        
+              
     if len(keypoints) >= 1:
         targetFinder()           
 
