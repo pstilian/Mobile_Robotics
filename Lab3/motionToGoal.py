@@ -331,13 +331,10 @@ while startFlag:
         print("x: ", x_pos)
     	
     if len(keypoints) < 1:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+        targetFinder()
 
     if len(keypoints) >= 1:
-    	targetFinder()
-    	if trackFlag == True:
-    		motionToGoal()
+    	motionToGoal()
 
     # Check for user input
     c = cv.waitKey(1)
