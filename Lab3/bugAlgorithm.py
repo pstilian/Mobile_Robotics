@@ -135,7 +135,8 @@ def leftTurn():
 
     # Loop turns Robot as long as there is an object in front of it
     while inchDistance < 8:
-        setSpeedsIPS(1.3,-1.3)
+        pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
 	# Gets Distance From Sensor
         fDistance = fSensor.get_distance()
 	# Converts readings from milimeters to inches
