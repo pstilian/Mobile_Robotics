@@ -159,15 +159,6 @@ def saturationFunction(ips):
 		controlSignal = -4.0
 	return controlSignal
 
-# Sets boundary speed for robot movement
-def saturationFunctionGoalFacing(ips):
-	controlSignal = ips
-	if controlSignal > 0.5:
-		controlSignal = 0.5
-	elif controlSignal < -0.5:
-		controlSignal = -0.5
-	return controlSignal
-
 ###### OPEN CV FUNCTIONS #######
 
 def onMinHTrackbar(val):
@@ -207,73 +198,31 @@ def onMaxVTrackbar(val):
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
-def faceGoal():
-    find = True
-    pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-    pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
-    while True:
-        # Calculate FPS
-        now = time.time()
-        fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
-        prev = now
-
-        # Get a frame
-        frame = camera.read()
-        
-        # Blob detection works better in the HSV color space 
-        # (than the RGB color space) so the frame is converted to HSV.
-        frame_hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-        
-        # Create a mask using the given HSV range
-        mask = cv.inRange(frame_hsv, (minH, minS, minV), (maxH, maxS, maxV))
-        
-        # Run the SimpleBlobDetector on the mask.
-        # The results are stored in a vector of 'KeyPoint' objects,
-        # which describe the location and size of the blobs.
-        keypoints = detector.detect(mask)
-        
-        # For each detected blob, draw a circle on the frame
-        frame_with_keypoints = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        
-        # Write text onto the frame
-        cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-        cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-        
-        # Display the frame
-        cv.imshow(WINDOW1, mask)
-        cv.imshow(WINDOW2, frame_with_keypoints)
-
-        if keypoints:
-            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-            find = False
-            
-        if not keypoints:
-            pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
-
+def targetFinder():
+    if x_pos >= 250 and x_pos <= 310:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
 
 def motionToGoal():
     print("IM GOING THE GOALLLLLL!!!!")
-    if len(keypoints):
-        #sensorCount = 0
+    #sensorCount = 0
 
 	# Gets Distance From Sensor
-        fDistance = fSensor.get_distance()
+    fDistance = fSensor.get_distance()
 	# Converts readings from milimeters to inches
-        inchDistance = fDistance * 0.03937
+    inchDistance = fDistance * 0.03937
    	# 0.394 is the conversion rate from cm to inches Determining error amount
 
-    	# fError is the calculated respective error value aka the e(t) value
-        error = 5.0 - inchDistance
+   	# fError is the calculated respective error value aka the e(t) value
+    error = 5.0 - inchDistance
 
-    	# Control Signal aka u(t)  = Kp * e(t)
-        controlSignal = kpValue * error
+    # Control Signal aka u(t)  = Kp * e(t)
+    controlSignal = kpValue * error
 
-    	# Calculating new control signal value by running control signal through saturation function
-        newSignal = saturationFunction(controlSignal)
+    # Calculating new control signal value by running control signal through saturation function
+    newSignal = saturationFunction(controlSignal)
 
-        setSpeedsIPS(newSignal, newSignal)
+    setSpeedsIPS(newSignal, newSignal)
 
 
     
@@ -336,7 +285,7 @@ while selectCommand != 's':
       selectCommand = input("Please enter \'s\' to begin robot movement: ")
 
 startFlag =True
-spinFlag = False
+trackFlag = False
 
 # 
 while startFlag:
@@ -383,7 +332,10 @@ while startFlag:
         pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
-    elif x_pos >= 250 and x_pos <= 310:
+    if len(keypoints) >= 1:
+    	targetFinder()
+
+    while trackFlag == True:
     	motionToGoal()
 
     # Check for user input
