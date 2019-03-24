@@ -168,18 +168,14 @@ def setSpeedsIPS(ipsLeft, ipsRight):
       lPwmValue = float(LWSpeed[rpsLeft])
       rPwmValue = float(RWSpeed[rpsRight])
 
-      if ipsLeft < 0 and ipsRight < 0:
+      if ipsLeft < 0 or ipsRight < 0:
             # Setting appropiate speeds to the servos when going forwards
             pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
             pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
-      elif ipsLeft >= 0 and ipsRight >= 0:
+      elif ipsLeft >= 0 or ipsRight >= 0:
             # Setting apporpiate speeds to the servos when going backwards
             pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
             pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
-      elif ipsLeft >= 0 and ipsRight < 0:
-            # Setting appropriate speedsto the servos while making a turn
-            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
 
 def setSpeedsvw(v, w):
       velocityLeft1 = float(( v + ( w * dAxis)))
