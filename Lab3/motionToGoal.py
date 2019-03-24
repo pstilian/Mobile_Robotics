@@ -375,7 +375,7 @@ while startFlag:
     if x_pos < 250 or x_pos > 310:
         goalSearch()
 
-    elif x_pos >= 250 and x_pos <= 310:  #len(keypoints) >= 1:
+    elif x_pos >= 250 and x_pos <= 310:
     	motionToGoal()
 
     # Check for user input
