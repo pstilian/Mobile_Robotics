@@ -150,6 +150,31 @@ def setSpeedsIPS(ipsLeft, ipsRight):
             pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
             pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
 
+def spinIPS(ipsLeft, ipsRight):
+      # Converting inches per second into revolutions per second
+      rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
+      rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
+
+      if rpsLeft < 0:
+            rpsLeft = 0 - rpsLeft
+      if rpsRight < 0:
+            rpsRight = 0 - rpsRight
+
+      # Calculating pwm values from the respective dictionaries
+      lPwmValue = float(LWSpeed[rpsLeft])
+      rPwmValue = float(RWSpeed[rpsRight])
+
+      if ipsLeft < 0 or ipsRight < 0:
+            # Setting appropiate speeds to the servos when going forwards
+            pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+      elif ipsLeft >= 0 or ipsRight >= 0:
+            # Setting apporpiate speeds to the servos when going backwards
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+
+
+
 # Sets boundary speed for robot movement
 def saturationFunction(ips):
 	controlSignal = ips
@@ -157,6 +182,15 @@ def saturationFunction(ips):
 		controlSignal = 4.0
 	elif controlSignal < -4.0:
 		controlSignal = -4.0
+	return controlSignal
+
+# Sets boundary speed for robot movement
+def saturationFunctionGoalFacing(ips):
+	controlSignal = ips
+	if controlSignal > 1.0:
+		controlSignal = 1.0
+	elif controlSignal < -1.0:
+		controlSignal = -1.0
 	return controlSignal
 
 ###### OPEN CV FUNCTIONS #######
@@ -198,11 +232,19 @@ def onMaxVTrackbar(val):
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
-def targetFinder():
-    if x_pos >= 250 and x_pos <= 310:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
-        trackFlag = True
+def goalSearch():
+    if len(keypoints) >= 1:
+    	error = 280 - x_pos
+
+    	controlSignal = kpValue * error
+
+    	newSignal = saturationFunctionGoalFacing(controlSignal)
+
+    	spinIPS(newSignal, newSignal)
+
+    else:
+		pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+		pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
 def motionToGoal():
     print("IM GOING THE GOALLLLLL!!!!")
@@ -287,7 +329,7 @@ while selectCommand != 's':
       selectCommand = input("Please enter \'s\' to begin robot movement: ")
 
 startFlag = True
-trackFlag = False
+
 
 # 
 while startFlag:
@@ -329,15 +371,11 @@ while startFlag:
     for keypoint in keypoints:
         x_pos = keypoint.pt[0]
         print("x: ", x_pos)
-
-    while trackFlag == True:
-    	motionToGoal()
     	
-    if len(keypoints) < 1 and trackFlag == False:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+    if x_pos < 250 or x_pos > 310:
+        goalSearch()
 
-    if len(keypoints) >= 1 and trackFlag == False:
+    if len(keypoints) >= 1:
     	motionToGoal()
 
     # Check for user input
