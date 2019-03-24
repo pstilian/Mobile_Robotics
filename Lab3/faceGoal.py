@@ -126,24 +126,12 @@ def onMaxVTrackbar(val):
     maxV = max(val, minV + 1)
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
-def rotateTarget():
-    tSleep = 1.52
-    pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
-    pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
-    time.sleep(1.5)
-    if not keypoints:
-        tSleep = 1.48
-        pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
-        time.sleep(3)
-    if not keypoints:
-        tSleep = 1.52
-        pwm.set_pwm(LSERVO, 0, math.floor(tSleep / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(tSleep / 20 * 4096))
-        time.sleep(1.5)
-    elif keypoints:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+def targetFinder():
+
+    if x_pos >= 250 and x_pos <= 310:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
+
 
 #------------------------------MAIN-------------------------------------
 
@@ -251,15 +239,13 @@ while True:
     if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
         camera.stop()
         break
-    if len(keypoints) <= 1:
+    if len(keypoints) < 1:
         pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
         #rotateTarget()
         
         
     if len(keypoints) >= 1:
-        if x_pos >= 250 and x_pos <= 310:
-            pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))           
+        targetFinder()           
 
 camera.stop()
