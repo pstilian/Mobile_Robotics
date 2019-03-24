@@ -246,6 +246,10 @@ while True:
     cv.imshow(WINDOW1, mask)
     cv.imshow(WINDOW2, frame_with_keypoints)
     
+    for keypoint in keypoints:
+        x_pos = keypoint.pt[0]
+        print("x: ", x_pos)
+    
     # Check for user input
     c = cv.waitKey(1)
     if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
@@ -258,7 +262,7 @@ while True:
         
         
     if len(keypoints) >= 1:
-        if x_pos >= 250 and x_pos <= 310:
+        #if x_pos >= 250 and x_pos <= 310:
         pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
 
