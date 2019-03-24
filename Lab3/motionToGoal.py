@@ -281,15 +281,16 @@ def motionToGoal():
 
 		setSpeedsIPS(newSignal, newSignal)
 
-	elif spinFlag == False:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.49 / 20 * 4096))
-        time.sleep(0.5)
+	if x_pos < 250 and x_pos > 290:
+		if spinFlag == False:
+        	pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
+        	pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
+        	time.sleep(0.5)
 
-    elif spinFlag == True:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
-        time.sleep(0.5)
+    	if spinFlag == True:
+        	pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+        	pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+        	time.sleep(0.5)
 
 
 
