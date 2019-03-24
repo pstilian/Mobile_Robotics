@@ -202,7 +202,7 @@ def targetFinder():
     if x_pos >= 250 and x_pos <= 310:
         #pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
         #pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
-        trackFlag = True
+
 
 def motionToGoal():
     print("IM GOING THE GOALLLLLL!!!!")
@@ -331,7 +331,8 @@ while startFlag:
         print("x: ", x_pos)
     	
     if len(keypoints) < 1:
-        targetFinder()
+        pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
 
     if len(keypoints) >= 1:
     	motionToGoal()
