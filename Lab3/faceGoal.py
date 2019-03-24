@@ -18,6 +18,7 @@ from UnthreadedWebcam import UnthreadedWebcam
 startTime = time.time()
 currentTime = 0
 FPS_SMOOTHING = 0.9
+kpValue = 0.9
 
 # Pins that the encoders are connected to
 LENCODER = 17
