@@ -200,11 +200,11 @@ def onMaxVTrackbar(val):
 
 def targetFinder():
     if x_pos >= 250 and x_pos <= 310:
-        trackFlag = True
+        motionToGoal()
 
 def motionToGoal():
     print("IM GOING THE GOALLLLLL!!!!")
-    sensorCount = 0
+    #sensorCount = 0
 
 	# Gets Distance From Sensor
     fDistance = fSensor.get_distance()
@@ -222,17 +222,6 @@ def motionToGoal():
     newSignal = saturationFunction(controlSignal)
 
     setSpeedsIPS(newSignal, newSignal)
-
-    # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
-    if len(keypoints) < 1:
-
-        sensorCount += 1
-
-        if sensorCount > 5:
-            trackFlag = False
-
-        else:
-            sensorCount = 0
 
 
     
@@ -295,7 +284,6 @@ while selectCommand != 's':
       selectCommand = input("Please enter \'s\' to begin robot movement: ")
 
 startFlag =True
-trackFlag = False
 
 # 
 while startFlag:
@@ -337,15 +325,12 @@ while startFlag:
     for keypoint in keypoints:
         x_pos = keypoint.pt[0]
         print("x: ", x_pos)
-
-    while trackFlag == True:
-    	motionToGoal()
     	
-    if len(keypoints) < 1 and trackFlag == False:
+    if len(keypoints) < 1:
         pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
-    if len(keypoints) >= 1 and trackFlag == False:
+    if len(keypoints) >= 1:
     	targetFinder()
 
     # Check for user input
