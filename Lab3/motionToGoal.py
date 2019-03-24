@@ -226,13 +226,13 @@ def motionToGoal():
     # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
     if fInchDistance < 5.0:
 
-		sensorCount += 1
+        sensorCount += 1
 
-		if sensorCount > 5:
-			trackFlag = False
+        if sensorCount > 5:
+            trackFlag = False
 
-	else:
-        sensorCount = 0
+        else:
+            sensorCount = 0
 
 
     
