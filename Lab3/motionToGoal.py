@@ -395,7 +395,7 @@ while startFlag:
         pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
 
-    elif len(keypoints) >= 1:
+    elif len(keypoints) >= 1 and x_pos > 260 and x_pos < 280:
     	motionToGoal()
 
     # Check for user input
