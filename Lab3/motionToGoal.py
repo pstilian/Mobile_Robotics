@@ -380,8 +380,8 @@ while startFlag:
     cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
     # Display the frame
-    cv.imshow(WINDOW1, mask)
-    cv.imshow(WINDOW2, frame_with_keypoints)
+    #cv.imshow(WINDOW1, mask)
+    #cv.imshow(WINDOW2, frame_with_keypoints)
 
     # Prints FPS and number of blobs on string
     print("FPS : ", fps)
