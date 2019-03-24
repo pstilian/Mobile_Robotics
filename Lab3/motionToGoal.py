@@ -261,8 +261,8 @@ def faceGoal():
 
 def motionToGoal():
     print("IM GOING THE GOALLLLLL!!!!")
-    if x_pos > 260 and x_pos < 280:
-        sensorCount = 0
+    if x_pos >= 250 and x_pos <= 310:
+        #sensorCount = 0
 
 	# Gets Distance From Sensor
         fDistance = fSensor.get_distance()
@@ -281,16 +281,20 @@ def motionToGoal():
 
         setSpeedsIPS(newSignal, newSignal)
 
-	if x_pos < 250 and x_pos > 290:
-		if spinFlag == False:
-        	pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
-        	pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
-        	time.sleep(0.5)
+    #if x_pos < 260 and x_pos > 310:
+     #   if spinFlag == False:
+       #     pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
+      #      pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
+        #    time.sleep(0.5)
+         #   if x_pos >= 260 and x_pos <= 310:
+          #      spinFlag = True
 
-    	if spinFlag == True:
-        	pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
-        	pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
-        	time.sleep(0.5)
+     #   if spinFlag == True:
+      #      pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+       #     pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
+        #    time.sleep(0.5)
+         #   if x_pos >= 260 and x_pos <= 310:
+          #      spinflag = Flase
 
 
     
