@@ -261,7 +261,7 @@ def faceGoal():
 
 def motionToGoal():
 	print("IM GOING THE GOALLLLLL!!!!")
-	if x_pos > 260 and x_pos < 280
+	if x_pos > 260 and x_pos < 280:
 		sensorCount = 0
 
 		# Gets Distance From Sensor
