@@ -334,12 +334,12 @@ pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
 
 # Create trackbars
-cv.createTrackbar("Min Hue", WINDOW1, minH, 180, onMinHTrackbar)
-cv.createTrackbar("Max Hue", WINDOW1, maxH, 180, onMaxHTrackbar)
-cv.createTrackbar("Min Sat", WINDOW1, minS, 255, onMinSTrackbar)
-cv.createTrackbar("Max Sat", WINDOW1, maxS, 255, onMaxSTrackbar)
-cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
-cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
+#cv.createTrackbar("Min Hue", WINDOW1, minH, 180, onMinHTrackbar)
+#cv.createTrackbar("Max Hue", WINDOW1, maxH, 180, onMaxHTrackbar)
+#cv.createTrackbar("Min Sat", WINDOW1, minS, 255, onMinSTrackbar)
+#cv.createTrackbar("Max Sat", WINDOW1, maxS, 255, onMaxSTrackbar)
+#cv.createTrackbar("Min Val", WINDOW1, minV, 255, onMinVTrackbar)
+#cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
 startFlag = False
 selectCommand = ' '
@@ -380,8 +380,8 @@ while startFlag:
     cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
     # Display the frame
-    #cv.imshow(WINDOW1, mask)
-    #cv.imshow(WINDOW2, frame_with_keypoints)
+    cv.imshow(WINDOW1, mask)
+    cv.imshow(WINDOW2, frame_with_keypoints)
 
     # Prints FPS and number of blobs on string
     print("FPS : ", fps)
