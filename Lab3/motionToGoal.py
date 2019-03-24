@@ -200,8 +200,8 @@ def onMaxVTrackbar(val):
 
 def targetFinder():
     if x_pos >= 250 and x_pos <= 310:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
+        #pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
+        #pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
         trackFlag = True
 
 def motionToGoal():
@@ -330,7 +330,7 @@ while startFlag:
         x_pos = keypoint.pt[0]
         print("x: ", x_pos)
 
-    if trackFlag == True:
+    while trackFlag == True:
     	motionToGoal()
     	
     if len(keypoints) < 1 and trackFlag == False:
