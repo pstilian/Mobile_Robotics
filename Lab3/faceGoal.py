@@ -68,11 +68,52 @@ def readCSV():
     #print("*******LEFTSPEEDS*******\n", LWSpeed)
     #print("*******RIGHTSPEEDS******\n", RWSpeed)
 
+# Sets speed of motors in Inches per econd
+def spinIPS(ipsLeft, ipsRight):
+      # Converting inches per second into revolutions per second
+      rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
+      rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
+
+      if rpsLeft < 0:
+            rpsLeft = 0 - rpsLeft
+      if rpsRight < 0:
+            rpsRight = 0 - rpsRight
+
+      # Calculating pwm values from the respective dictionaries
+      lPwmValue = float(LWSpeed[rpsLeft])
+      rPwmValue = float(RWSpeed[rpsRight])
+
+      if ipsLeft < 0 or ipsRight < 0:
+            # Setting appropiate speeds to the servos when going forwards
+            pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+
+      elif ipsLeft >= 0 and ipsRight >= 0:
+            # Setting appropriate speedsto the servos while making a turn
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+
+def spinForGoal():
+    print("Searching for goal")
+    if len(keypoints) >= 1:
+        error = 280 - x_pos
+
+    controlSignal = kpValue * error
+
+    newSignal = saturationFunctionGoalFacing(controlSignal)
+
+    spinIPS(newSignal, newSignal)
 
 
+# Sets boundary speed for robot movement
+def saturationFunctionGoalFacing(ips):
+    controlSignal = ips
+    if controlSignal > 0.5:
+        controlSignal = 0.5
+    elif controlSignal < -0.5:
+        controlSignal = -0.5
+    return controlSignal
 
-
-###############################
 def saturationFunction(ips):
     controlSignal = ips
     if controlSignal > 7.1:
@@ -199,12 +240,12 @@ cv.namedWindow(WINDOW1)
 cv.namedWindow(WINDOW2)
 
 # Create trackbars
-cv.createTrackbar("Min Hue", WINDOW1, minH, 88, onMinHTrackbar)
-cv.createTrackbar("Max Hue", WINDOW1, maxH, 180, onMaxHTrackbar)
-cv.createTrackbar("Min Sat", WINDOW1, minS, 148, onMinSTrackbar)
-cv.createTrackbar("Max Sat", WINDOW1, maxS, 255, onMaxSTrackbar)
-cv.createTrackbar("Min Val", WINDOW1, minV, 92, onMinVTrackbar)
-cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
+#cv.createTrackbar("Min Hue", WINDOW1, minH, 88, onMinHTrackbar)
+#cv.createTrackbar("Max Hue", WINDOW1, maxH, 180, onMaxHTrackbar)
+#cv.createTrackbar("Min Sat", WINDOW1, minS, 148, onMinSTrackbar)
+#cv.createTrackbar("Max Sat", WINDOW1, maxS, 255, onMaxSTrackbar)
+#cv.createTrackbar("Min Val", WINDOW1, minV, 92, onMinVTrackbar)
+#cv.createTrackbar("Max Val", WINDOW1, maxV, 255, onMaxVTrackbar)
 
 fps, prev = 0.0, 0.0
 
@@ -263,7 +304,6 @@ while True:
         
     if len(keypoints) >= 1:
         #if x_pos >= 250 and x_pos <= 310:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
+        spinForGoal()
 
 camera.stop()
