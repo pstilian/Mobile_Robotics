@@ -130,17 +130,17 @@ def leftTurn():
     inchDistance = fDistance * 0.03937
    	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
-   	# Loop turns Robot as long as there is an object in front of it
-   	while inchDistance < 8:
-		setSpeedsIPS(1.3,-1.3)
-		# Gets Distance From Sensor
-    	fDistance = fSensor.get_distance()
-		# Converts readings from milimeters to inches
-    	inchDistance = fDistance * 0.03937
-   		# 0.0394 is the conversion rate from mm to inches Determining error amount
+    # Loop turns Robot as long as there is an object in front of it
+    while inchDistance < 8:
+        setSpeedsIPS(1.3,-1.3)
+	# Gets Distance From Sensor
+        fDistance = fSensor.get_distance()
+	# Converts readings from milimeters to inches
+        inchDistance = fDistance * 0.03937
+   	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
-	time.sleep(0.25)
-	setSpeedsIPS(0,0)
+        time.sleep(0.25)
+        setSpeedsIPS(0,0)
 
 # Pivots robot on an axis to make a right turn
 def rightTurn():
@@ -307,42 +307,42 @@ def wallFollowing():
 	sensorCount = 0
 
 	while len(keypoints) < 1:
-		print("FOLLOWING THE WALLLLL!!!!")
+            print("FOLLOWING THE WALLLLL!!!!")
 
-    	# Reads Distance From Sensors
-    	fDistance = fSensor.get_distance()
-    	rDistance = rSensor.get_distance()
+            # Reads Distance From Sensors
+            fDistance = fSensor.get_distance()
+            rDistance = rSensor.get_distance()
 
-    	# Converts readings from centimeters to inches
-    	fInchDistance = fDistance * 0.0394
-    	rInchDistance = rDistance * 0.0394
-    	# 0.394 is the conversion rate from millimeters to inches Determining error amount
+            # Converts readings from centimeters to inches
+            fInchDistance = fDistance * 0.0394
+            rInchDistance = rDistance * 0.0394
+            # 0.394 is the conversion rate from millimeters to inches Determining error amount
 
-    	# fError is the calculated respective error value aka the e(t) value
-    	fError = desiredDistance - fInchDistance
-    	rError = desiredDistance - rInchDistance
+            # fError is the calculated respective error value aka the e(t) value
+            fError = 5 - fInchDistance
+            rError = 5 - rInchDistance
 
-    	# Control Signal aka u(t)  = Kp * e(t)
-    	fControlSignal = kpValue * fError
-    	rControlSignal = kpValue * rError
+            # Control Signal aka u(t)  = Kp * e(t)
+            fControlSignal = kpValue * fError
+            rControlSignal = kpValue * rError
 
-    	# Calculating new control signal value by running control signal through saturation function
-    	fNewSignal = saturationFunction(fControlSignal)
-    	rNewSignal = saturationFunction(rControlSignal)
+            # Calculating new control signal value by running control signal through saturation function
+            fNewSignal = saturationFunction(fControlSignal)
+            rNewSignal = saturationFunction(rControlSignal)
 
-    	# Setting speed of the robot.
-    	setSpeedsvw(linearSpeed, -rNewSignal)
+            # Setting speed of the robot.
+            setSpeedsvw(linearSpeed, -rNewSignal)
 
-    	# Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
-    	if fInchDistance < 5.0:
+            # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
+            if fInchDistance < 5.0:
 
-            sensorCount += 1
+                sensorCount += 1
 
-            if sensorCount > 4:
-                  leftTurn()
+                if sensorCount > 4:
+                    leftTurn()
 
-    	else:
-            sensorCount = 0
+            else:
+                sensorCount = 0
 
 
     
