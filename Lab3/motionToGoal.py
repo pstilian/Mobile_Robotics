@@ -261,7 +261,7 @@ def faceGoal():
 
 def motionToGoal():
 	print("IM GOING THE GOALLLLLL!!!!")
-	if x_pos > 260 and x_pos < 280
+	if x_pos > 260 and x_pos < 280:
 		sensorCount = 0
 
 		# Gets Distance From Sensor
@@ -280,6 +280,19 @@ def motionToGoal():
 		newSignal = saturationFunction(controlSignal)
 
 		setSpeedsIPS(newSignal, newSignal)
+
+	elif spinFlag == False:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.49 / 20 * 4096))
+        time.sleep(0.5)
+
+    elif spinFlag == True:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+        time.sleep(0.5)
+
+
+
 
     
     # Initialization functions
@@ -350,6 +363,7 @@ while selectCommand != 's':
       selectCommand = input("Please enter \'s\' to begin robot movement: ")
 
 startFlag =True
+spinFlag = False
 
 # 
 while startFlag:
