@@ -168,12 +168,6 @@ def saturationFunctionGoalFacing(ips):
 		controlSignal = -0.5
 	return controlSignal
 
-# Pivots robot on an axis to make a left turn
-def leftTurn():
-      setSpeedsIPS(1.3,-1.3)
-      time.sleep(1)
-      setSpeedsIPS(0,0)
-
 ###### OPEN CV FUNCTIONS #######
 
 def onMinHTrackbar(val):
@@ -385,7 +379,7 @@ while startFlag:
         x_pos = keypoint.pt[0]
         print("x: ", x_pos)
 
-    if x_pos < 250 and x_pos > 310:
+    if len(keypoints) < 1:
         pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
