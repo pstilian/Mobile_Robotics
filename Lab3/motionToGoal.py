@@ -224,7 +224,7 @@ def motionToGoal():
     setSpeedsIPS(newSignal, newSignal)
 
     # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
-    if fInchDistance < 5.0:
+    if len(keypoints) < 1:
 
         sensorCount += 1
 
