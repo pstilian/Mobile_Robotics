@@ -177,6 +177,12 @@ def setSpeedsIPS(ipsLeft, ipsRight):
             pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
             pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
 
+def setSpeedsvw(v, w):
+      velocityLeft1 = float(( v + ( w * dAxis)))
+      velocityRight1 = float(( v - ( w * dAxis)))
+
+      setSpeedsIPS(-velocityLeft1, -velocityRight1)
+
 def spinIPS(ipsLeft, ipsRight):
       # Converting inches per second into revolutions per second
       rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
