@@ -328,14 +328,18 @@ while startFlag:
         x_pos = keypoint.pt[0]
         print("x: ", x_pos)
 
-    if len(keypoints) < 1:
+    if x_pos < 250 or x_pos > 310:
         pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
 
+<<<<<<< HEAD
     if len(keypoints) >= 1:
     	targetFinder()
 
     while trackFlag == True:
+=======
+    elif x_pos >= 250 and x_pos <= 300:
+>>>>>>> b7aaaf7f85127f0c8012b4619d88f0687da37c61
     	motionToGoal()
 
     # Check for user input

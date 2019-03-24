@@ -116,7 +116,7 @@ def onMaxVTrackbar(val):
     cv.setTrackbarPos("Max Val", WINDOW1, maxV)
 
 def targetFinder():
-    if x_pos >= 250 and x_pos <= 310:
+    if x_pos >= 260 and x_pos <= 300:
         pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
 
