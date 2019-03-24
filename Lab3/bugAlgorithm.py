@@ -226,6 +226,15 @@ def saturationFunctionGoalFacing(ips):
 		controlSignal = -1.0
 	return controlSignal
 
+# Sets boundary speed for robot movement
+def saturationFunctionWallFollowing(ips):
+	controlSignal = ips
+	if controlSignal > 0.5:
+		controlSignal = 0.5
+	elif controlSignal < -0.5:
+		controlSignal = -0.5
+	return controlSignal
+
 ###### OPEN CV FUNCTIONS #######
 
 def onMinHTrackbar(val):
@@ -325,16 +334,16 @@ def wallFollowing():
             # 0.394 is the conversion rate from millimeters to inches Determining error amount
 
             # fError is the calculated respective error value aka the e(t) value
-            fError = 5 - fInchDistance
-            rError = 5 - rInchDistance
+            fError = 5.0 - fInchDistance
+            rError = 5.0 - rInchDistance
 
             # Control Signal aka u(t)  = Kp * e(t)
             fControlSignal = kpValue * fError
             rControlSignal = kpValue * rError
 
             # Calculating new control signal value by running control signal through saturation function
-            fNewSignal = saturationFunction(fControlSignal)
-            rNewSignal = saturationFunction(rControlSignal)
+            fNewSignal = saturationFunctionWallFollowing(fControlSignal)
+            rNewSignal = saturationFunctionWallFollowing(rControlSignal)
 
             # Setting speed of the robot.
             setSpeedsvw(linearSpeed, -rNewSignal)
