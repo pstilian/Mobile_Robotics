@@ -412,8 +412,8 @@ def wallFollowing():
             # Setting speed of the robot.
             setSpeedsvw(linearSpeed, -rNewSignal)
 
-            # Checks for obstacle to the front if 6 consecutive reading are made robot makes a left turn
-            if fInchDistance < 6.0:
+            # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
+            if fInchDistance < 5.0:
 
                 sensorCount += 1
 
