@@ -308,7 +308,7 @@ def motionToGoal():
 
     setSpeedsIPS(newSignal, newSignal)
 
-    if inchDistance < 8:
+    if inchDistance < 6:
     	print("Turning Left!")
     	leftTurn()
     	time.sleep(0.25)
@@ -316,8 +316,8 @@ def motionToGoal():
 
 def wallFollowing():
         global fps, prev
-        # Set Linear Speed to 5 inches per second
-        linearSpeed = 5
+        # Set Linear Speed to 3 inches per second
+        linearSpeed = 3
 
 	# Setting a counter to keep track of BIG front sensor reading
         sensorCount = 0
