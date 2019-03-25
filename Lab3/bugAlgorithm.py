@@ -308,11 +308,7 @@ def motionToGoal():
 
     setSpeedsIPS(newSignal, newSignal)
 
-<<<<<<< HEAD
     if inchDistance < 8:
-=======
-    if inchDistance < 5:
->>>>>>> bf06d7083f5d78b8f38387ce9d969769e6447090
     	print("Turning Left!")
     	leftTurn()
     	time.sleep(0.25)
