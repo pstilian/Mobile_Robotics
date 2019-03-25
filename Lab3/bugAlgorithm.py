@@ -134,7 +134,7 @@ def leftTurn():
    	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
     # Loop turns Robot as long as there is an object in front of it
-    while inchDistance < 8:
+    while inchDistance < 10:
         pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
 	# Gets Distance From Sensor
@@ -317,7 +317,7 @@ def motionToGoal():
 def wallFollowing():
         global fps, prev
         # Set Linear Speed to 3 inches per second
-        linearSpeed = 3
+        linearSpeed = 5
 
 	# Setting a counter to keep track of BIG front sensor reading
         sensorCount = 0
