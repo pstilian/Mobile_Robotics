@@ -350,7 +350,7 @@ def wallFollowing():
         cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
         while len(keypoints) < 1:
-            print("FOLLOWING THE WALLLLL!!!!")
+            #print("FOLLOWING THE WALLLLL!!!!")
 
             # Calculate FPS
             now = time.time()
@@ -399,6 +399,14 @@ def wallFollowing():
             # Calculating new control signal value by running control signal through saturation function
             fNewSignal = saturationFunctionWallFollowing(fControlSignal)
             rNewSignal = saturationFunctionWallFollowing(rControlSignal)
+
+    		# Display the frame
+			cv.imshow(WINDOW1, mask)
+			cv.imshow(WINDOW2, frame_with_keypoints)
+
+			# Prints FPS and number of blobs on string
+			print("FPS : ", fps)
+			print("Number of Blobs", len(keypoints))
 
             # Setting speed of the robot.
             setSpeedsvw(linearSpeed, -rNewSignal)
