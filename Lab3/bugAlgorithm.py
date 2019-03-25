@@ -134,7 +134,7 @@ def leftTurn():
    	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
     # Loop turns Robot as long as there is an object in front of it
-    while inchDistance < 10:
+    while inchDistance < 8:
         pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
         pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
 	# Gets Distance From Sensor

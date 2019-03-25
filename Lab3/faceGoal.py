@@ -213,8 +213,8 @@ while True:
         camera.stop()
         break
     if len(keypoints) < 1:
-        pwm.set_pwm(LSERVO, 0, math.floor(1.51 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+        pwm.set_pwm(LSERVO, 0, math.floor(1.52 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.52 / 20 * 4096))
         #rotateTarget()
               
     if len(keypoints) >= 1:
