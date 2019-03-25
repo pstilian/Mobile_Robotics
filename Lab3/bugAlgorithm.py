@@ -128,26 +128,23 @@ def setDifference(speed):
 # Pivots robot on an axis to make a left turn
 def leftTurn():
 	# Gets Distance From Sensor
-    #fDistance = fSensor.get_distance()
+    fDistance = fSensor.get_distance()
 	# Converts readings from milimeters to inches
-    #inchDistance = fDistance * 0.03937
+    inchDistance = fDistance * 0.03937
    	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
     # Loop turns Robot as long as there is an object in front of it
-    #while inchDistance < 8:
-        #pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
-        #pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
+    while inchDistance < 8:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
 	# Gets Distance From Sensor
-        #fDistance = fSensor.get_distance()
+        fDistance = fSensor.get_distance()
 	# Converts readings from milimeters to inches
-        #inchDistance = fDistance * 0.03937
+        inchDistance = fDistance * 0.03937
    	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
-    #pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
-    #pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
-    setSpeedsIPS(1.3,-1.3)
-    time.sleep(1)
-    setSpeedsIPS(0,0)
+    pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
 
 
 # Pivots robot on an axis to make a right turn
@@ -320,8 +317,8 @@ def motionToGoal():
 
 def wallFollowing():
         global fps, prev
-        # Set Linear Speed to 3 inches per second
-        linearSpeed = 5
+        # Set Linear Speed to 4 inches per second
+        linearSpeed = 4
 
 	# Setting a counter to keep track of BIG front sensor reading
         sensorCount = 0
@@ -415,8 +412,8 @@ def wallFollowing():
             # Setting speed of the robot.
             setSpeedsvw(linearSpeed, -rNewSignal)
 
-            # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
-            if fInchDistance < 5.0:
+            # Checks for obstacle to the front if 6 consecutive reading are made robot makes a left turn
+            if fInchDistance < 6.0:
 
                 sensorCount += 1
 
