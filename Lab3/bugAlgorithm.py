@@ -400,13 +400,13 @@ def wallFollowing():
             fNewSignal = saturationFunctionWallFollowing(fControlSignal)
             rNewSignal = saturationFunctionWallFollowing(rControlSignal)
 
-    		# Display the frame
-			cv.imshow(WINDOW1, mask)
-			cv.imshow(WINDOW2, frame_with_keypoints)
+    	    # Display the frame
+            cv.imshow(WINDOW1, mask)
+            cv.imshow(WINDOW2, frame_with_keypoints)
 
-			# Prints FPS and number of blobs on string
-			print("FPS : ", fps)
-			print("Number of Blobs", len(keypoints))
+	    # Prints FPS and number of blobs on string
+            print("FPS : ", fps)
+            print("Number of Blobs", len(keypoints))
 
             # Setting speed of the robot.
             setSpeedsvw(linearSpeed, -rNewSignal)
