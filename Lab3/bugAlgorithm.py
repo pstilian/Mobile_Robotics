@@ -315,40 +315,41 @@ def motionToGoal():
     	wallFollowing()
 
 def wallFollowing():
-	# Set Linear Speed to 5 inches per second
-	linearSpeed = 5
+        global fps, prev
+        # Set Linear Speed to 5 inches per second
+        linearSpeed = 5
 
 	# Setting a counter to keep track of BIG front sensor reading
-	sensorCount = 0
+        sensorCount = 0
+	
+        # Calculate FPS
+        now = time.time()
+        fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
+        prev = now
 
-    # Calculate FPS
-    now = time.time()
-    fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
-    prev = now
+        # Get a frame
+        frame = camera.read()
+    
+        # Blob detection works better in the HSV color space 
+        # (than the RGB color space) so the frame is converted to HSV.
+        frame_hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+    
+        # Create a mask using the given HSV range
+        mask = cv.inRange(frame_hsv, (minH, minS, minV), (maxH, maxS, maxV))
+    
+        # Run the SimpleBlobDetector on the mask.
+        # The results are stored in a vector of 'KeyPoint' objects,
+        # which describe the location and size of the blobs.
+        keypoints = detector.detect(mask)
 
-    # Get a frame
-    frame = camera.read()
+        # For each detected blob, draw a circle on the frame
+        frame_with_keypoints = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     
-    # Blob detection works better in the HSV color space 
-    # (than the RGB color space) so the frame is converted to HSV.
-    frame_hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-    
-    # Create a mask using the given HSV range
-    mask = cv.inRange(frame_hsv, (minH, minS, minV), (maxH, maxS, maxV))
-    
-    # Run the SimpleBlobDetector on the mask.
-    # The results are stored in a vector of 'KeyPoint' objects,
-    # which describe the location and size of the blobs.
-    keypoints = detector.detect(mask)
-    
-    # For each detected blob, draw a circle on the frame
-    frame_with_keypoints = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    
-    # Write text onto the frame
-    cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-    cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        # Write text onto the frame
+        cv.putText(frame_with_keypoints, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
-	while len(keypoints) < 1:
+        while len(keypoints) < 1:
             print("FOLLOWING THE WALLLLL!!!!")
 
             # Calculate FPS
