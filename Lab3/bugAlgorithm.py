@@ -145,14 +145,6 @@ def leftTurn():
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.50 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.50 / 20 * 4096))
-
-
-# Pivots robot on an axis to make a right turn
-def rightTurn():
-    setSpeedsIPS(-1.3,1.3)
-    time.sleep(1)
-    setSpeedsIPS(0,0)
-
         
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
