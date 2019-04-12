@@ -36,7 +36,7 @@ fps = 0.0
 prev = 0.0
 x_pos = 0
 
-kpValue = 0.9
+kpValue = 0.7
 
 # Pins that the encoders are connected to
 LENCODER = 17
@@ -358,7 +358,7 @@ def frontDist():
 
         # makes sure robot doesnt get stuck from retardation
         fCount = fCount + 1
-        if fCount > 70:
+        if fCount > 80:
             break
 
     lRevolutions = 1.1
