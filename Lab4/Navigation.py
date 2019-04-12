@@ -276,6 +276,7 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	# Option 2 demands move forward
 	elif option == 2:
 		# needs to move forward
+		print("Moving Forward")
 		moveForward()
 
 	# Option 3 demands right turn
