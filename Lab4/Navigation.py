@@ -393,13 +393,13 @@ def moveForward():
     rNewSignal = saturationFunctionWallFollowing(rControlSignal)
 
     if rInchDistance > lInchDistance and rInchDistance < 12.0:
-    	setSpeedsvw(linearSpeed, lNewSignal/3)
+    	setSpeedsvw(linearSpeed, lNewSignal/2)
     elif rInchDistance > lInchDistance and rInchDistance > 12.0:
-    	setSpeedsvw(linearSpeed, lNewSignal/3)
+    	setSpeedsvw(linearSpeed, lNewSignal/2)
     elif rInchDistance < lInchDistance and lInchDistance < 12.0:
-    	setSpeedsvw(linearSpeed, -rNewSignal/3)
+    	setSpeedsvw(linearSpeed, -rNewSignal/2)
     elif rInchDistance < lInchDistance and lInchDistance > 12.0:
-    	setSpeedsvw(linearSpeed, -rNewSignal/3)
+    	setSpeedsvw(linearSpeed, -rNewSignal/2)
     else:
     	setSpeedsvw(linearSpeed, 0)
 
