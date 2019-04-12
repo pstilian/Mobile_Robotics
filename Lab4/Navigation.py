@@ -182,10 +182,10 @@ def setDifference(speed):
  # Sets boundary speed for robot movement
 def saturationFunction(ips):
 	controlSignal = ips
-	if controlSignal > 4.0:
-		controlSignal = 4.0
-	elif controlSignal < -4.0:
-		controlSignal = -4.0
+	if controlSignal > 7.1:
+		controlSignal = 7.1
+	elif controlSignal < -7.1:
+		controlSignal = -7.1
 	return controlSignal
 
 # Sets boundary speed for robot movement
@@ -196,6 +196,43 @@ def saturationFunctionWallFollowing(ips):
 	elif controlSignal < -0.5:
 		controlSignal = -0.5
 	return controlSignal
+
+
+# Sets speed of motors in Inches per econd
+def setSpeedsIPS(ipsLeft, ipsRight):
+      # Converting inches per second into revolutions per second
+      rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
+      rpsRight = float(math.ceil((ipsRight / 8.20) * 100) / 100)
+
+      if rpsLeft < 0:
+            rpsLeft = 0 - rpsLeft
+      if rpsRight < 0:
+            rpsRight = 0 - rpsRight
+
+      # Calculating pwm values from the respective dictionaries
+      lPwmValue = float(LWSpeed[rpsLeft])
+      rPwmValue = float(RWSpeed[rpsRight])
+
+      if ipsLeft < 0 and ipsRight < 0:
+            # Setting appropiate speeds to the servos when going forwards
+            pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+      elif ipsLeft >= 0 and ipsRight >= 0:
+            # Setting apporpiate speeds to the servos when going backwards
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+      elif ipsLeft >= 0 and ipsRight < 0:
+      		#S Setting appropriate speeds tot he servos while turning
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
+
+
+def setSpeedsvw(v, w):
+      velocityLeft1 = float(( v + ( w * dAxis)))
+      velocityRight1 = float(( v - ( w * dAxis)))
+
+      setSpeedsIPS(-velocityLeft1, -velocityRight1)
+
 
 # Function for determinng robot actions throught the maze
 def whatDo(lWallOpen, fWallOpen, rWallOpen):
@@ -235,21 +272,21 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	# Option 1 demands left turn
 	if option == 1:
 		print("I'm turning left")
-		LeftPivot()
+		leftPivot()
 
 	# Option 2 demands move forward
 	elif option == 2:
 		# needs to move forward
-		stop()
+		moveForward()
 
 	# Option 3 demands right turn
 	elif option == 3:
 		print("I'm turning right")
-		RightPivot()
+		rightPivot()
 
 	else:
 		print("OH NO IM TRAPPED!! 0.0")
-		TurnAround()
+		turnAround()
 
 def stop():
 	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -257,7 +294,7 @@ def stop():
 	time.sleep(1)
 
 
-def LeftPivot():
+def leftPivot():
 	global distanceT, lRevolutions, rRevolutions
 	stop()
 
@@ -268,7 +305,7 @@ def LeftPivot():
     rRevolutions = 1.1
 
 
-def RightPivot():
+def rightPivot():
 	global distanceT, lRevolutions, rRevolutions
 	stop()
 
@@ -278,7 +315,7 @@ def RightPivot():
     lRevolutions = 1.1
     rRevolutions = 1.1
 
-def TurnAround():
+def turnAround():
 	global distanceT, lRevolutions, rRevolutions
 	stop()
 
@@ -287,6 +324,92 @@ def TurnAround():
     time.sleep(3.6)
     lRevolutions = 1.1
     rRevolutions = 1.1
+
+# Maneuvers robot back to center of cell works like motion to goal / wall distance
+def frontDist():
+	global lRevolutions, rRevolutions
+
+	fCount = 0
+
+	while True:
+		# Gets Distance From Sensor
+    	fDistance = fSensor.get_distance()
+		# Converts readings from milimeters to inches
+    	inchDistance = fDistance * 0.03937
+   		# 0.0394 is the conversion rate from mm to inches Determining error amount
+
+   		# Calculating the front error
+   		fError = 8 -inchDistance
+
+    	# Control Signal aka u(t)  = Kp * e(t)
+    	controlSignal = kpValue * error
+
+    	# Calculating new control signal value by running control signal through saturation function
+    	newSignal = saturationFunction(controlSignal)
+
+    	setSpeedsIPS(newSignal, newSignal)
+
+    	# When robot is 8 inches from wall adjustment is complete
+    	if fError < 0.5 and fError > -0.5:
+    		break
+
+    	# makes sure robot doesnt get stuck from retardation
+    	fCount = fCount + 1
+    	if fCount > 70:
+    		break
+
+    lRevolutions = 1.1
+    rRevolutions = 1.1
+
+def moveForward():
+	global sCount
+
+    #measure distances..
+    fDistance = fSensor.get_distance()
+    lDistance = lSensor.get_distance()
+    rDistance = rSensor.get_distance()
+
+	# Converts readings from milimeters to inches
+    finchDistance = fDistance * 0.03937
+    linchDistance = lDistance * 0.03937
+    rinchDistance = rDistance * 0.03937
+
+    # fError is the calculated respective error value aka the e(t) value
+    fError = 7.0 - fInchDistance
+    lError = 8.0 - lInchDistance
+    rError = 8.0 - rInchDistance
+
+    # Control Signal aka u(t)  = Kp * e(t)
+    fControlSignal = kpValue * fError
+    lControlSignal = kpValue * lError
+    rControlSignal = kpValue * rError
+
+    # Calculating new control signal value by running control signal through saturation function
+    fNewSignal = saturationFunction(fControlSignal)
+    lNewSignal = saturationFunctionWallFollowing(lControlSignal)
+    rNewSignal = saturationFunctionWallFollowing(rControlSignal)
+
+    if rInchDistance > lInchDistance and rInchDistance < 12.0:
+    	setSpeedsvw(linearSpeed, lNewSignal/3)
+    elif rInchDistance > lInchDistance and rInchDistance > 12.0:
+    	setSpeedsvw(linearSpeed, lNewSignal/3)
+    elif rInchDistance < lInchDistance and lInchDistance < 12.0:
+    	setSpeedsvw(linearSpeed, -rNewSignal/3)
+    elif rInchDistance < lInchDistance and lInchDistance > 12.0:
+    	setSpeedsvw(linearSpeed, -rNewSignal/3)
+    else:
+    	setSpeedsvw(linearSpeed, 0)
+
+    # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
+    if fInchDistance < 5.0:
+
+        sensorCount += 1
+
+        if sensorCount > 4:
+            frontDist()
+
+    else:
+        sensorCount = 0
 
 ################################################################################
 ########################### INITALIZATION FUNCTIONS ############################
