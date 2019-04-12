@@ -13,7 +13,6 @@ import random
 
 import cv2 as cv
 from ThreadedWebcam import ThreadedWebcam
-from UnthreadedWebcam import UnthreadedWebcam
 
 #Intialize maps
 startTime = time.time()
@@ -295,8 +294,8 @@ def stop():
 
 
 def leftPivot():
-	global distanceT, lRevolutions, rRevolutions
-	stop()
+    global distanceT, lRevolutions, rRevolutions
+    stop()
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.45 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.45 / 20 * 4096))
@@ -306,8 +305,8 @@ def leftPivot():
 
 
 def rightPivot():
-	global distanceT, lRevolutions, rRevolutions
-	stop()
+    global distanceT, lRevolutions, rRevolutions
+    stop()
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
@@ -316,8 +315,8 @@ def rightPivot():
     rRevolutions = 1.1
 
 def turnAround():
-	global distanceT, lRevolutions, rRevolutions
-	stop()
+    global distanceT, lRevolutions, rRevolutions
+    stop()
 
     pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
@@ -327,42 +326,42 @@ def turnAround():
 
 # Maneuvers robot back to center of cell works like motion to goal / wall distance
 def frontDist():
-	global lRevolutions, rRevolutions
+    global lRevolutions, rRevolutions
 
-	fCount = 0
+    fCount = 0
 
-	while True:
-		# Gets Distance From Sensor
-    	fDistance = fSensor.get_distance()
-		# Converts readings from milimeters to inches
-    	inchDistance = fDistance * 0.03937
-   		# 0.0394 is the conversion rate from mm to inches Determining error amount
+    while True:
+        # Gets Distance From Sensor
+        fDistance = fSensor.get_distance()
+	# Converts readings from milimeters to inches
+        inchDistance = fDistance * 0.03937
+   	# 0.0394 is the conversion rate from mm to inches Determining error amount
 
-   		# Calculating the front error
-   		fError = 8 -inchDistance
+   	# Calculating the front error
+        fError = 8 - inchDistance
 
     	# Control Signal aka u(t)  = Kp * e(t)
-    	controlSignal = kpValue * error
+        controlSignal = kpValue * error
 
-    	# Calculating new control signal value by running control signal through saturation function
-    	newSignal = saturationFunction(controlSignal)
+        # Calculating new control signal value by running control signal through saturation function
+        newSignal = saturationFunction(controlSignal)
 
-    	setSpeedsIPS(newSignal, newSignal)
+        setSpeedsIPS(newSignal, newSignal)
 
-    	# When robot is 8 inches from wall adjustment is complete
-    	if fError < 0.5 and fError > -0.5:
-    		break
+        # When robot is 8 inches from wall adjustment is complete
+        if fError < 0.5 and fError > -0.5:
+            break
 
-    	# makes sure robot doesnt get stuck from retardation
-    	fCount = fCount + 1
-    	if fCount > 70:
-    		break
+        # makes sure robot doesnt get stuck from retardation
+        fCount = fCount + 1
+        if fCount > 70:
+            break
 
     lRevolutions = 1.1
     rRevolutions = 1.1
 
 def moveForward():
-	global sCount
+    global sCount
 
     #measure distances..
     fDistance = fSensor.get_distance()
