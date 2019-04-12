@@ -345,7 +345,7 @@ def frontDist():
         fError = 8 - inchDistance
 
     	# Control Signal aka u(t)  = Kp * e(t)
-        controlSignal = kpValue * ferror
+        controlSignal = kpValue * fError
 
         # Calculating new control signal value by running control signal through saturation function
         newSignal = saturationFunction(controlSignal)
