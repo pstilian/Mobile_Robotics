@@ -280,7 +280,7 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	elif option == 2:
 		# needs to move forward
 		print("Moving Forward")
-		moveForward()
+		#moveForward()
 
 	# Option 3 demands right turn
 	elif option == 3:
