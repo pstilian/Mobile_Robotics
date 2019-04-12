@@ -24,7 +24,7 @@ RWSpeed = {}
 # Used Values
 lCount = 0
 rCount = 0
-#TotalCount = (0, 0)
+TotalCount = (0, 0)
 lSpeed = 0
 rSpeed = 0
 lRevolutions = 0
@@ -143,7 +143,7 @@ def onRightEncode(pin):
 
 # Resets the tick count
 def resetCounts():
-    global Lcount, rCount, startTime
+    global TotalCount, Lcount, rCount, startTime
     lCount = 0
     rCount = 0
     startTime = time.time()
@@ -238,6 +238,9 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	# Initialize "option" variable
 	# 1 = Left turn, 2 = Move Forward, 3 = Right Turn
 	option = 0
+
+	if fInchDistance < 18:
+		frontDist()
 
 	if lWallOpen and fWallOpen and rWallOpen:
 		choices = [1, 2, 3]
