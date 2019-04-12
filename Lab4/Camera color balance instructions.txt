@@ -1,0 +1,7 @@
+Open up a program to preview the camera image (such as the CameraTest demo).
+Open a separate terminal and enter the following commands.
+Adjust the red_balance and blue_balance values as necessary until the image appears correct.
+
+v4l2-ctl -c white_balance_auto_preset=0
+v4l2-ctl -c red_balance=1400
+v4l2-ctl -c blue_balance=1600
