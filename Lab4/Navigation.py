@@ -459,13 +459,13 @@ lInchDistance = lDistance * 0.0394
 # 0.394 is the conversion rate from millimeters to inches Determining error amount
 
 # Initialize the current cell
-if fInchDistance < 15:
+if fInchDistance > 15:
 	fWallOpen = True
 
-if rInchDistance < 15:
+if rInchDistance > 15:
 	rWallOpen = True
 
-if lInchDistance < 15:
+if lInchDistance > 15:
 	lWallOpen = True
 
 
@@ -483,13 +483,13 @@ while True:
     lInchDistance = lDistance * 0.0394
     # 0.394 is the conversion rate from millimeters to inches Determining error amount
 
-    if fInchDistance < 15:
+    if fInchDistance > 15:
     	fWallOpen = True
 
-    if rInchDistance < 15:
+    if rInchDistance > 15:
     	rWallOpen = True
 
-    if lInchDistance < 15:
+    if lInchDistance > 15:
     	lWallOpen = True
 
     # Records Distance Traveled by Robot
