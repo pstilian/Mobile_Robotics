@@ -246,7 +246,7 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 		choices = [1, 2, 3]
 		option = random.choice(choices)
 
-	elif rWallOpen and fWallOpen:
+	elif fWallOpen and rWallOpen:
 		choices = [2, 3]
 		option = random.choice(choices)
 
