@@ -90,7 +90,6 @@ def readCSV():
         rReader = csv.reader(RightCalibrate)
         RWSpeed = dict(map(float,x) for x in rReader) # pulls in each row as a key-value pai
 
-
 #Function that resets the total count of ticks
 def resetCounts():
     global totalCountTuple, lTickCount, rTickCount, startTime
@@ -158,11 +157,6 @@ def ctrlC(signum, frame):
     rSensor.stop_ranging()
     exit()
 
-# Function that flips pwm values since servos are in opposite directions
-def servoFlip(speed):
-    difference = speed - 1.5
-    return 1.5 - difference
-
 # This function changes the values from 1.5 - 1.7 to 1.5-1.3 basically outputting inverse pwm values
 def setDifference(speed):
     diff = speed - 1.5
@@ -218,33 +212,6 @@ def saturationFunctionRight(inches):
         controlSignal = -0.5
     return controlSignal
 
-# Function to make a left turn when needed
-def turnLeft():
-    # Reading in from sensor
-    fDistance = fSensor.get_distance()
-
-    # Transforming readings to inches
-    inchesDistance = fDistance * 0.0393700787
-
-    while inchesDistance < 10:
-        if inchesDistance < 3:
-            pwm.set_pwm(LSERVO, 0, math.floor(1.47 / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(servoFlip(1.47) / 20 * 4096))
-
-            time.sleep(1.2)
-        pwm.set_pwm(LSERVO, 0, math.floor(1.49 / 20 * 4096))
-        pwm.set_pwm(RSERVO, 0, math.floor(1.42 / 20 * 4096))
-        #setSpeedsIPS(1.3, -2)
-
-        # Reading in from sensor
-        fDistance = fSensor.get_distance()
-
-        # Transforming readings to inches
-        inchesDistance = fDistance * 0.0393700787
-    time.sleep(0.25)
-    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
-    pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
-
 # Function to set appropiate boundaries for front sensor
 def saturationFunctionFront(ips):
     controlSignal = ips
@@ -290,8 +257,6 @@ def frontDist():
     lRevolutions = 1.1
     rRevolutions = 1.1
 
-
-
 def setSpeedsvw(v, w):
     leftSpeed1 = (v + (w*3.95))
     rightSpeed1 = (v - (w*3.95))
@@ -302,7 +267,7 @@ def stop():
     pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
     time.sleep(1)
 
-#Check if specific flags are set to decide action.
+# Check if specific flags are set to decide action.
 def whatDo(leftWallOpen, frontWallOpen, rightWallOpen):
     option = 0
 
@@ -423,7 +388,6 @@ def leftPivot():
     lRevolutions = 1.1
     rRevolutions = 1.1
 
-
 def rightPivot():
     global distanceT, lRevolutions, rRevolutions, direction
     stop()
@@ -432,7 +396,6 @@ def rightPivot():
     time.sleep(0.9)
     lRevolutions = 1.1
     rRevolutions = 1.1
-
 
 def turnAround():
     global distanceT, lRevolutions, rRevolutions, direction
@@ -545,7 +508,6 @@ while True:
     if distanceT > 9 and newCell:
         print("I have entered a new cell")
         newCell = False
-        # updateCell(direction, currentCell)
 
     if distanceT > 18:
 
@@ -553,9 +515,7 @@ while True:
         newCell = True
 
         distanceT = 0
-        #stop()
         resetCounts()
-        #print("TRAVELLED .75 FEET (9INCHES)")
 
     frontWallOpen = False
     leftWallOpen = False
