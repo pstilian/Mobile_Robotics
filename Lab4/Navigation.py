@@ -179,6 +179,7 @@ def setDifference(speed):
     return 1.5 - diff
 
  # Sets boundary speed for robot movement
+
 def saturationFunction(ips):
 	controlSignal = ips
 	if controlSignal > 7.1:
@@ -195,7 +196,6 @@ def saturationFunctionWallFollowing(ips):
 	elif controlSignal < -0.5:
 		controlSignal = -0.5
 	return controlSignal
-
 
 # Sets speed of motors in Inches per econd
 def setSpeedsIPS(ipsLeft, ipsRight):
@@ -233,74 +233,133 @@ def setSpeedsvw(v, w):
       setSpeedsIPS(-velocityLeft1, -velocityRight1)
 
 
-# Function for determinng robot actions throught the maze
-def whatDo(lWallOpen, fWallOpen, rWallOpen):
-	# Initialize "option" variable
-	# 1 = Left turn, 2 = Move Forward, 3 = Right Turn
-	option = 0
+# # Function for determinng robot actions throught the maze
+# def whatDo(lWallOpen, fWallOpen, rWallOpen):
+# 	# Initialize "option" variable
+# 	# 1 = Left turn, 2 = Move Forward, 3 = Right Turn
+# 	option = 0
 
-	if fInchDistance < 18:
-		frontDist()
+# 	if fInchDistance < 18:
+# 		frontDist()
 
-	if lWallOpen and fWallOpen and rWallOpen:
-		choices = [1, 2, 3]
-		option = random.choice(choices)
-		#stop()
+# 	if lWallOpen and fWallOpen and rWallOpen:
+# 		choices = [1, 2, 3]
+# 		option = random.choice(choices)
+# 		#stop()
 
-	elif fWallOpen and rWallOpen:
-		choices = [2, 3]
-		option = random.choice(choices)
-		#stop()
+# 	elif fWallOpen and rWallOpen:
+# 		choices = [2, 3]
+# 		option = random.choice(choices)
+# 		#stop()
 
-	elif lWallOpen and rWallOpen:
-		choices = [1, 3]
-		option = random.choice(choices)
-		#stop()
+# 	elif lWallOpen and rWallOpen:
+# 		choices = [1, 3]
+# 		option = random.choice(choices)
+# 		#stop()
 
-	elif lWallOpen and fWallOpen:
-		choices = [1, 2]
-		option = random.choice(choices)
-		#stop()
+# 	elif lWallOpen and fWallOpen:
+# 		choices = [1, 2]
+# 		option = random.choice(choices)
+# 		#stop()
 
-	elif rWallOpen:
-		option = 3
-		#stop()
+# 	elif rWallOpen:
+# 		option = 3
+# 		#stop()
 
-	elif fWallOpen:
-		option = 2
-		#stop()
+# 	elif fWallOpen:
+# 		option = 2
+# 		#stop()
 
-	elif lWallOpen:
-		option = 1
-		#stop()
+# 	elif lWallOpen:
+# 		option = 1
+# 		#stop()
 
-	else:
-		option = 0
-		#stop()
+# 	else:
+# 		option = 0
+# 		#stop()
 
-	## DETERMINE THE MOVEMENTS OF ROBOT
-	# Option 1 demands left turn
-	if option == 1:
-		print("I'm turning left")
-		leftPivot()
-
-
-	# Option 2 demands move forward
-	elif option == 2:
-		# needs to move forward
-		print("Moving Forward")
-		moveForward()
+# 	## DETERMINE THE MOVEMENTS OF ROBOT
+# 	# Option 1 demands left turn
+# 	if option == 1:
+# 		print("I'm turning left")
+# 		leftPivot()
 
 
-	# Option 3 demands right turn
-	elif option == 3:
-		print("I'm turning right")
-		rightPivot()
+# 	# Option 2 demands move forward
+# 	elif option == 2:
+# 		# needs to move forward
+# 		print("Moving Forward")
+# 		moveForward()
 
-	else:
-		print("OH NO IM TRAPPED!! 0.0")
-		turnAround()
 
+# 	# Option 3 demands right turn
+# 	elif option == 3:
+# 		print("I'm turning right")
+# 		rightPivot()
+
+# 	else:
+# 		print("OH NO IM TRAPPED!! 0.0")
+# 		turnAround()
+
+#Check if specific flags are set to decide action.
+def whatToDo(leftWallOpen, frontWallOpen, rightWallOpen):
+    option = 0
+
+    if inchesDFront < 18:
+        frontDist()
+
+    if lWallOpen and fWallOpen and rWallOpen:
+        choices = [1, 2, 3]
+        option = random.choice(choices)
+        #stop()
+
+    elif fWallOpen and rWallOpen:
+        choices = [2, 3]
+        option = random.choice(choices)
+        #stop()
+
+    elif lWallOpen and rWallOpen:
+        choices = [1, 3]
+        option = random.choice(choices)
+        #stop()
+
+    elif lWallOpen and fWallOpen:
+        choices = [1, 2]
+        option = random.choice(choices)
+        #stop()
+
+    elif rWallOpen:
+        option = 3
+        #stop()
+
+    elif fWallOpen:
+        option = 2
+        #stop()
+
+    elif lWallOpen:
+        option = 1
+        #stop()
+
+    else:
+        option = 0
+        #stop()
+
+    #CHECK WHAT MOVE I MUST DO!
+    if option == 1:
+        #turn left
+        print("LEFT TURN")
+       	leftPivot()
+    elif option == 2:
+        #keep moving forward
+        print("MOVE FORWARD")
+    elif option == 3:
+        #right turn
+        print("RIGHT TURN")
+        rightPivot()
+    else:
+        #360 turn and move forward
+        print("WALL IN ALL THREE PLACES")
+        turnAround()
 
 def stop():
 	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -375,116 +434,56 @@ def frontDist():
     lRevolutions = 1.1
     rRevolutions = 1.1
 
-# def moveForward():
-#     global sensorCount
-
-#     #measure distances..
-#     fDistance = fSensor.get_distance()
-#     lDistance = lSensor.get_distance()
-#     rDistance = rSensor.get_distance()
-
-# 	# Converts readings from milimeters to inches
-#     fInchDistance = fDistance * 0.03937
-#     lInchDistance = lDistance * 0.03937
-#     rInchDistance = rDistance * 0.03937
-
-#     # fError is the calculated respective error value aka the e(t) value
-#     fError = 7.0 - fInchDistance
-#     lError = 8.0 - lInchDistance
-#     rError = 8.0 - rInchDistance
-
-#     # Control Signal aka u(t)  = Kp * e(t)
-#     fControlSignal = kpValue * fError
-#     lControlSignal = kpValue * lError
-#     rControlSignal = kpValue * rError
-
-#     # Calculating new control signal value by running control signal through saturation function
-#     fNewSignal = saturationFunction(fControlSignal)
-#     lNewSignal = saturationFunctionWallFollowing(lControlSignal)
-#     rNewSignal = saturationFunctionWallFollowing(rControlSignal)
-
-#     if rInchDistance > lInchDistance and rInchDistance < 12.0:
-#     	setSpeedsvw(linearSpeed, lNewSignal/3)
-#     elif rInchDistance > lInchDistance and rInchDistance > 12.0:
-#     	setSpeedsvw(linearSpeed, lNewSignal/3)
-#     elif rInchDistance < lInchDistance and lInchDistance < 12.0:
-#     	setSpeedsvw(linearSpeed, -rNewSignal/3)
-#     elif rInchDistance < lInchDistance and lInchDistance > 12.0:
-#     	setSpeedsvw(linearSpeed, -rNewSignal/3)
-#     else:
-#     	setSpeedsvw(linearSpeed, 0)
-
-#     # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
-#     if fInchDistance < 5.0:
-
-#         sensorCount += 1
-
-#         if sensorCount > 4:
-#             frontDist()
-
-#     else:
-#         sensorCount = 0
-
-
 def moveForward():
     global sensorCount
 
-	# Reading in from sensors
+    #measure distances..
     fDistance = fSensor.get_distance()
-    rDistance = rSensor.get_distance()
     lDistance = lSensor.get_distance()
+    rDistance = rSensor.get_distance()
 
-    # Transforming readings to inches
-    inchesDistanceFront = fDistance * 0.0393700787
-    inchesDistanceRight = rDistance * 0.0393700787
-    inchesDistanceLeft = lDistance * 0.0393700787
+	# Converts readings from milimeters to inches
+    fInchDistance = fDistance * 0.03937
+    lInchDistance = lDistance * 0.03937
+    rInchDistance = rDistance * 0.03937
 
-    # Calculating respective errors
-    errorf = 7.0 - inchesDistanceFront
-    errorr = 8.0 - inchesDistanceRight
-    errorl = 8.0 - inchesDistanceLeft
+    # fError is the calculated respective error value aka the e(t) value
+    fError = 7.0 - fInchDistance
+    lError = 8.0 - lInchDistance
+    rError = 8.0 - rInchDistance
 
-    # Computing the control signals
-    controlSignalf = kpValue * errorf
-    controlSignalr = kpValue * errorr
-    controlSignall = kpValue * errorl
+    # Control Signal aka u(t)  = Kp * e(t)
+    fControlSignal = kpValue * fError
+    lControlSignal = kpValue * lError
+    rControlSignal = kpValue * rError
 
-    # Running control signals through saturation functions
-    newSignalf = saturationFunction(controlSignalf)
-    newSignalr = saturationFunctionWallFollowing(controlSignalr)
-    newSignall = saturationFunctionWallFollowing(controlSignall)
+    # Calculating new control signal value by running control signal through saturation function
+    fNewSignal = saturationFunction(fControlSignal)
+    lNewSignal = saturationFunctionWallFollowing(lControlSignal)
+    rNewSignal = saturationFunctionWallFollowing(rControlSignal)
 
-
-    if inchesDistanceRight > inchesDistanceLeft and inchesDistanceRight < 12.0:
-        # Setting speed of the robot, angular speed will be zero when moving straight
-        #setSpeedsvw(linearSpeed,-newSignalr)
-        setSpeedsvw(linearSpeed,newSignall/3)
-    elif inchesDistanceRight > inchesDistanceLeft and inchesDistanceRight > 12.0:
-        # Setting speed of the robot, angular speed will be zero when moving straight
-        #setSpeedsvw(linearSpeed,-newSignalr)
-        setSpeedsvw(linearSpeed,newSignall/3)
-    elif inchesDistanceRight < inchesDistanceLeft and inchesDistanceLeft < 12.0:
-        setSpeedsvw(linearSpeed,-newSignalr/3)
-        #setSpeedsvw(linearSpeed,newSignall)
-    elif inchesDistanceRight < inchesDistanceLeft and inchesDistanceLeft > 12.0:
-        setSpeedsvw(linearSpeed,-newSignalr/3)
-        #setSpeedsvw(linearSpeed,newSignall)
+    if rInchDistance > lInchDistance and rInchDistance < 12.0:
+    	setSpeedsvw(linearSpeed, lNewSignal/3)
+    elif rInchDistance > lInchDistance and rInchDistance > 12.0:
+    	setSpeedsvw(linearSpeed, lNewSignal/3)
+    elif rInchDistance < lInchDistance and lInchDistance < 12.0:
+    	setSpeedsvw(linearSpeed, -rNewSignal/3)
+    elif rInchDistance < lInchDistance and lInchDistance > 12.0:
+    	setSpeedsvw(linearSpeed, -rNewSignal/3)
     else:
-        setSpeedsvw(linearSpeed,0)
+    	setSpeedsvw(linearSpeed, 0)
 
-    # Checking if there is an object approaching from the front
-    if inchesDistanceFront < 5.0:
-        # Increasing reading count
-	    sensorCount += 1
+    # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
+    if fInchDistance < 5.0:
 
-        # Checking if the front small reading happens continously to avoid a fake trigger
-	    if sensorCount > 4:
-            # Turning left
-		    frontDist()
+        sensorCount += 1
 
-    # Clearing sensor count for continous small front readings
+        if sensorCount > 4:
+            frontDist()
+
     else:
         sensorCount = 0
+
 
 ################################################################################
 ########################### INITALIZATION FUNCTIONS ############################
