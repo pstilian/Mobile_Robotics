@@ -516,7 +516,7 @@ while True:
 
     if distanceT > 18:
 
-    	whatToDo(lWallOpen, fWallOpen, rWallOpen)
+    	whatDo(lWallOpen, fWallOpen, rWallOpen)
     	#newCell = True
 
     	distanceT = 0
