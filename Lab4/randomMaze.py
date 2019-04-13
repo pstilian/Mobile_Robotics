@@ -125,19 +125,14 @@ def setSpeedsIPS(ipsLeft, ipsRight):
       lPwmValue = float(LWSpeed[rpsLeft])
       rPwmValue = float(RWSpeed[rpsRight])
 
-      if ipsLeft < 0 and ipsRight < 0:
+      if ipsLeft < 0 or ipsRight < 0:
             # Setting appropiate speeds to the servos when going forwards
+            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue)    / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
+      elif ipsLeft >= 0 or ipsRight >= 0:
+            # Setting apporpiate speeds to the servos when going backwards
             pwm.set_pwm(LSERVO, 0, math.floor(lPwmValue / 20 * 4096))
             pwm.set_pwm(RSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
-      elif ipsLeft >= 0 and ipsRight >= 0:
-            # Setting apporpiate speeds to the servos when going backwards
-            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-            pwm.set_pwm(RSERVO, 0, math.floor(rPwmValue / 20 * 4096))
-      elif ipsLeft >= 0 and ipsRight < 0:
-            # Setting appropriate speedsto the servos while making a turn
-            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(lPwmValue) / 20 * 4096))
-            pwm.set_pwm(LSERVO, 0, math.floor(setDifference(rPwmValue) / 20 * 4096))
-
 def spinIPS(ipsLeft, ipsRight):
       # Converting inches per second into revolutions per second
       rpsLeft = float(math.ceil((ipsLeft / 8.20) * 100) / 100)
@@ -343,7 +338,7 @@ def motionToGoal():
     setSpeedsIPS(2,2)
 
 def center():
-
+    
     #measure distances..
     fDistance = fSensor.get_distance()
     lDistance = lSensor.get_distance()
@@ -354,31 +349,71 @@ def center():
     linchDistance = lDistance * 0.03937
     rinchDistance = rDistance * 0.03937
 
-    while fDistance > 7 and (rDistance < 14 or lDistance < 14):
-        if rDistance < 7 and rDistance > 6:
-            setSpeedsIPS(3,2)
-        if lDistance < 7 and lDistance > 6:
-            setSpeedsIPS(2,3)
+    pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.45 / 20 * 4096))
+    while finchDistance > 5:
+        print("front Sensor greater than 6")
+        fDistance = fSensor.get_distance()
+        lDistance = lSensor.get_distance()
+        rDistance = rSensor.get_distance()
+        print("Front Sensor: ", fDistance)
 
-        if rDistance < 5 and rDistance > 4:
-            setSpeedsIPS(4,2)
-        if lDistance < 5 and lDistance > 4:
-            setSpeedsIPS(2,4)
+        # Converts readings from milimeters to inches
+        finchDistance = fDistance * 0.03937
+        linchDistance = lDistance * 0.03937
+        rinchDistance = rDistance * 0.03937
+
+        if linchDistance < 5:
+            print("left Sensor, " )
+            pwm.set_pwm(LSERVO, 0, math.floor(1.58 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.45 / 20 * 4096))
+
+        if rinchDistance < 5:
+            pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.43 / 20 * 4096))
+
+        if linchDistance > 12 and rinchDistance > 12:
+            print("front Sensor greater than 6")
+            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+            break
+
+        if linchDistance > 12:
+            print("front Sensor greater than 12")
+            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+            break
         
-        if lDistance < 4:
-            setSpeedsIPS(5,3)
-        if rDistance < 4:
-            setSpeedsIPS(3,5)
+        if rinchDistance > 12:
+            print("front Sensor greater than 12")
+            pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+            pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+            break
+    
+    if finchDistance < 3:
+        print("front Sensor less than 4")
+        pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+    
+    
+    #setSpeedsIPS(3,3)
+    #time.sleep(3)
+        
+    
+    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
-    while rDistance > 14:
-        setSpeedsIPS(5,3)
-    while lDistance > 14:
-        setSpeedsIPS(3,5)
+    if linchDistance > 13:
+        pwm.set_pwm(LSERVO, 0, math.floor(1.47 / 20 * 4096))
+        pwm.set_pwm(RSERVO, 0, math.floor(1.47 / 20 * 4096))
+        time.sleep(2)
 
-
-
-
-
+    if finchDistance < 5.0:
+        sensorCount += 1
+        if sensorCount > 4:
+            frontDist()
+    else :
+        sensorCount = 0
 
 
 
@@ -402,7 +437,9 @@ pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 
 startFlag = False
 selectCommand = ' '
-
+#pwm.set_pwm(LSERVO, 0, math.floor(1.45 / 20 * 4096))
+#pwm.set_pwm(RSERVO, 0, math.floor(1.45 / 20 * 4096))
+#time.sleep(0.9)
 # Holds program until command value is entered
 while selectCommand != 's':
       selectCommand = input("Please enter \'s\' to begin robot movement: ")
@@ -414,8 +451,8 @@ startFlag = True
 while startFlag:
     # Calculate FPS
 
-    pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
-    pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
+    #pwm.set_pwm(LSERVO, 0, math.floor(1.48 / 20 * 4096))
+    #pwm.set_pwm(RSERVO, 0, math.floor(1.48 / 20 * 4096))
 
     #measure distances..
     fDistance = fSensor.get_distance()
@@ -451,8 +488,10 @@ while startFlag:
         #setSpeedsIPS(2,1)
     center()
 
-    
-    
+
+    startFlag = False
+    #pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+    #pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
     now = time.time()
     
 
