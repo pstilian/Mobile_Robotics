@@ -457,68 +457,14 @@ newCell = True
 ############################### MAIN LINE CODE #################################
 ################################################################################
 
-# Utilizes 3 flags one for each detectable wall to see if there is an opening or not
-# These Flags are leftWallOpen, rightWallOpen and frontWallOpen
-
-# Reading in from sensors
-fDistance = fSensor.get_distance()
-rDistance = rSensor.get_distance()
-lDistance = lSensor.get_distance()
-
-# Transforming readings to inches
-inchesDFront = fDistance * 0.0393700787
-inchesDRight = rDistance * 0.0393700787
-inchesDLeft = lDistance * 0.0393700787
-
-#Constantly updates the flags while reading the sensors.
-if inchesDFront > 15:
-    frontWallOpen = True
-
-if inchesDRight > 15:
-    rightWallOpen = True
-
-if inchesDLeft > 15:
-    leftWallOpen = True
-
 while True:
  
-    # Reading in from sensors
-    fDistance = fSensor.get_distance()
-    rDistance = rSensor.get_distance()
-    lDistance = lSensor.get_distance()
+    # Waiting for user to enter the required key in order to start the movement
+    startFlag = False
+    selectCommand = ' '
+    # Holds program until command value is entered
+    while selectCommand != 's':
+      selectCommand = input("Please enter \'s\' to make me so a pretty spin!!: ")
+      leftPivot()
 
-    # Transforming readings to inches
-    inchesDFront = fDistance * 0.0393700787
-    inchesDRight = rDistance * 0.0393700787
-    inchesDLeft = lDistance * 0.0393700787
-
-    #Constantly updates the flags while reading the sensors.
-    if inchesDFront > 15:
-        frontWallOpen = True
-
-    if inchesDRight > 15:
-        rightWallOpen = True
-
-    if inchesDLeft > 15:
-        leftWallOpen = True
-
-    #Checking if the robot has already traveled the required distance
-    distanceT = (8.20 * ((lRevolutions + rRevolutions) / 2))
-    
-    if distanceT > 9 and newCell:
-        print("I have entered a new cell")
-        newCell = False
-
-    if distanceT > 18:
-
-        whatDo(leftWallOpen, frontWallOpen, rightWallOpen)
-        newCell = True
-
-        distanceT = 0
-        resetCounts()
-
-    frontWallOpen = False
-    leftWallOpen = False
-    rightWallOpen = False
-
-    moveForward()
+    startFlag = True
