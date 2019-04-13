@@ -306,7 +306,7 @@ def whatToDo(leftWallOpen, frontWallOpen, rightWallOpen):
     option = 0
 
     if inchesDFront < 18:
-        adjustFront()
+        frontDist()
 
     if lWallOpen and fWallOpen and rWallOpen:
         choices = [1, 2, 3]
