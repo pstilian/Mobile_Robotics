@@ -467,4 +467,4 @@ while True:
       selectCommand = input("Please enter \'s\' to make me so a pretty spin!!: ")
       leftPivot()
 
-    startFlag = True
+      startFlag = True
