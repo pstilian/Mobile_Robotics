@@ -476,4 +476,4 @@ while True:
         if selectCommand == 'q':
             turnAround()
 
-      startFlag = True
+        startFlag = True
