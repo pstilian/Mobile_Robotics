@@ -301,6 +301,66 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 		print("OH NO IM TRAPPED!! 0.0")
 		turnAround()
 
+#Check if specific flags are set to decide action.
+def whatToDo(leftWallOpen, frontWallOpen, rightWallOpen):
+    option = 0
+
+    if inchesDFront < 18:
+        adjustFront()
+
+    if lWallOpen and fWallOpen and rWallOpen:
+        choices = [1, 2, 3]
+        option = random.choice(choices)
+        #stop()
+
+    elif fWallOpen and rWallOpen:
+        choices = [2, 3]
+        option = random.choice(choices)
+        #stop()
+
+    elif lWallOpen and rWallOpen:
+        choices = [1, 3]
+        option = random.choice(choices)
+        #stop()
+
+    elif lWallOpen and fWallOpen:
+        choices = [1, 2]
+        option = random.choice(choices)
+        #stop()
+
+    elif rWallOpen:
+        option = 3
+        #stop()
+
+    elif fWallOpen:
+        option = 2
+        #stop()
+
+    elif lWallOpen:
+        option = 1
+        #stop()
+
+    else:
+        option = 0
+        #stop()
+
+    #CHECK WHAT MOVE I MUST DO!
+    if option == 1:
+        #turn left
+        print("LEFT TURN")
+        leftPivot()
+    elif option == 2:
+        #keep moving forward
+        print("MOVE FORWARD")
+    elif option == 3:
+        #right turn
+        print("RIGHT TURN")
+        rightPivot()
+    else:
+        #360 turn and move forward
+        print("WALL IN ALL THREE PLACES")
+        turnAround()
+
 
 def stop():
 	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -516,7 +576,7 @@ while True:
 
     if distanceT > 18:
 
-    	whatDo(lWallOpen, fWallOpen, rWallOpen)
+    	whatToDo(lWallOpen, fWallOpen, rWallOpen)
     	#newCell = True
 
     	distanceT = 0
