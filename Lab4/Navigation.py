@@ -450,7 +450,7 @@ fWallOpen = False
 rWallOpen = False
 lWallOpen = False
 startFlag = False
-newCell = True
+#newCell = True
 
 linearSpeed = 5
 sensorCount = 0
@@ -510,14 +510,14 @@ while True:
     # Records Distance Traveled by Robot
     distanceT = ( 8.20 * ((lRevolutions + rRevolutions) / 2) )
 
-    if distanceT > 9 and newCell:
-    	print("I have entered a new cell yay!")
-    	newCell = False
+    # if distanceT > 9 and newCell:
+    # 	print("I have entered a new cell yay!")
+    # 	newCell = False
 
     if distanceT > 18:
 
     	whatDo(lWallOpen, fWallOpen, rWallOpen)
-    	newCell = True
+    	#newCell = True
 
     	distanceT = 0
     	resetCounts()
