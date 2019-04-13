@@ -245,38 +245,38 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	if lWallOpen and fWallOpen and rWallOpen:
 		choices = [1, 2, 3]
 		option = random.choice(choices)
-		stop()
+		#stop()
 
 	elif fWallOpen and rWallOpen:
 		choices = [2, 3]
 		option = random.choice(choices)
-		stop()
+		#stop()
 
 	elif lWallOpen and rWallOpen:
 		choices = [1, 3]
 		option = random.choice(choices)
-		stop()
+		#stop()
 
 	elif lWallOpen and fWallOpen:
 		choices = [1, 2]
 		option = random.choice(choices)
-		stop()
+		#stop()
 
 	elif rWallOpen:
 		option = 3
-		stop()
+		#stop()
 
 	elif fWallOpen:
 		option = 2
-		stop()
+		#stop()
 
 	elif lWallOpen:
 		option = 1
-		stop()
+		#stop()
 
 	else:
 		option = 0
-		stop()
+		#stop()
 
 	## DETERMINE THE MOVEMENTS OF ROBOT
 	# Option 1 demands left turn
