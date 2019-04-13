@@ -472,10 +472,13 @@ while True:
         """)
         if selectCommand == 'l':
             leftPivot()
+            stop()
         if selectCommand == 'r':
             rightPivot()
+            stop()
         if selectCommand == 'q':
             turnAround()
-        selectCommand = "S"
+            stop()
+        selectCommand = " "
 
         startFlag = True
