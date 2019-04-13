@@ -378,16 +378,16 @@ def moveForward():
     # Clearing sensor count for continous small front readings
     else:
         sensorCount = 0
-
+# should be good only mess with sleep time!!!!
 def leftPivot():
     global distanceT, lRevolutions, rRevolutions, direction
     stop()
     pwm.set_pwm(LSERVO, 0, math.floor(1.46 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.41 / 20 * 4096))
-    time.sleep(0.9)
+    time.sleep(1)
     lRevolutions = 1.1
     rRevolutions = 1.1
-
+# Time is way off and pwm is way to slow, only mess with time
 def rightPivot():
     global distanceT, lRevolutions, rRevolutions, direction
     stop()
@@ -396,13 +396,13 @@ def rightPivot():
     time.sleep(0.9)
     lRevolutions = 1.1
     rRevolutions = 1.1
-
+# very close keep tweaking with the sleep time
 def turnAround():
     global distanceT, lRevolutions, rRevolutions, direction
     stop()
     pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
-    time.sleep(2.27)
+    time.sleep(2.25)
     lRevolutions = 1.1
     rRevolutions = 1.1
 
