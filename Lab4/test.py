@@ -464,7 +464,16 @@ while True:
     selectCommand = ' '
     # Holds program until command value is entered
     while selectCommand != 's':
-      selectCommand = input("Please enter \'s\' to make me so a pretty spin!!: ")
-      leftPivot()
+      selectCommand = input("""
+        Enter \'l\' to make me spin left
+        Enter \'l\' to make me spin right or
+        Enter \'l\' to make me spin all the way around
+        """)
+        if selectCommand == 'l':
+            leftPivot()
+        if selectCommand == 'r':
+            rightPivot()
+        if selectCommand == 'q':
+            turnAround()
 
       startFlag = True
