@@ -305,7 +305,7 @@ def setSpeedsvw(v, w):
 def whatToDo(leftWallOpen, frontWallOpen, rightWallOpen):
     option = 0
 
-    if inchesDFront < 18:
+    if fInchDistance < 18:
         frontDist()
 
     if lWallOpen and fWallOpen and rWallOpen:
