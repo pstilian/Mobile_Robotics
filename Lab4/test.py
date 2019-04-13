@@ -384,16 +384,16 @@ def leftPivot():
     stop()
     pwm.set_pwm(LSERVO, 0, math.floor(1.46 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.41 / 20 * 4096))
-    time.sleep(1)
+    time.sleep(0.9)
     lRevolutions = 1.1
     rRevolutions = 1.1
 
 def rightPivot():
     global distanceT, lRevolutions, rRevolutions, direction
     stop()
-    pwm.set_pwm(LSERVO, 0, math.floor(1.59 / 20 * 4096))
-    pwm.set_pwm(RSERVO, 0, math.floor(1.53 / 20 * 4096))
-    time.sleep(1.2)
+    pwm.set_pwm(LSERVO, 0, math.floor(1.57 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.51 / 20 * 4096))
+    time.sleep(0.9)
     lRevolutions = 1.1
     rRevolutions = 1.1
 
@@ -402,7 +402,7 @@ def turnAround():
     stop()
     pwm.set_pwm(LSERVO, 0, math.floor(1.55 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.55 / 20 * 4096))
-    time.sleep(2.28)
+    time.sleep(2.27)
     lRevolutions = 1.1
     rRevolutions = 1.1
 
