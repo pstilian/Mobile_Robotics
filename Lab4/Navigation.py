@@ -365,7 +365,7 @@ def frontDist():
     rRevolutions = 1.1
 
 def moveForward():
-    global sCount
+    global sensorCount
 
     #measure distances..
     fDistance = fSensor.get_distance()
@@ -442,7 +442,7 @@ startFlag = False
 newCell = True
 
 linearSpeed = 5
-sCount = 0
+sensorCount = 0
 selectCommand = ' '
 
 # Holds program until command value is entered
