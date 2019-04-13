@@ -245,30 +245,38 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	if lWallOpen and fWallOpen and rWallOpen:
 		choices = [1, 2, 3]
 		option = random.choice(choices)
+		stop()
 
 	elif fWallOpen and rWallOpen:
 		choices = [2, 3]
 		option = random.choice(choices)
+		stop()
 
 	elif lWallOpen and rWallOpen:
 		choices = [1, 3]
 		option = random.choice(choices)
+		stop()
 
 	elif lWallOpen and fWallOpen:
 		choices = [1, 2]
 		option = random.choice(choices)
+		stop()
 
 	elif rWallOpen:
 		option = 3
+		stop()
 
 	elif fWallOpen:
 		option = 2
+		stop()
 
 	elif lWallOpen:
 		option = 1
+		stop()
 
 	else:
 		option = 0
+		stop()
 
 	## DETERMINE THE MOVEMENTS OF ROBOT
 	# Option 1 demands left turn
@@ -276,11 +284,13 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 		print("I'm turning left")
 		leftPivot()
 
+
 	# Option 2 demands move forward
 	elif option == 2:
 		# needs to move forward
 		print("Moving Forward")
-		#moveForward()
+		moveForward()
+
 
 	# Option 3 demands right turn
 	elif option == 3:
@@ -290,6 +300,7 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	else:
 		print("OH NO IM TRAPPED!! 0.0")
 		turnAround()
+
 
 def stop():
 	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
