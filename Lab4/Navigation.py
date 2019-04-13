@@ -238,8 +238,8 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	# 1 = Left turn, 2 = Move Forward, 3 = Right Turn
 	option = 0
 
-	# if fInchDistance < 18:
-	# 	frontDist()
+	if fInchDistance < 18:
+		frontDist()
 
 	if lWallOpen and fWallOpen and rWallOpen:
 		choices = [1, 2, 3]
@@ -288,8 +288,7 @@ def whatDo(lWallOpen, fWallOpen, rWallOpen):
 	elif option == 2:
 		# needs to move forward
 		print("Moving Forward")
-		moveForward()
-
+		#moveForward()
 
 	# Option 3 demands right turn
 	elif option == 3:
