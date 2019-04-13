@@ -375,53 +375,114 @@ def frontDist():
     lRevolutions = 1.1
     rRevolutions = 1.1
 
+# def moveForward():
+#     global sensorCount
+
+#     #measure distances..
+#     fDistance = fSensor.get_distance()
+#     lDistance = lSensor.get_distance()
+#     rDistance = rSensor.get_distance()
+
+# 	# Converts readings from milimeters to inches
+#     fInchDistance = fDistance * 0.03937
+#     lInchDistance = lDistance * 0.03937
+#     rInchDistance = rDistance * 0.03937
+
+#     # fError is the calculated respective error value aka the e(t) value
+#     fError = 7.0 - fInchDistance
+#     lError = 8.0 - lInchDistance
+#     rError = 8.0 - rInchDistance
+
+#     # Control Signal aka u(t)  = Kp * e(t)
+#     fControlSignal = kpValue * fError
+#     lControlSignal = kpValue * lError
+#     rControlSignal = kpValue * rError
+
+#     # Calculating new control signal value by running control signal through saturation function
+#     fNewSignal = saturationFunction(fControlSignal)
+#     lNewSignal = saturationFunctionWallFollowing(lControlSignal)
+#     rNewSignal = saturationFunctionWallFollowing(rControlSignal)
+
+#     if rInchDistance > lInchDistance and rInchDistance < 12.0:
+#     	setSpeedsvw(linearSpeed, lNewSignal/3)
+#     elif rInchDistance > lInchDistance and rInchDistance > 12.0:
+#     	setSpeedsvw(linearSpeed, lNewSignal/3)
+#     elif rInchDistance < lInchDistance and lInchDistance < 12.0:
+#     	setSpeedsvw(linearSpeed, -rNewSignal/3)
+#     elif rInchDistance < lInchDistance and lInchDistance > 12.0:
+#     	setSpeedsvw(linearSpeed, -rNewSignal/3)
+#     else:
+#     	setSpeedsvw(linearSpeed, 0)
+
+#     # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
+#     if fInchDistance < 5.0:
+
+#         sensorCount += 1
+
+#         if sensorCount > 4:
+#             frontDist()
+
+#     else:
+#         sensorCount = 0
+
+
 def moveForward():
     global sensorCount
 
-    #measure distances..
+	# Reading in from sensors
     fDistance = fSensor.get_distance()
-    lDistance = lSensor.get_distance()
     rDistance = rSensor.get_distance()
+    lDistance = lSensor.get_distance()
 
-	# Converts readings from milimeters to inches
-    fInchDistance = fDistance * 0.03937
-    lInchDistance = lDistance * 0.03937
-    rInchDistance = rDistance * 0.03937
+    # Transforming readings to inches
+    inchesDistanceFront = fDistance * 0.0393700787
+    inchesDistanceRight = rDistance * 0.0393700787
+    inchesDistanceLeft = lDistance * 0.0393700787
 
-    # fError is the calculated respective error value aka the e(t) value
-    fError = 7.0 - fInchDistance
-    lError = 8.0 - lInchDistance
-    rError = 8.0 - rInchDistance
+    # Calculating respective errors
+    errorf = 7.0 - inchesDistanceFront
+    errorr = 8.0 - inchesDistanceRight
+    errorl = 8.0 - inchesDistanceLeft
 
-    # Control Signal aka u(t)  = Kp * e(t)
-    fControlSignal = kpValue * fError
-    lControlSignal = kpValue * lError
-    rControlSignal = kpValue * rError
+    # Computing the control signals
+    controlSignalf = kpValue * errorf
+    controlSignalr = kpValue * errorr
+    controlSignall = kpValue * errorl
 
-    # Calculating new control signal value by running control signal through saturation function
-    fNewSignal = saturationFunction(fControlSignal)
-    lNewSignal = saturationFunctionWallFollowing(lControlSignal)
-    rNewSignal = saturationFunctionWallFollowing(rControlSignal)
+    # Running control signals through saturation functions
+    newSignalf = saturationFunction(controlSignalf)
+    newSignalr = saturationFunctionWallFollowing(controlSignalr)
+    newSignall = saturationFunctionWallFollowing(controlSignall)
 
-    if rInchDistance > lInchDistance and rInchDistance < 12.0:
-    	setSpeedsvw(linearSpeed, lNewSignal/2)
-    elif rInchDistance > lInchDistance and rInchDistance > 12.0:
-    	setSpeedsvw(linearSpeed, lNewSignal/2)
-    elif rInchDistance < lInchDistance and lInchDistance < 12.0:
-    	setSpeedsvw(linearSpeed, -rNewSignal/2)
-    elif rInchDistance < lInchDistance and lInchDistance > 12.0:
-    	setSpeedsvw(linearSpeed, -rNewSignal/2)
+
+    if inchesDistanceRight > inchesDistanceLeft and inchesDistanceRight < 12.0:
+        # Setting speed of the robot, angular speed will be zero when moving straight
+        #setSpeedsvw(linearSpeed,-newSignalr)
+        setSpeedsvw(linearSpeed,newSignall/3)
+    elif inchesDistanceRight > inchesDistanceLeft and inchesDistanceRight > 12.0:
+        # Setting speed of the robot, angular speed will be zero when moving straight
+        #setSpeedsvw(linearSpeed,-newSignalr)
+        setSpeedsvw(linearSpeed,newSignall/3)
+    elif inchesDistanceRight < inchesDistanceLeft and inchesDistanceLeft < 12.0:
+        setSpeedsvw(linearSpeed,-newSignalr/3)
+        #setSpeedsvw(linearSpeed,newSignall)
+    elif inchesDistanceRight < inchesDistanceLeft and inchesDistanceLeft > 12.0:
+        setSpeedsvw(linearSpeed,-newSignalr/3)
+        #setSpeedsvw(linearSpeed,newSignall)
     else:
-    	setSpeedsvw(linearSpeed, 0)
+        setSpeedsvw(linearSpeed,0)
 
-    # Checks for obstacle to the front if 5 consecutive reading are made robot makes a left turn
-    if fInchDistance < 5.0:
+    # Checking if there is an object approaching from the front
+    if inchesDistanceFront < 5.0:
+        # Increasing reading count
+	    sensorCount += 1
 
-        sensorCount += 1
+        # Checking if the front small reading happens continously to avoid a fake trigger
+	    if sensorCount > 4:
+            # Turning left
+		    frontDist()
 
-        if sensorCount > 4:
-            frontDist()
-
+    # Clearing sensor count for continous small front readings
     else:
         sensorCount = 0
 
