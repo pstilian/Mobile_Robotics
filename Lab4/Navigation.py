@@ -12,7 +12,6 @@ import csv
 import random
 
 import cv2 as cv
-from ThreadedWebcam import ThreadedWebcam
 
 #Intialize maps
 startTime = time.time()
@@ -233,133 +232,75 @@ def setSpeedsvw(v, w):
       setSpeedsIPS(-velocityLeft1, -velocityRight1)
 
 
-# # Function for determinng robot actions throught the maze
-# def whatDo(lWallOpen, fWallOpen, rWallOpen):
-# 	# Initialize "option" variable
-# 	# 1 = Left turn, 2 = Move Forward, 3 = Right Turn
-# 	option = 0
+# Function for determinng robot actions throught the maze
+def whatDo(lWallOpen, fWallOpen, rWallOpen):
+	# Initialize "option" variable
+	# 1 = Left turn, 2 = Move Forward, 3 = Right Turn
+	option = 0
 
-# 	if fInchDistance < 18:
-# 		frontDist()
+	# if fInchDistance < 18:
+	# 	frontDist()
 
-# 	if lWallOpen and fWallOpen and rWallOpen:
-# 		choices = [1, 2, 3]
-# 		option = random.choice(choices)
-# 		#stop()
+	if lWallOpen and fWallOpen and rWallOpen:
+		choices = [1, 2, 3]
+		option = random.choice(choices)
+		#stop()
 
-# 	elif fWallOpen and rWallOpen:
-# 		choices = [2, 3]
-# 		option = random.choice(choices)
-# 		#stop()
+	elif fWallOpen and rWallOpen:
+		choices = [2, 3]
+		option = random.choice(choices)
+		#stop()
 
-# 	elif lWallOpen and rWallOpen:
-# 		choices = [1, 3]
-# 		option = random.choice(choices)
-# 		#stop()
+	elif lWallOpen and rWallOpen:
+		choices = [1, 3]
+		option = random.choice(choices)
+		#stop()
 
-# 	elif lWallOpen and fWallOpen:
-# 		choices = [1, 2]
-# 		option = random.choice(choices)
-# 		#stop()
+	elif lWallOpen and fWallOpen:
+		choices = [1, 2]
+		option = random.choice(choices)
+		#stop()
 
-# 	elif rWallOpen:
-# 		option = 3
-# 		#stop()
+	elif rWallOpen:
+		option = 3
+		#stop()
 
-# 	elif fWallOpen:
-# 		option = 2
-# 		#stop()
+	elif fWallOpen:
+		option = 2
+		#stop()
 
-# 	elif lWallOpen:
-# 		option = 1
-# 		#stop()
+	elif lWallOpen:
+		option = 1
+		#stop()
 
-# 	else:
-# 		option = 0
-# 		#stop()
+	else:
+		option = 0
+		#stop()
 
-# 	## DETERMINE THE MOVEMENTS OF ROBOT
-# 	# Option 1 demands left turn
-# 	if option == 1:
-# 		print("I'm turning left")
-# 		leftPivot()
-
-
-# 	# Option 2 demands move forward
-# 	elif option == 2:
-# 		# needs to move forward
-# 		print("Moving Forward")
-# 		moveForward()
+	## DETERMINE THE MOVEMENTS OF ROBOT
+	# Option 1 demands left turn
+	if option == 1:
+		print("I'm turning left")
+		leftPivot()
 
 
-# 	# Option 3 demands right turn
-# 	elif option == 3:
-# 		print("I'm turning right")
-# 		rightPivot()
+	# Option 2 demands move forward
+	elif option == 2:
+		# needs to move forward
+		print("Moving Forward")
+		moveForward()
 
-# 	else:
-# 		print("OH NO IM TRAPPED!! 0.0")
-# 		turnAround()
 
-#Check if specific flags are set to decide action.
-def whatToDo(leftWallOpen, frontWallOpen, rightWallOpen):
-    option = 0
+	# Option 3 demands right turn
+	elif option == 3:
+		print("I'm turning right")
+		rightPivot()
 
-    if fInchDistance < 18:
-        frontDist()
+	else:
+		print("OH NO IM TRAPPED!! 0.0")
+		turnAround()
 
-    if lWallOpen and fWallOpen and rWallOpen:
-        choices = [1, 2, 3]
-        option = random.choice(choices)
-        #stop()
 
-    elif fWallOpen and rWallOpen:
-        choices = [2, 3]
-        option = random.choice(choices)
-        #stop()
-
-    elif lWallOpen and rWallOpen:
-        choices = [1, 3]
-        option = random.choice(choices)
-        #stop()
-
-    elif lWallOpen and fWallOpen:
-        choices = [1, 2]
-        option = random.choice(choices)
-        #stop()
-
-    elif rWallOpen:
-        option = 3
-        #stop()
-
-    elif fWallOpen:
-        option = 2
-        #stop()
-
-    elif lWallOpen:
-        option = 1
-        #stop()
-
-    else:
-        option = 0
-        #stop()
-
-    #CHECK WHAT MOVE I MUST DO!
-    if option == 1:
-        #turn left
-        print("LEFT TURN")
-       	leftPivot()
-    elif option == 2:
-        #keep moving forward
-        print("MOVE FORWARD")
-    elif option == 3:
-        #right turn
-        print("RIGHT TURN")
-        rightPivot()
-    else:
-        #360 turn and move forward
-        print("WALL IN ALL THREE PLACES")
-        turnAround()
 
 def stop():
 	pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
@@ -576,7 +517,7 @@ while True:
 
     if distanceT > 18:
 
-    	whatToDo(lWallOpen, fWallOpen, rWallOpen)
+    	whatDo(lWallOpen, fWallOpen, rWallOpen)
     	#newCell = True
 
     	distanceT = 0
