@@ -5,6 +5,8 @@ import VL53L0X
 import RPi.GPIO as GPIO
 import signal
 import math
+import time
+import csv
 import random
 
 # The servo hat uses its own numbering scheme within the Adafruit library.
@@ -75,6 +77,17 @@ rSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
 GPIO.output(FSHDN, GPIO.HIGH)
 time.sleep(0.01)
 fSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
+
+def readCSV():
+    global LWSpeed, RWSpeed
+    with open('LeftSpeedCalibration.csv', newline='') as LeftCalibrate:
+        lReader = csv.reader(LeftCalibrate)
+        LWSpeed = dict(map(float,x) for x in lReader) # pulls in each row as a key-value pair
+        
+    with open('RightSpeedCalibration.csv', newline= '') as RightCalibrate:
+        rReader = csv.reader(RightCalibrate)
+        RWSpeed = dict(map(float,x) for x in rReader) # pulls in each row as a key-value pai
+
 
 #Function that resets the total count of ticks
 def resetCounts():
