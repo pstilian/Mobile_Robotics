@@ -544,7 +544,7 @@ def updateMaze(left, front, right, direction, currentCell):
 
     #### WEST #####
 
-    if directon == 'W':
+    if direction == 'W':
 
         if left == True: 
             maze[currentCellIndex].south = 'O'
