@@ -478,7 +478,43 @@ def printMaze(maze, hRes = 4, vRes = 2):
     # Print drawing
     print(''.join(output))
 
+
+class Cell:
+    def __init__(self, west, north, east, south, visited = False):
+        # There are 4 walls per cell
+        # Wall values can be 'W', 'O', or '?' (wall, open, or unknown)
+        self.west = west
+        self.north = north
+        self.east = east
+        self.south = south
+        
+        # Store whether or not the cell has been visited before
+        self.visited = visited
+
+        
+# Helper function that verifies all the walls of the maze
+def detectMazeInconsistencies(maze):
+    # Check horizontal walls
+    for i in range(3):
+        for j in range(4):
+            pos1 = i * 4 + j
+            pos2 = i * 4 + j + 4
+            hWall1 = maze[pos1].south
+            hWall2 = maze[pos2].north       
+            assert hWall1 == hWall2, " Cell " + str(pos1) + "'s south wall doesn't equal cell " + str(pos2) + "'s north wall! ('" + str(hWall1) + "' != '" + str(hWall2) + "')"
+    
+    # Check vertical walls
+    for i in range(4):
+        for j in range(3):
+            pos1 = i * 4 + j
+            pos2 = i * 4 + j + 1
+            vWall1 = maze[pos1].east
+            vWall2 = maze[pos2].west
+            assert vWall1 == vWall2, " Cell " + str(pos1) + "'s east wall doesn't equal cell " + str(pos2) + "'s west wall! ('" + str(vWall1) + "' != '" + str(vWall2) + "')"
+
+
 ################################################################################
+
 
 # This is the most important function of this program. Updates the maze walls based
 # on current cell position
