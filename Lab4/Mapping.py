@@ -482,7 +482,7 @@ def printMaze(maze, hRes = 4, vRes = 2):
 
 # This is the most important function of this program. Updates the maze walls based
 # on current cell position
-def updateMaze(left, front, right, direction, currentCell)
+def updateMaze(left, front, right, direction, currentCell):
     global maze
 
     currentCellIndex = currentCell - 1
@@ -594,7 +594,7 @@ def updateMaze(left, front, right, direction, currentCell)
 ################################################################################
 
 #Updates the current Cell number ( 1 -16 )
-def updateCell(direction, cell)
+def updateCell(direction, cell):
     global currentCell
 
     if direction == 'W':
