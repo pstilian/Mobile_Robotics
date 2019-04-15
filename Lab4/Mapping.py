@@ -781,7 +781,7 @@ while True:
         print("Current Orientation: ", direction)
         # Update and print the maze every time a new cell is entered
         updateMaze(leftWallOpen, frontWallOpen, rightWallOpen, direction, currentCell)
-        printMaze(maze)
+        #printMaze(maze)
         whatDo(leftWallOpen, frontWallOpen, rightWallOpen)
         newCell = True
 
