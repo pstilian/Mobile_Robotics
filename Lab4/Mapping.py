@@ -685,7 +685,7 @@ pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 time.sleep(0.5)
 
-currentCell = input("Please identify my starting cell (Numbered 1 - 16): ")
+currentCell = int(input("Please identify my starting cell (Numbered 1 - 16): "))
 direction = input("Please enter the robot's atarting orientation (N, S, E, W): ")
 
 
