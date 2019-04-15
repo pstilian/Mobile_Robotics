@@ -738,7 +738,7 @@ if inchesDRight > 15:
 if inchesDLeft > 15:
     leftWallOpen = True
 
-updateMaze(leftWallOpen, frontWallOpen, direction, currentCell)
+updateMaze(leftWallOpen, frontWallOpen, rightWallOpen, direction, currentCell)
 
 while True:
  
