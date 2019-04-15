@@ -627,11 +627,11 @@ def updateMaze(left, front, right, direction, currentCell):
         maze[currentCellIndex].north = 'O'
 
 
-    if leftIndex >= 0:
-        maze[leftIndex].east = maze[currentCellIndex].west
+    # if leftIndex >= 0:
+    #     maze[leftIndex].east = maze[currentCellIndex].west
 
-    if upIndex >= 0:
-        maze[upIndex].south = maze[currentCellIndex].north
+    # if upIndex >= 0:
+    #     maze[upIndex].south = maze[currentCellIndex].north
 
 ################################################################################
 
