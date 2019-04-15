@@ -389,6 +389,16 @@ def leftPivot():
     lRevolutions = 1.1
     rRevolutions = 1.1
 
+    # Update direction of robot movement
+    if direction == 'N':
+        direction = 'W'
+    elif direction == 'W':
+        direction = 'S'
+    elif direction == 'S':
+        direction = 'E'
+    elif direction == 'E':
+        direction = 'N'
+
 def rightPivot():
     global distanceT, lRevolutions, rRevolutions, direction
     stop()
@@ -398,6 +408,17 @@ def rightPivot():
     lRevolutions = 1.1
     rRevolutions = 1.1
 
+    # Update direction of robot movement
+    if direction == 'N':
+        direction = 'E'
+    elif direction == 'W':
+        direction = 'N'
+    elif direction == 'S':
+        direction = 'W'
+    elif direction == 'E':
+        direction = 'S'
+
+
 def turnAround():
     global distanceT, lRevolutions, rRevolutions, direction
     stop()
@@ -406,6 +427,16 @@ def turnAround():
     time.sleep(2.05)
     lRevolutions = 1.1
     rRevolutions = 1.1
+
+    # Update direction of robot movement
+    if direction == 'N':
+        direction = 'S'
+    elif direction == 'W':
+        direction = 'E'
+    elif direction == 'S':
+        direction = 'N'
+    elif direction == 'E':
+        direction = 'W'
 
 #################################################################################
             
