@@ -20,9 +20,11 @@ of the robot and move forward while keeping a distance of 5 inches from the wall
 wall from the left side as well which will be implemented in Lab 3.
 
 
-### Lab 3
+### Lab 3 Goal Tracking and Bug Algorithms
 
-### Lab 4 Localization and Mapping
+  This lab consists of three programs which each build off of each other. GoalFacing, Motion to Goal and BugAlgorithm. The Goal facing will prompt the robot to rotate slowly until it finds the desired "goal object" (In this case a red cylinder). At this point it will stop until either the robot or goal is moved. Motion To Goal runs the GoalFacing program and when it finds the goal object it approaches the object until it is 5 inches away. Finally the bug algorithm applies a Bug 0 algorithm to naviigate its way to a goal object avoiding hazards while also encapsulating the GoalFacing and Motion to Goal functions.
+
+### Lab 4.1 Localization and Mapping
 
   This lab uses many of our previous functions to create two programs. Navigation.py and Mapping.py. Navigation.py will randomly navigate through amaze using only 90 and 180 degree turns. It will continue to wander randomly through the maze until the program is terminated. The second preogram is Mapping.py which also wanders through a maze made up of a 4 x 4 grid of 18 inch squares. While navigating the maze the robot will use it distance sensors to map out the walls of the maze and print them in the terminal window.
   
