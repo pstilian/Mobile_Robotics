@@ -8,6 +8,7 @@ import math
 import time
 import csv
 import random
+from ThreadedWebcam import ThreadedWebcam
 
 # The servo hat uses its own numbering scheme within the Adafruit library.
 # 0 represents the first servo, 1 for the second, and so on.
