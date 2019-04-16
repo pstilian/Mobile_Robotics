@@ -20,4 +20,13 @@ of the robot and move forward while keeping a distance of 5 inches from the wall
 wall from the left side as well which will be implemented in Lab 3.
 
 
-### Lab 3 Working
+### Lab 3
+
+### Lab 4 Localization and Mapping
+
+  This lab uses many of our previous functions to create two programs. Navigation.py and Mapping.py. Navigation.py will randomly navigate through amaze using only 90 and 180 degree turns. It will continue to wander randomly through the maze until the program is terminated. The second preogram is Mapping.py which also wanders through a maze made up of a 4 x 4 grid of 18 inch squares. While navigating the maze the robot will use it distance sensors to map out the walls of the maze and print them in the terminal window.
+  
+ ### Lab 4.2 Path Planning
+ 
+ Working....
+
