@@ -384,7 +384,7 @@ def leftPivot():
     stop()
     pwm.set_pwm(LSERVO, 0, math.floor(1.46 / 20 * 4096))
     pwm.set_pwm(RSERVO, 0, math.floor(1.42 / 20 * 4096))
-    time.sleep(0.9)
+    time.sleep(1)
     lRevolutions = 1.1
     rRevolutions = 1.1
 
