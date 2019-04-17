@@ -6,8 +6,10 @@ import RPi.GPIO as GPIO
 import signal
 import math
 import time
+import cv2 as cv
 import csv
 import random
+import numpy as np
 from ThreadedWebcam import ThreadedWebcam
 
 # The servo hat uses its own numbering scheme within the Adafruit library.
@@ -17,6 +19,8 @@ RSERVO = 1
 
 # Initialize the servo hat library.
 pwm = Adafruit_PCA9685.PCA9685()
+
+FPS_SMOOTHING = 0.9
 
 # 50Hz is used for the frequency of the servos.
 pwm.set_pwm_freq(50)
@@ -107,6 +111,10 @@ else:
     fs2.release()
     
 fs.release()
+
+# Window names
+WINDOW1 = "Adjustable Mask - Press Esc to quit"
+WINDOW2 = "Detected Blobs - Press Esc to quit"
 
 # Create windows
 cv.namedWindow(WINDOW1)
@@ -748,7 +756,7 @@ def checkCamera():
     inchesDFront = fDistance * 0.0393700787      
 
     if inchesDFront < 18:
-    frontDist()
+        frontDist()
 
     while camCount < 10:
         camCount += 1
@@ -782,23 +790,23 @@ def checkCamera():
         keypoints_blue = detector.detect(mask_blue)
     
         # For each detected blob, draw a circle on the frame
-        frame_with_keypoints_yellow = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        frame_with_keypoints_pink = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        frame_with_keypoints_green = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        frame_with_keypoints_blue = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        frame_with_keypoints_yellow = cv.drawKeypoints(frame, keypoints_yellow, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        frame_with_keypoints_pink = cv.drawKeypoints(frame, keypoints_pink, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        frame_with_keypoints_green = cv.drawKeypoints(frame, keypoints_green, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        frame_with_keypoints_blue = cv.drawKeypoints(frame, keypoints_blue, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     
         # Write text onto the frame
         cv.putText(frame_with_keypoints_yellow, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-        cv.putText(frame_with_keypoints_yellow, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_yellow, "{} blobs".format(len(keypoints_yellow)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
         cv.putText(frame_with_keypoints_pink, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-        cv.putText(frame_with_keypoints_pink, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_pink, "{} blobs".format(len(keypoints_pink)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
         cv.putText(frame_with_keypoints_green, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-        cv.putText(frame_with_keypoints_green, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_green, "{} blobs".format(len(keypoints_green)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
         cv.putText(frame_with_keypoints_blue, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
-        cv.putText(frame_with_keypoints_blue, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_blue, "{} blobs".format(len(keypoints_blue)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
 
         for keypoint in keypoints_yellow:
             print(" I see yellow!")
@@ -822,11 +830,11 @@ def checkCamera():
             blue = currentCell
 
 
-    # Check for user input
-    c = cv.waitKey(1)
-    if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
-        camera.stop()
-        break
+        # Check for user input
+        c = cv.waitKey(1)
+        if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
+            camera.stop()
+            break
 
     lRevolutions = 1.1
     rRevolutions = 1.1
