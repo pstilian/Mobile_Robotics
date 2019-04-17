@@ -81,6 +81,50 @@ GPIO.output(FSHDN, GPIO.HIGH)
 time.sleep(0.01)
 fSensor.start_ranging(VL53L0X.VL53L0X_GOOD_ACCURACY_MODE)
 
+# Initialize the threaded camera
+# You can run the unthreaded camera instead by changing the line below.
+# Look for any differences in frame rate and latency.
+camera = ThreadedWebcam() # UnthreadedWebcam()
+camera.start()
+
+# Initialize the SimpleBlobDetector
+params = cv.SimpleBlobDetector_Params()
+detector = cv.SimpleBlobDetector_create(params)
+
+# Attempt to open a SimpleBlobDetector parameters file if it exists,
+# Otherwise, one will be generated.
+# These values WILL need to be adjusted for accurate and fast blob detection.
+fs = cv.FileStorage("params.yaml", cv.FILE_STORAGE_READ); #yaml, xml, or json
+if fs.isOpened():
+    detector.read(fs.root())
+else:
+    print("WARNING: params file not found! Creating default file.")
+    
+    fs2 = cv.FileStorage("params.yaml", cv.FILE_STORAGE_WRITE)
+    detector.write(fs2)
+    fs2.release()
+    
+fs.release()
+
+# Create windows
+cv.namedWindow(WINDOW1)
+cv.namedWindow(WINDOW2)
+
+# Setting upper and lower values for yellow, pink green and blue
+upper_yellow = np.array([28, 255, 255])
+lower_yellow = np.array([24, 137, 78])
+
+upper_pink = np.array([180, 255, 255])
+lower_pink = np.array([136, 139, 77])
+
+upper_green = np.array([43, 255, 255])
+lower_green = np.array([35, 139, 77])
+
+upper_blue = np.array([103, 255, 255])
+lower_blue = np.array([65, 0, 77])
+
+fps, prev = 0.0, 0.0
+
 def readCSV():
     global LWSpeed, RWSpeed
     with open('LeftSpeedCalibration.csv', newline='') as LeftCalibrate:
@@ -545,9 +589,6 @@ def detectMazeInconsistencies(maze):
             assert vWall1 == vWall2, " Cell " + str(pos1) + "'s east wall doesn't equal cell " + str(pos2) + "'s west wall! ('" + str(vWall1) + "' != '" + str(vWall2) + "')"
 
 
-################################################################################
-
-
 # This is the most important function of this program. Updates the maze walls based
 # on current cell position
 def updateMaze(left, front, right, direction, currentCell):
@@ -665,7 +706,6 @@ def updateMaze(left, front, right, direction, currentCell):
     if upIndex >= 0:
         maze[upIndex].south = maze[currentCellIndex].north
 
-################################################################################
 
 #Updates the current Cell number ( 1 -16 )
 def updateCell(direction, cell):
@@ -682,6 +722,424 @@ def updateCell(direction, cell):
 
     maze[currentCell - 1].visited = True
 
+
+################################################################################
+########################### Camera Functions ###################################
+################################################################################
+def pauseMovement():
+    pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
+    pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
+
+    fDistance = fSensor.get_distance()
+
+    inchesDFront = fDistance * 0.0394
+
+    if inchesDFront < 18:
+        frontDist()
+
+def checkCamera():
+    global fps, prev, lRevolutions, rRevolutions, yellow, blue, green, pink
+    camCount = 0
+
+    # Reading in distance from front sensor and converting to inches
+    fDistance = fSensor.get_distance()
+    inchesDFront = fDistance * 0.0393700787      
+
+    if inchesDFront < 18:
+    frontDist()
+
+    while camCount < 10:
+        camCount += 1
+        #print("checking camera feed") 
+
+        # Calculate FPS
+        now = time.time()
+        fps = (fps*FPS_SMOOTHING + (1/(now - prev))*(1.0 - FPS_SMOOTHING))
+        prev = now
+
+        # Get a frame
+        frame = camera.read()
+    
+        # Blob detection works better in the HSV color space 
+        # (than the RGB color space) so the frame is converted to HSV.
+        frame_hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+
+        # Create a mask using the given HSV range
+        mask_yellow = cv.inRange(frame_hsv, (lower_yellow), (upper_yellow))
+        mask_pink = cv.inRange(frame_hsv, (lower_pink), (upper_pink))
+        mask_green = cv.inRange(frame_hsv, (lower_green), (upper_green))
+        mask_blue = cv.inRange(frame_hsv, (lower_blue), (upper_blue))
+
+        # Setting the mask values for yellow, pink, green and blue
+        # Run the SimpleBlobDetector on the mask.
+        # The results are stored in a vector of 'KeyPoint' objects,
+        # which describe the location and size of the blobs.
+        keypoints_yellow = detector.detect(mask_yellow)
+        keypoints_pink = detector.detect(mask_pink)
+        keypoints_green = detector.detect(mask_green)
+        keypoints_blue = detector.detect(mask_blue)
+    
+        # For each detected blob, draw a circle on the frame
+        frame_with_keypoints_yellow = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        frame_with_keypoints_pink = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        frame_with_keypoints_green = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        frame_with_keypoints_blue = cv.drawKeypoints(frame, keypoints, None, color = (0, 255, 0), flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    
+        # Write text onto the frame
+        cv.putText(frame_with_keypoints_yellow, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_yellow, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+
+        cv.putText(frame_with_keypoints_pink, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_pink, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+
+        cv.putText(frame_with_keypoints_green, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_green, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+
+        cv.putText(frame_with_keypoints_blue, "FPS: {:.1f}".format(fps), (5, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+        cv.putText(frame_with_keypoints_blue, "{} blobs".format(len(keypoints)), (5, 35), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0))
+
+        for keypoint in keypoints_yellow:
+            print(" I see yellow!")
+            # set the current cell as this colored cell
+            yellow = currentCell
+
+        for keypoint in keypoints_pink:
+            print(" I see pink!")
+            # set the current cell as this colored cell
+            pink = currentCell
+
+        for keypoint in keypoints_green:
+            print(" I see green!")
+            # set the current cell as this colored cell
+            green = currentCell
+
+
+        for keypoint in keypoints_blue:
+            print(" I see blue!")
+            # set the current cell as this colored cell
+            blue = currentCell
+
+
+    # Check for user input
+    c = cv.waitKey(1)
+    if c == 27 or c == ord('q') or c == ord('Q'): # Esc or Q
+        camera.stop()
+        break
+
+    lRevolutions = 1.1
+    rRevolutions = 1.1
+
+
+def turnToWall():
+    global lRevolutions, rRevolutions
+
+    fDistance = fSensor.get_distance()
+
+    inchesDFront = fDistance * 0.0394
+
+    if currentCell == 1:
+        if direction == 'N':
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+        elif direction == 'W':
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+
+    elif currentCell == 2 or currentCell == 3:
+        if direction == 'N':
+            checkCamera()
+        elif direction == 'E':
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+        elif direction == 'W':
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+
+    elif currentCell == 4:
+        if direction == 'N':
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+        elif direction == 'E':
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+
+    elif currentCell == 5 or currentCell == 9:
+        if direction == 'W':
+            checkCamera()
+        elif direction == 'N':
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+        elif direction == 'S':
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+
+    elif currentCell == 8 or currentCell == 12:
+        if direction == 'E':
+            checkCamera()
+        elif direction == 'N':
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+        elif direction == 'S':
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+
+    elif currentCell == 13:
+        if direction == 'S':
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+        elif direction == 'W':
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+
+    elif currentCell == 14 or currentCell == 15:
+        if direction == 'S':
+            checkCamera()
+        elif direction == 'E':
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+        elif direction == 'W':
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+
+    elif currentCell == 16:
+        if direction == 'S':
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+        elif direction == 'E':
+            checkCamera()
+            rightPivot()
+            pauseMovement()
+            checkCamera()
+            leftPivot()
+            pauseMovement()
+
+    lRevolutions = 1.1
+    rRevolutions = 1.1
+
+
+
+################################################################################
+
+
+def mapping():
+    global sensorCount, leftWallOpen, frontWallOpen, rightWallOpen, newCell, inchesDLeft, inchesDFront, inchesDRight, direction, currentCell
+    stop()
+
+    currentCell = int(input("Please identify my starting cell (Numbered 1 - 16): "))
+    direction = input("Please enter the robot's atarting orientation (N, S, E, W): ")
+
+    # Waiting for user to enter the required key in order to start the movement
+    startFlag = False
+    selectCommand = ' '
+    # Holds program until command value is entered
+    while selectCommand != 's':
+        selectCommand = input("Please enter \'s\' to begin robot movement: ")
+
+
+    # Declaring a variable to keep track of front sensor big readings
+    sensorCount = 0
+
+    #Booleans to determine if walls are open?
+    frontWallOpen = False
+    leftWallOpen = False
+    rightWallOpen = False
+    newCell = True
+
+    # Utilizes 3 flags one for each detectable wall to see if there is an opening or not
+    # These Flags are leftWallOpen, rightWallOpen and frontWallOpen
+
+    # Reading in from sensors
+    fDistance = fSensor.get_distance()
+    rDistance = rSensor.get_distance()
+    lDistance = lSensor.get_distance()
+
+    # Transforming readings to inches
+    inchesDFront = fDistance * 0.0393700787
+    inchesDRight = rDistance * 0.0393700787
+    inchesDLeft = lDistance * 0.0393700787
+
+    #Constantly updates the flags while reading the sensors.
+    if inchesDFront > 15:
+        frontWallOpen = True
+
+    if inchesDRight > 15:
+        rightWallOpen = True
+
+    if inchesDLeft > 15:
+        leftWallOpen = True
+
+    updateMaze(leftWallOpen, frontWallOpen, rightWallOpen, direction, currentCell)
+
+    while True:
+ 
+        # Reading in from sensors
+        fDistance = fSensor.get_distance()
+        rDistance = rSensor.get_distance()
+        lDistance = lSensor.get_distance()
+
+        # Transforming readings to inches
+        inchesDFront = fDistance * 0.0393700787
+        inchesDRight = rDistance * 0.0393700787
+        inchesDLeft = lDistance * 0.0393700787
+
+        #Constantly updates the flags while reading the sensors.
+        if inchesDFront > 15:
+            frontWallOpen = True
+
+        if inchesDRight > 15:
+            rightWallOpen = True
+
+        if inchesDLeft > 15:
+            leftWallOpen = True
+
+        #Checking if the robot has already traveled the required distance
+        distanceT = (8.20 * ((lRevolutions + rRevolutions) / 2))
+    
+        if distanceT > 9 and newCell:
+            print("I have entered a new cell")
+            newCell = False
+            updateCell(direction, currentCell)
+
+        if distanceT > 18:
+
+            print("""***************************************
+                """)
+            print("Current Cell Number: ", currentCell)
+            print("Current Orientation: ", direction)
+            print("""
+                ***************************************
+                """)
+            # Update and print the maze every time a new cell is entered
+            updateMaze(leftWallOpen, frontWallOpen, rightWallOpen, direction, currentCell)
+
+            if currentCell >= 1 and currentCell <= 16:
+                turnToWall()
+
+            printMaze(maze)
+            print("""
+                ***************************************""")
+            whatDo(leftWallOpen, frontWallOpen, rightWallOpen)
+            newCell = True
+
+            distanceT = 0
+            resetCounts()
+
+        # The exit function for when all cells have been visited
+        # for cell in maze:
+        #     completionCounter = 0
+
+        #     if cell.visited == True:
+        #         completionCounter += 1
+        #     else:
+        #         completionCounter = 0
+
+        #     if completionCounter == 16:
+
+
+        frontWallOpen = False
+        leftWallOpen = False
+        rightWallOpen = False
+
+        moveForward()
+
+            
+
+def loadMap():
+    global yellow, blue, pink, green, maze
+
+
+
+def mainMenu():
+    global currentCell, direction
+
+    #startFlag = False
+    option = input("""
+        ************************************************************************
+        ************************* MAIN MENU ************************************
+        ************************************************************************
+
+        Please Select one of the following options...(1 -4)
+
+        1. Change robot's current orientation and position
+        2. Run the Mapping Algorithm
+        3. Load a pre-built map
+        4. Travel to a specific color tile
+
+        Enter any other key to exit...
+
+        """)
+    if option == '1':
+        currentCell = int(input("Please identify my starting cell (Numbered 1 - 16): "))
+        direction = input("Please enter the robot's atarting orientation (N, S, E, W): ")
+
+    elif option == '2':
+        mapping()
+    elif option == '3':
+        loadMap()
+    elif option == '4':
+        #startFlag = True
+        # goalColor variable stores which of the premapped grids to go to
+        goalColor = input("""
+            Please choose a colored cell to navigate to options are...
+            Y for yellow
+            P for pink
+            G for green
+            B for blue
+            """)
+    else:
+        exit()
 
 ################################################################################
 ########################### MAZE INITALIZATION #################################
@@ -722,17 +1180,6 @@ pwm.set_pwm(LSERVO, 0, math.floor(1.5 / 20 * 4096))
 pwm.set_pwm(RSERVO, 0, math.floor(1.5 / 20 * 4096))
 time.sleep(0.5)
 
-currentCell = int(input("Please identify my starting cell (Numbered 1 - 16): "))
-direction = input("Please enter the robot's atarting orientation (N, S, E, W): ")
-
-
-# Waiting for user to enter the required key in order to start the movement
-startFlag = False
-selectCommand = ' '
-# Holds program until command value is entered
-while selectCommand != 's':
-      selectCommand = input("Please enter \'s\' to begin robot movement: ")
-
 startFlag = True
 
 # Declaring constant linear speed that will be used during the movement
@@ -747,87 +1194,4 @@ leftWallOpen = False
 rightWallOpen = False
 newCell = True
 
-
-################################################################################
-############################### MAIN LINE CODE #################################
-################################################################################
-
-# Utilizes 3 flags one for each detectable wall to see if there is an opening or not
-# These Flags are leftWallOpen, rightWallOpen and frontWallOpen
-
-# Reading in from sensors
-fDistance = fSensor.get_distance()
-rDistance = rSensor.get_distance()
-lDistance = lSensor.get_distance()
-
-# Transforming readings to inches
-inchesDFront = fDistance * 0.0393700787
-inchesDRight = rDistance * 0.0393700787
-inchesDLeft = lDistance * 0.0393700787
-
-#Constantly updates the flags while reading the sensors.
-if inchesDFront > 15:
-    frontWallOpen = True
-
-if inchesDRight > 15:
-    rightWallOpen = True
-
-if inchesDLeft > 15:
-    leftWallOpen = True
-
-updateMaze(leftWallOpen, frontWallOpen, rightWallOpen, direction, currentCell)
-
-while True:
- 
-    # Reading in from sensors
-    fDistance = fSensor.get_distance()
-    rDistance = rSensor.get_distance()
-    lDistance = lSensor.get_distance()
-
-    # Transforming readings to inches
-    inchesDFront = fDistance * 0.0393700787
-    inchesDRight = rDistance * 0.0393700787
-    inchesDLeft = lDistance * 0.0393700787
-
-    #Constantly updates the flags while reading the sensors.
-    if inchesDFront > 15:
-        frontWallOpen = True
-
-    if inchesDRight > 15:
-        rightWallOpen = True
-
-    if inchesDLeft > 15:
-        leftWallOpen = True
-
-    #Checking if the robot has already traveled the required distance
-    distanceT = (8.20 * ((lRevolutions + rRevolutions) / 2))
-    
-    if distanceT > 9 and newCell:
-        print("I have entered a new cell")
-        newCell = False
-        updateCell(direction, currentCell)
-
-    if distanceT > 18:
-        print("""***************************************
-            """)
-        print("Current Cell Number: ", currentCell)
-        print("Current Orientation: ", direction)
-        print("""
-            ***************************************
-            """)
-        # Update and print the maze every time a new cell is entered
-        updateMaze(leftWallOpen, frontWallOpen, rightWallOpen, direction, currentCell)
-        printMaze(maze)
-        print("""
-            ***************************************""")
-        whatDo(leftWallOpen, frontWallOpen, rightWallOpen)
-        newCell = True
-
-        distanceT = 0
-        resetCounts()
-
-    frontWallOpen = False
-    leftWallOpen = False
-    rightWallOpen = False
-
-    moveForward()
+mainMenu()
