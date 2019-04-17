@@ -21,6 +21,8 @@ pwm = Adafruit_PCA9685.PCA9685()
 # 50Hz is used for the frequency of the servos.
 pwm.set_pwm_freq(50)
 
+FPS_SMOOTHING = 0.9
+
 # Pins that the encoders are connected to
 LENCODER = 17
 RENCODER = 18
