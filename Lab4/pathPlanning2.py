@@ -836,7 +836,7 @@ def makeMap(goal, start):
                 elif d == "West":
                     rightPivot()
 
-            elif: direction == 'E':
+            elif direction == 'E':
                 if d == "North":
                     leftPivot()
                 elif d == "South":
@@ -844,7 +844,7 @@ def makeMap(goal, start):
                 elif d == "West":
                     turnAround()
 
-            elif: direction == 'W':
+            elif direction == 'W':
                 if d == "North":
                     rightPivot()
                 elif d == "South":
