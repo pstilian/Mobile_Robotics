@@ -736,7 +736,7 @@ def makeMap(goal, start):
     nVal = 99
     GO = True
     direct = []
-    for p in maze:
+    for p in rout:
         p.visited = False
         mazeMap[p.cellNum] = p
         if p.cellNum == goal:
@@ -1311,17 +1311,18 @@ def mainMenu():
 #West, North, East, South
 maze = [
     Cell('W','W','?','?', 1, 99, False), Cell('?','W','?','?', 2, 99, False), Cell('?','W','?','?', 3, 99, False), Cell('?','W','W','?', 4, 99, False),
-    Cell('W','?','?','?', 5, 99, False), Cell('?','?','?','?', 6, 99, False), Cell('?','?','?','?', 7, 99, False), Cell('?','?','W','?', 8, 99, False),
+    Cell('W','?','?','?', 5, 99, False), Cell('?','?','?','?', 6, 99, False), Cell('','?','?','?', 7, 99, False), Cell('?','?','W','?', 8, 99, False),
     Cell('W','?','?','?', 9, 99, False), Cell('?','?','?','?', 10, 99, False), Cell('?','?','?','?', 11, 99, False), Cell('?','?','W','?', 12, 99, False),
     Cell('W','?','?','W', 13, 99, False), Cell('?','?','?','W', 14, 99, False), Cell('?','?','?','W', 15, 99, False), Cell('?','?','W','W', 16, 99, False)
 ]
 
 rout = [
-    Path(1,99,99,99,99,99), Path(2,99,99,99,99,99), Path(3,99,99,99,99,99), Path(4,99,99,99,99,99),
-    Path(5,99,99,99,99,99), Path(6,99,99,99,99,99), Path(7,99,99,99,99,99), Path(8,99,99,99,99,99),
-    Path(9,99,99,99,99,99), Path(10,99,99,99,99,99), Path(11,99,99,99,99,99), Path(12,99,99,99,99,99),
-    Path(13,99,99,99,99,99), Path(14,99,99,99,99,99), Path(15,99,99,99,99,99), Path(16,99,99,99,99,99),
+   Cell('W','W','O','W', 1, 99, False), Cell('O','W','O','W', 2, 99, False), Cell('O','W','O','O', 3, 99, False), Cell('O','W','W','O', 4, 99, False),
+    Cell('W','O','W','O', 5, 99, False), Cell('O','W','W','O', 6, 99, False), Cell('W','O','W','O', 7, 99, False), Cell('W','O','W','O', 8, 99, False),
+    Cell('W','O','W','O', 9, 99, False), Cell('W','O','O','W', 10, 99, False), Cell('O','O','W','W', 11, 99, False), Cell('W','O','W','O', 12, 99, False),
+    Cell('W','O','O','W', 13, 99, False), Cell('O','W','O','W', 14, 99, False), Cell('O','W','O','W', 15, 99, False), Cell('O','O','W','W', 16, 99, False)
 ]
+
 
 ################################################################################
 ########################### INITALIZATION FUNCTIONS ############################
