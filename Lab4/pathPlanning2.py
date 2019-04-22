@@ -730,7 +730,7 @@ def updateMaze(left, front, right, direction, currentCell):
 
 #start from goal, and end at start
 
-def makeMap(goal, start):
+def makeMap():
     start = 5
     goal = 16
     nVal = 99
