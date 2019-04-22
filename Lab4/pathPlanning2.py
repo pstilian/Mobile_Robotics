@@ -794,7 +794,7 @@ def makeMap(goal, start):
             if p.cellNum == goal:
                 direct.append("Stop")
                 break
-            if p.cellNum = newStart:
+            if p.cellNum == newStart:
                 for q in mazeMap:
                     if p.val == q.val - 1:
                         if q.cellNum == (p.cellNum + 4):
@@ -852,7 +852,7 @@ def makeMap(goal, start):
                 elif d == "East":
                     turnAround()
         
-        moveForward()
+        #moveForward()
         distanceT = (8.20 * ((lRevolutions + rRevolutions) / 2))
         
         if distanceT > 9 and newCell:
