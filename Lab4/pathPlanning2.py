@@ -42,8 +42,6 @@ rRevolutions = 0
 startTime = time.time()
 LWSpeed = {}
 RWSpeed = {}
-startCell
-endCell
 directions = {}
 pathMap = {}
 mazeMap = {}
