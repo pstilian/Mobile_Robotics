@@ -872,7 +872,6 @@ def makeMap(goal, start):
 def updateCell(direction, cell):
     global currentCell
 
-    Path.
     if direction == 'W':
         currentCell = cell -1
     elif direction =='N':
